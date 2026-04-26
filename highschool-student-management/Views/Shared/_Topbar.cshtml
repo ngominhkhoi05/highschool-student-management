@@ -1,0 +1,82 @@
+@*
+    Topbar - Thanh dieu huong phia tren
+    Chua ten trang hien tai, o tim kiem, thong bao, va thong tin nguoi dung
+*@
+
+@{
+    var userName = User.Identity?.Name ?? "User";
+    var userRole = User.IsInRole("Admin") ? "Quan tri vien"
+                 : User.IsInRole("Teacher") ? "Giao Vien"
+                 : User.IsInRole("Student") ? "Hoc Sinh"
+                 : User.IsInRole("Parent") ? "Phu Huynh"
+                 : "Unknown";
+
+    // Lay ten page hien tai lam tieu de
+    var pageTitle = ViewData["Title"] as string ?? "Bang dieu khien";
+}
+
+<!-- Topbar: Sticky h=64px -->
+<header class="sticky top-0 ml-[280px] h-16 bg-white/90 backdrop-blur-sm border-b border-green-100 z-30 flex items-center justify-between px-8 font-['Lexend']">
+
+    <!-- Ben trai: Tieu de trang + o tim kiem -->
+    <div class="flex items-center gap-4">
+        <h2 class="text-lg font-semibold text-slate-800">@pageTitle</h2>
+        <div class="h-4 w-[1px] bg-slate-200"></div>
+        <div class="relative group">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+            <input class="pl-9 pr-4 py-1.5 bg-slate-100 border-none rounded-full text-sm focus:ring-2 focus:ring-green-600/20 w-64 transition-all"
+                   placeholder="Tim kiem nhanh..." type="text"/>
+        </div>
+    </div>
+
+    <!-- Ben phai: Nut thong bao, help, va thong tin nguoi dung -->
+    <div class="flex items-center gap-6">
+
+        <!-- Nut thong bao -->
+        <a asp-area="" asp-controller="Notifications" asp-action="Index"
+           class="relative text-slate-500 hover:text-green-600 transition-colors active:opacity-80 cursor-pointer">
+            <span class="material-symbols-outlined">notifications</span>
+            @{
+                // Neu co bien count tu controller truyen xuong thi hien thi
+                var notifCount = ViewData["NotifCount"] as int? ?? 0;
+            }
+            @if (notifCount > 0)
+            {
+                <span class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] flex items-center justify-center rounded-full border-2 border-white">
+                    @(notifCount > 9 ? "9+" : notifCount.ToString())
+                </span>
+            }
+        </a>
+
+        <!-- Nut tro giup -->
+        <button class="text-slate-500 hover:text-green-600 transition-colors active:opacity-80 cursor-pointer"
+                title="Tro giup">
+            <span class="material-symbols-outlined">help</span>
+        </button>
+
+        <!-- Nut menu mobile: Hien thi tren man nho nho -->
+        <button id="btnToggleSidebar" class="hidden max-md:block text-slate-500 hover:text-green-600 transition-colors cursor-pointer">
+            <span class="material-symbols-outlined">menu</span>
+        </button>
+
+        <!-- Thong tin nguoi dung -->
+        <div class="flex items-center gap-3 pl-6 border-l border-slate-100">
+            <div class="text-right hidden sm:block">
+                <p class="text-sm font-bold text-slate-800 leading-none">@userName</p>
+                <p class="text-[11px] text-green-600 font-semibold mt-1">@userRole</p>
+            </div>
+            <div class="relative">
+                @{
+                    // Lay initial tu ten nguoi dung lam avatar mac dinh
+                    var initial = string.IsNullOrEmpty(userName) ? "U" : userName[0].ToString().ToUpper();
+                }
+                <div class="w-10 h-10 rounded-full border-2 border-green-100 bg-green-600 flex items-center justify-center text-white font-bold text-sm">
+                    @initial
+                </div>
+                <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+            </div>
+        </div>
+
+    </div>
+
+</header>
