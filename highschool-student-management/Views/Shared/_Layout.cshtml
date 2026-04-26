@@ -69,7 +69,7 @@
         body {
             font-family: 'Lexend', sans-serif;
         }
-        /* Thanh cuon custom cho sidebar */
+        /* Thanh cuộn custom cho sidebar */
         .sidebar-scroll::-webkit-scrollbar {
             width: 4px;
         }
@@ -77,7 +77,7 @@
             background: #e2e8f0;
             border-radius: 10px;
         }
-        /* An sidebar tren man hinh nho */
+        /* Ẩn sidebar trên màn hình nhỏ */
         @@media (max-width: 768px) {
             #sidebar {
                 transform: translateX(-100%);
@@ -97,19 +97,19 @@
 </head>
 <body class="bg-[#f4fcf0] text-slate-800 antialiased">
 
-    <!-- Sidebar: Partial view cho thanh dieu huong ben trai -->
+    <!-- Sidebar: Partial view cho thanh điều hướng bên trái -->
     @if (Context.User?.Identity?.IsAuthenticated == true)
     {
         <partial name="_Sidebar"/>
     }
 
-    <!-- Topbar: Partial view cho thanh dieu huong phia tren -->
+    <!-- Topbar: Partial view cho thanh điều hướng phía trên -->
     @if (Context.User?.Identity?.IsAuthenticated == true)
     {
         <partial name="_Topbar"/>
     }
 
-    <!-- Main Content: Noi dung chinh cua trang -->
+    <!-- Main Content: Nội dung chính của trang -->
     @{
         var mainMarginClass = Context.User?.Identity?.IsAuthenticated == true ? "ml-[280px]" : "";
     }
@@ -117,22 +117,22 @@
         @RenderBody()
     </main>
 
-    <!-- Modal Container: Noi chua popup CRUD tu AJAX -->
+    <!-- Modal Container: Nơi chứa popup CRUD từ AJAX -->
     <div class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/40 backdrop-blur-sm px-4"
          id="modalContainer">
-        <!-- Noi dung partial view se duoc load vao day qua AJAX -->
+        <!-- Nội dung partial view sẽ được load vào đây qua AJAX -->
     </div>
 
     <!-- Scripts Area -->
     <script>
         $(document).ready(function() {
 
-            // === Nut toggle sidebar tren mobile ===
+            // === Nút toggle sidebar trên mobile ===
             $('#btnToggleSidebar').on('click', function() {
                 $('#sidebar').toggleClass('sidebar-open');
             });
 
-            // === Dong sidebar khi click ra ngoai tren mobile ===
+            // === Đóng sidebar khi click ra ngoài trên mobile ===
             $(document).on('click', function(e) {
                 if ($(window).width() <= 768) {
                     if (!$(e.target).closest('#sidebar').length && !$(e.target).closest('#btnToggleSidebar').length) {
@@ -141,16 +141,16 @@
                 }
             });
 
-            // === Bat su kien mo modal cho cac nut co class .btn-render-modal ===
+            // === Bắt sự kiện mở modal cho các nút có class .btn-render-modal ===
             $(document).on('click', '.btn-render-modal', function(e) {
                 e.preventDefault();
                 var url = $(this).data('url');
-                var title = $(this).data('title') || 'Chi tiet';
+                var title = $(this).data('title') || 'Chi tiết';
 
                 if (!url) {
-                    // Neu khong co url, chi hien thi mockup (dung cho mau)
+                    // Nếu không có url, chỉ hiển thị mockup (dùng cho mẫu)
                     Swal.fire({
-                        title: 'Dang tai du lieu...',
+                        title: 'Đang tải dữ liệu...',
                         allowOutsideClick: false,
                         didOpen: function() {
                             Swal.showLoading();
@@ -176,15 +176,15 @@
                     error: function() {
                         Swal.fire({
                             icon: 'error',
-                            title: 'Loi',
-                            text: 'Khong the tai noi dung. Vui long thu lai.',
+                            title: 'Lỗi',
+                            text: 'Không thể tải nội dung. Vui lòng thử lại.',
                             confirmButtonColor: '#006b2c'
                         });
                     }
                 });
             });
 
-            // === Dong modal khi click nut close hoac ra ngoai ===
+            // === Đóng modal khi click nút close hoặc ra ngoài ===
             $(document).on('click', '.btn-modal-close', function() {
                 $('#modalContainer').fadeOut().addClass('hidden').removeClass('flex');
             });
@@ -195,7 +195,7 @@
                 }
             });
 
-            // === Bat su kien form submit trong modal (SweetAlert2) ===
+            // === Bắt sự kiện form submit trong modal (SweetAlert2) ===
             $(document).on('submit', '#modalForm', function(e) {
                 e.preventDefault();
                 var form = $(this);
@@ -210,8 +210,8 @@
                         if (result.success) {
                             Swal.fire({
                                 icon: 'success',
-                                title: 'Thanh cong!',
-                                text: result.message || 'Du lieu da duoc luu.',
+                                title: 'Thành công!',
+                                text: result.message || 'Dữ liệu đã được lưu.',
                                 confirmButtonColor: '#006b2c'
                             }).then(function() {
                                 $('#modalContainer').fadeOut().addClass('hidden').removeClass('flex');
@@ -222,8 +222,8 @@
                         } else {
                             Swal.fire({
                                 icon: 'error',
-                                title: 'Loi',
-                                text: result.message || 'Da xay ra loi. Vui long thu lai.',
+                                title: 'Lỗi',
+                                text: result.message || 'Đã xảy ra lỗi. Vui lòng thử lại.',
                                 confirmButtonColor: '#006b2c'
                             });
                         }
@@ -231,8 +231,8 @@
                     error: function() {
                         Swal.fire({
                             icon: 'error',
-                            title: 'Loi',
-                            text: 'Khong the luu du lieu. Vui long thu lai.',
+                            title: 'Lỗi',
+                            text: 'Không thể lưu dữ liệu. Vui lòng thử lại.',
                             confirmButtonColor: '#006b2c'
                         });
                     }

@@ -1,19 +1,19 @@
 @*
-    Sidebar - Thanh dieu huong ben trai
-    Chua menu danh sach theo phan quyen: Admin, Teacher, Student/Parent
+    Sidebar - Thanh điều hướng bên trái
+    Chứa menu danh sách theo phân quyền: Admin, Teacher, Student/Parent
 *@
 @{ Layout = null; }
 
 @{
     var userName = Context.User?.Identity?.Name ?? "User";
     var userRole = Context.User?.IsInRole("Admin") == true ? "Admin"
-                 : Context.User?.IsInRole("Teacher") == true ? "Giao Vien"
-                 : Context.User?.IsInRole("Student") == true ? "Hoc Sinh"
-                 : Context.User?.IsInRole("Parent") == true ? "Phu Huynh"
+                 : Context.User?.IsInRole("Teacher") == true ? "Giáo viên"
+                 : Context.User?.IsInRole("Student") == true ? "Học sinh"
+                 : Context.User?.IsInRole("Parent") == true ? "Phụ huynh"
                  : "Unknown";
 }
 
-<!-- Sidebar: Cau truc co dinh 280px -->
+<!-- Sidebar: Cấu trúc cố định 280px -->
 <aside id="sidebar" class="fixed left-0 top-0 h-full w-[280px] bg-white border-r border-green-100 flex flex-col z-40 shadow-[4px_0_20px_rgba(0,0,0,0.03)] font-['Lexend'] text-sm antialiased">
 
     <div class="flex flex-col h-full py-6">
@@ -26,7 +26,7 @@
                 </div>
                 <div>
                     <h1 class="text-xl font-bold text-green-700 tracking-tight">EduAdmin</h1>
-                    <p class="text-[10px] text-slate-500 uppercase tracking-widest font-semibold">He thong quan ly</p>
+                    <p class="text-[10px] text-slate-500 uppercase tracking-widest font-semibold">Hệ thống quản lý</p>
                 </div>
             </div>
         </div>
@@ -34,86 +34,86 @@
         <!-- Navigation Menu -->
         <div class="flex-1 overflow-y-auto sidebar-scroll px-3">
 
-            @* ===== NHOM ADMIN ===== *@
+            @* ===== NHÓM ADMIN ===== *@
             @if (Context.User?.IsInRole("Admin") == true)
             {
-                <!-- Quan tri he thong -->
+                <!-- Quản trị hệ thống -->
                 <div class="mb-6">
-                    <p class="px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Quan tri he thong</p>
+                    <p class="px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Quản trị hệ thống</p>
                     <nav class="space-y-1">
 
                         <a class="flex items-center gap-3 border-l-4 border-green-600 bg-green-50 text-green-700 font-semibold px-4 py-3 cursor-pointer active:scale-[0.98] transition-all duration-200"
                            asp-area="" asp-controller="Home" asp-action="Index">
                             <span class="material-symbols-outlined text-lg">dashboard</span>
-                            <span>Bang dieu khien</span>
+                            <span>Bảng điều khiển</span>
                         </a>
 
-                        <!-- He thong -->
+                        <!-- Hệ thống -->
                         <div class="space-y-1 mt-2">
-                            <p class="px-4 py-2 text-xs font-semibold text-slate-500">He thong</p>
+                            <p class="px-4 py-2 text-xs font-semibold text-slate-500">Hệ thống</p>
 
                             <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
                                asp-area="" asp-controller="SchoolYears" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">calendar_today</span>
-                                <span>Nam hoc</span>
+                                <span>Năm học</span>
                             </a>
 
                             <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
                                asp-area="" asp-controller="Subjects" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">book</span>
-                                <span>Mon hoc</span>
+                                <span>Môn học</span>
                             </a>
 
                             <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
                                asp-area="" asp-controller="Settings" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">settings</span>
-                                <span>Cau hinh</span>
+                                <span>Cấu hình</span>
                             </a>
                         </div>
 
-                        <!-- Nhan su -->
+                        <!-- Nhân sự -->
                         <div class="space-y-1 mt-2">
-                            <p class="px-4 py-2 text-xs font-semibold text-slate-500">Nhan su</p>
+                            <p class="px-4 py-2 text-xs font-semibold text-slate-500">Nhân sự</p>
 
                             <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
                                asp-area="" asp-controller="Teachers" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">person_apron</span>
-                                <span>Giao vien</span>
+                                <span>Giáo viên</span>
                             </a>
 
                             <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
                                asp-area="" asp-controller="Students" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">group</span>
-                                <span>Hoc sinh</span>
+                                <span>Học sinh</span>
                             </a>
 
                             <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
                                asp-area="" asp-controller="Parents" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">family_restroom</span>
-                                <span>Phu huynh</span>
+                                <span>Phụ huynh</span>
                             </a>
                         </div>
 
-                        <!-- Hoc vu -->
+                        <!-- Học vụ -->
                         <div class="space-y-1 mt-2">
-                            <p class="px-4 py-2 text-xs font-semibold text-slate-500">Hoc vu</p>
+                            <p class="px-4 py-2 text-xs font-semibold text-slate-500">Học vụ</p>
 
                             <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
                                asp-area="" asp-controller="Classes" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">meeting_room</span>
-                                <span>Lop hoc</span>
+                                <span>Lớp học</span>
                             </a>
 
                             <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
                                asp-area="" asp-controller="TeacherClasses" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">assignment</span>
-                                <span>Phan cong</span>
+                                <span>Phân công</span>
                             </a>
 
                             <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
                                asp-area="" asp-controller="Notifications" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">campaign</span>
-                                <span>Thong bao</span>
+                                <span>Thông báo</span>
                             </a>
                         </div>
 
@@ -121,56 +121,56 @@
                 </div>
             }
 
-            @* ===== NHOM GIAO VIEN ===== *@
+            @* ===== NHÓM GIÁO VIÊN ===== *@
             @if (Context.User?.IsInRole("Teacher") == true)
             {
                 <div class="mb-6">
-                    <p class="px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Giang day &amp; Chu nhiem</p>
+                    <p class="px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Giảng dạy &amp; Chủ nhiệm</p>
                     <nav class="space-y-1">
 
                         <a class="flex items-center gap-3 text-slate-500 px-4 py-3 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
                            asp-area="" asp-controller="Home" asp-action="Index">
                             <span class="material-symbols-outlined text-lg">dashboard</span>
-                            <span>Bang dieu khien</span>
+                            <span>Bảng điều khiển</span>
                         </a>
 
-                        <!-- Cong tac giang day -->
+                        <!-- Công tác giảng dạy -->
                         <div class="space-y-1">
-                            <p class="px-4 py-2 text-xs font-semibold text-slate-500">Cong tac giang day</p>
+                            <p class="px-4 py-2 text-xs font-semibold text-slate-500">Công tác giảng dạy</p>
 
                             <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
                                asp-area="" asp-controller="Scores" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">assignment</span>
-                                <span>So diem</span>
+                                <span>Sổ điểm</span>
                             </a>
 
                             <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
                                asp-area="" asp-controller="Attendances" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">how_to_reg</span>
-                                <span>Diem danh</span>
+                                <span>Điểm danh</span>
                             </a>
                         </div>
 
-                        <!-- Cong tac chu nhiem -->
+                        <!-- Công tác chủ nhiệm -->
                         <div class="space-y-1 mt-2">
-                            <p class="px-4 py-2 text-xs font-semibold text-slate-500">Cong tac chu nhiem</p>
+                            <p class="px-4 py-2 text-xs font-semibold text-slate-500">Công tác chủ nhiệm</p>
 
                             <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
                                asp-area="" asp-controller="Classes" asp-action="MyClass">
                                 <span class="material-symbols-outlined text-lg">meeting_room</span>
-                                <span>Lop chu nhiem</span>
+                                <span>Lớp chủ nhiệm</span>
                             </a>
 
                             <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
                                asp-area="" asp-controller="Violations" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">report</span>
-                                <span>Nep le</span>
+                                <span>Nềp lệ</span>
                             </a>
 
                             <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
                                asp-area="" asp-controller="ConductScores" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">stars</span>
-                                <span>Hanh kiem</span>
+                                <span>Hạnh kiểm</span>
                             </a>
                         </div>
 
@@ -178,35 +178,35 @@
                 </div>
             }
 
-            @* ===== NHOM HOC SINH / PHU HUYNH ===== *@
+            @* ===== NHÓM HỌC SINH / PHỤ HUYNH ===== *@
             @if (Context.User?.IsInRole("Student") == true || Context.User?.IsInRole("Parent") == true)
             {
                 <div class="mb-6">
-                    <p class="px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Ca nhan &amp; Thong bao</p>
+                    <p class="px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Cá nhân &amp; Thông báo</p>
                     <nav class="space-y-1">
 
                         <a class="flex items-center gap-3 text-slate-500 px-4 py-3 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
                            asp-area="" asp-controller="Home" asp-action="Index">
                             <span class="material-symbols-outlined text-lg">dashboard</span>
-                            <span>Bang dieu khien</span>
+                            <span>Bảng điều khiển</span>
                         </a>
 
                         <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
                            asp-area="" asp-controller="SemesterResults" asp-action="Index">
                             <span class="material-symbols-outlined text-lg">grade</span>
-                            <span>Ket qua hoc tap</span>
+                            <span>Kết quả học tập</span>
                         </a>
 
                         <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
                            asp-area="" asp-controller="Attendances" asp-action="MyAttendance">
                             <span class="material-symbols-outlined text-lg">how_to_reg</span>
-                            <span>Diem danh</span>
+                            <span>Điểm danh</span>
                         </a>
 
                         <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
                            asp-area="" asp-controller="Notifications" asp-action="Index">
                             <span class="material-symbols-outlined text-lg">notifications</span>
-                            <span>Thong bao</span>
+                            <span>Thông báo</span>
                         </a>
 
                     </nav>
@@ -215,12 +215,12 @@
 
         </div>
 
-        <!-- Sidebar Footer: Nut dang xuat -->
+        <!-- Sidebar Footer: Nút đăng xuất -->
         <div class="px-3 pt-4 border-t border-slate-100">
             <form asp-area="" asp-controller="Account" asp-action="Logout" method="post">
                 <button type="submit" class="w-full flex items-center gap-3 text-slate-500 px-4 py-3 hover:bg-red-50 hover:text-red-600 transition-all duration-200 rounded-lg">
                     <span class="material-symbols-outlined text-lg">logout</span>
-                    <span class="font-medium">Dang xuat</span>
+                    <span class="font-medium">Đăng xuất</span>
                 </button>
             </form>
         </div>

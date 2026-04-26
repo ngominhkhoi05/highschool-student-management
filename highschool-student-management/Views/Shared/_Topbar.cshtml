@@ -1,44 +1,44 @@
 @*
-    Topbar - Thanh dieu huong phia tren
-    Chua ten trang hien tai, o tim kiem, thong bao, va thong tin nguoi dung
+    Topbar - Thanh điều hướng phía trên
+    Chứa tên trang hiện tại, ô tìm kiếm, thông báo, và thông tin người dùng
 *@
 @{ Layout = null; }
 
 @{
     var userName = Context.User?.Identity?.Name ?? "User";
-    var userRole = Context.User?.IsInRole("Admin") == true ? "Quan tri vien"
-                 : Context.User?.IsInRole("Teacher") == true ? "Giao Vien"
-                 : Context.User?.IsInRole("Student") == true ? "Hoc Sinh"
-                 : Context.User?.IsInRole("Parent") == true ? "Phu Huynh"
+    var userRole = Context.User?.IsInRole("Admin") == true ? "Quản trị viên"
+                 : Context.User?.IsInRole("Teacher") == true ? "Giáo viên"
+                 : Context.User?.IsInRole("Student") == true ? "Học sinh"
+                 : Context.User?.IsInRole("Parent") == true ? "Phụ huynh"
                  : "Unknown";
 
-    // Lay ten page hien tai lam tieu de
-    var pageTitle = ViewData["Title"] as string ?? "Bang dieu khien";
+    // Lấy tên page hiện tại làm tiêu đề
+    var pageTitle = ViewData["Title"] as string ?? "Bảng điều khiển";
 }
 
 <!-- Topbar: Sticky h=64px -->
 <header class="sticky top-0 ml-[280px] h-16 bg-white/90 backdrop-blur-sm border-b border-green-100 z-30 flex items-center justify-between px-8 font-['Lexend']">
 
-    <!-- Ben trai: Tieu de trang + o tim kiem -->
+    <!-- Bên trái: Tiêu đề trang + ô tìm kiếm -->
     <div class="flex items-center gap-4">
         <h2 class="text-lg font-semibold text-slate-800">@pageTitle</h2>
         <div class="h-4 w-[1px] bg-slate-200"></div>
         <div class="relative group">
             <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
             <input class="pl-9 pr-4 py-1.5 bg-slate-100 border-none rounded-full text-sm focus:ring-2 focus:ring-green-600/20 w-64 transition-all"
-                   placeholder="Tim kiem nhanh..." type="text"/>
+                   placeholder="Tìm kiếm nhanh..." type="text"/>
         </div>
     </div>
 
-    <!-- Ben phai: Nut thong bao, help, va thong tin nguoi dung -->
+    <!-- Bên phải: Nút thông báo, help, và thông tin người dùng -->
     <div class="flex items-center gap-6">
 
-        <!-- Nut thong bao -->
+        <!-- Nút thông báo -->
         <a asp-area="" asp-controller="Notifications" asp-action="Index"
            class="relative text-slate-500 hover:text-green-600 transition-colors active:opacity-80 cursor-pointer">
             <span class="material-symbols-outlined">notifications</span>
             @{
-                // Neu co bien count tu controller truyen xuong thi hien thi
+                // Nếu có biến count từ controller truyền xuống thì hiển thị
                 var notifCount = ViewData["NotifCount"] as int? ?? 0;
             }
             @if (notifCount > 0)
@@ -49,18 +49,18 @@
             }
         </a>
 
-        <!-- Nut tro giup -->
+        <!-- Nút trợ giúp -->
         <button class="text-slate-500 hover:text-green-600 transition-colors active:opacity-80 cursor-pointer"
-                title="Tro giup">
+                title="Trợ giúp">
             <span class="material-symbols-outlined">help</span>
         </button>
 
-        <!-- Nut menu mobile: Hien thi tren man nho nho -->
+        <!-- Nút menu mobile: Hiển thị trên màn nhỏ nhất -->
         <button id="btnToggleSidebar" class="hidden max-md:block text-slate-500 hover:text-green-600 transition-colors cursor-pointer">
             <span class="material-symbols-outlined">menu</span>
         </button>
 
-        <!-- Thong tin nguoi dung -->
+        <!-- Thông tin người dùng -->
         <div class="flex items-center gap-3 pl-6 border-l border-slate-100">
             <div class="text-right hidden sm:block">
                 <p class="text-sm font-bold text-slate-800 leading-none">@userName</p>
@@ -68,7 +68,7 @@
             </div>
             <div class="relative">
                 @{
-                    // Lay initial tu ten nguoi dung lam avatar mac dinh
+                    // Lấy initial từ tên người dùng làm avatar mặc định
                     var initial = string.IsNullOrEmpty(userName) ? "U" : userName[0].ToString().ToUpper();
                 }
                 <div class="w-10 h-10 rounded-full border-2 border-green-100 bg-green-600 flex items-center justify-center text-white font-bold text-sm">

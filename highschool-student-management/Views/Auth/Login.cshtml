@@ -1,5 +1,5 @@
 @*
-    Trang dang nhap - Khong su dung _Layout.cshtml chinh
+    Trang đăng nhập - Không sử dụng _Layout.cshtml chính
 *@
 @model highschool_student_management.ViewModels.LoginViewModel
 @{
@@ -11,7 +11,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Dang nhap - EduAdmin</title>
+    <title>Đăng nhập - EduAdmin</title>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -87,7 +87,7 @@
 </head>
 <body class="bg-background min-h-screen flex items-center justify-center p-4">
 
-    <!-- Khung dang nhap -->
+    <!-- Khung đăng nhập -->
     <div class="w-full max-w-md">
 
         <!-- Brand / Logo -->
@@ -96,14 +96,14 @@
                 <span class="material-symbols-outlined text-white text-3xl">school</span>
             </div>
             <h2 class="font-h1 text-h1 text-primary">EduAdmin</h2>
-            <p class="font-body-md text-body-md text-outline mt-1">He thong quan ly hoc sinh toan dien</p>
+            <p class="font-body-md text-body-md text-outline mt-1">Hệ thống quản lý học sinh toàn diện</p>
         </div>
 
-        <!-- The dang nhap -->
+        <!-- Thẻ đăng nhập -->
         <div class="bg-white rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.03)] border border-green-100 overflow-hidden">
 
             <div class="p-8">
-                <h1 class="font-h1 text-h1 text-on-surface mb-6 text-center">Dang nhap he thong</h1>
+                <h1 class="font-h1 text-h1 text-on-surface mb-6 text-center">Đăng nhập hệ thống</h1>
 
                 <!-- Validation Summary -->
                 @if (!ViewData.ModelState.IsValid)
@@ -111,7 +111,7 @@
                     <div class="mb-6 p-4 bg-error-container text-on-error-container border border-red-200 rounded-lg flex items-start gap-3">
                         <span class="material-symbols-outlined text-error shrink-0">error</span>
                         <div>
-                            <p class="font-label-sm text-label-sm font-bold mb-1">Thong tin khong chinh xac</p>
+                            <p class="font-label-sm text-label-sm font-bold mb-1">Thông tin không chính xác</p>
                             <div class="font-body-md text-body-md opacity-90">
                                 @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
                                 {
@@ -124,10 +124,10 @@
 
                 <form asp-action="Login" method="POST" class="space-y-6">
 
-                    <!-- Truong ten dang nhap -->
+                    <!-- Trường tên đăng nhập -->
                     <div class="space-y-2">
                         <label class="block font-label-sm text-label-sm text-on-surface-variant" asp-for="Username">
-                            Ten dang nhap
+                            Tên đăng nhập
                         </label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -135,19 +135,19 @@
                             </div>
                             <input asp-for="Username"
                                    class="w-full pl-10 pr-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
-                                   placeholder="Nhap ten dang nhap cua ban"
+                                   placeholder="Nhập tên đăng nhập của bạn"
                                    autocomplete="username"/>
                         </div>
                         <span asp-validation-for="Username" class="text-xs text-error"></span>
                     </div>
 
-                    <!-- Truong mat khau -->
+                    <!-- Trường mật khẩu -->
                     <div class="space-y-2">
                         <div class="flex justify-between items-center">
                             <label class="block font-label-sm text-label-sm text-on-surface-variant" asp-for="Password">
-                                Mat khau
+                                Mật khẩu
                             </label>
-                            <a class="font-label-sm text-label-sm text-primary hover:underline" href="#">Quen mat khau?</a>
+                            <a class="font-label-sm text-label-sm text-primary hover:underline" href="#">Quên mật khẩu?</a>
                         </div>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -155,25 +155,25 @@
                             </div>
                             <input asp-for="Password"
                                    class="w-full pl-10 pr-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
-                                   placeholder="Nhap mat khau"
+                                   placeholder="Nhập mật khẩu"
                                    autocomplete="current-password"/>
                         </div>
                         <span asp-validation-for="Password" class="text-xs text-error"></span>
                     </div>
 
-                    <!-- Nut ghi nho dang nhap -->
+                    <!-- Nút ghi nhớ đăng nhập -->
                     <div class="flex items-center">
                         <input asp-for="RememberMe"
                                class="w-4 h-4 text-primary bg-white border-outline-variant rounded focus:ring-primary focus:ring-offset-2 transition-colors"/>
                         <label class="ml-3 font-body-md text-body-md text-on-surface-variant select-none cursor-pointer" asp-for="RememberMe">
-                            Ghi nho dang nhap
+                            Ghi nhớ đăng nhập
                         </label>
                     </div>
 
-                    <!-- Nut dang nhap -->
+                    <!-- Nút đăng nhập -->
                     <button type="submit"
                             class="w-full bg-primary text-white font-h2 text-h2 py-3.5 rounded-lg shadow-sm hover:bg-primary-container active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2">
-                        <span>Dang nhap</span>
+                        <span>Đăng nhập</span>
                         <span class="material-symbols-outlined text-lg">login</span>
                     </button>
 
@@ -183,27 +183,27 @@
             <!-- Footer -->
             <div class="bg-surface-container-low px-8 py-4 border-t border-green-100">
                 <p class="font-label-sm text-label-sm text-center text-outline">
-                    &copy; 2026 EduAdmin Management System. Phien ban 1.0.0
+                    &copy; 2026 EduAdmin Management System. Phiên bản 1.0.0
                 </p>
             </div>
 
         </div>
 
-        <!-- Ho tro -->
+        <!-- Hỗ trợ -->
         <div class="mt-8 text-center">
             <div class="inline-flex items-center gap-4">
                 <div class="w-10 h-[1px] bg-outline-variant"></div>
-                <p class="font-label-sm text-label-sm text-outline-variant uppercase tracking-widest">Ho tro</p>
+                <p class="font-label-sm text-label-sm text-outline-variant uppercase tracking-widest">Hỗ trợ</p>
                 <div class="w-10 h-[1px] bg-outline-variant"></div>
             </div>
             <div class="mt-4 flex justify-center gap-6">
                 <button class="font-body-md text-body-md text-outline hover:text-primary transition-colors flex items-center gap-1">
                     <span class="material-symbols-outlined text-lg">help</span>
-                    Tro giup
+                    Trợ giúp
                 </button>
                 <button class="font-body-md text-body-md text-outline hover:text-primary transition-colors flex items-center gap-1">
                     <span class="material-symbols-outlined text-lg">policy</span>
-                    Dieu khoan
+                    Điều khoản
                 </button>
             </div>
         </div>
@@ -218,7 +218,7 @@
         <div class="w-[400px] h-[400px] bg-secondary rounded-full mix-blend-multiply filter blur-3xl animate-pulse"></div>
     </div>
 
-    <!-- Script xac thuc phia client -->
+    <!-- Script xác thực phía client -->
     <partial name="_ValidationScriptsPartial"/>
 
 </body>
