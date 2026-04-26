@@ -2,13 +2,14 @@
     Sidebar - Thanh dieu huong ben trai
     Chua menu danh sach theo phan quyen: Admin, Teacher, Student/Parent
 *@
+@{ Layout = null; }
 
 @{
-    var userName = User.Identity?.Name ?? "User";
-    var userRole = User.IsInRole("Admin") ? "Admin"
-                 : User.IsInRole("Teacher") ? "Giao Vien"
-                 : User.IsInRole("Student") ? "Hoc Sinh"
-                 : User.IsInRole("Parent") ? "Phu Huynh"
+    var userName = Context.User?.Identity?.Name ?? "User";
+    var userRole = Context.User?.IsInRole("Admin") == true ? "Admin"
+                 : Context.User?.IsInRole("Teacher") == true ? "Giao Vien"
+                 : Context.User?.IsInRole("Student") == true ? "Hoc Sinh"
+                 : Context.User?.IsInRole("Parent") == true ? "Phu Huynh"
                  : "Unknown";
 }
 
@@ -34,7 +35,7 @@
         <div class="flex-1 overflow-y-auto sidebar-scroll px-3">
 
             @* ===== NHOM ADMIN ===== *@
-            @if (User.IsInRole("Admin"))
+            @if (Context.User?.IsInRole("Admin") == true)
             {
                 <!-- Quan tri he thong -->
                 <div class="mb-6">
@@ -121,7 +122,7 @@
             }
 
             @* ===== NHOM GIAO VIEN ===== *@
-            @if (User.IsInRole("Teacher"))
+            @if (Context.User?.IsInRole("Teacher") == true)
             {
                 <div class="mb-6">
                     <p class="px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Giang day &amp; Chu nhiem</p>
@@ -178,7 +179,7 @@
             }
 
             @* ===== NHOM HOC SINH / PHU HUYNH ===== *@
-            @if (User.IsInRole("Student") || User.IsInRole("Parent"))
+            @if (Context.User?.IsInRole("Student") == true || Context.User?.IsInRole("Parent") == true)
             {
                 <div class="mb-6">
                     <p class="px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Ca nhan &amp; Thong bao</p>

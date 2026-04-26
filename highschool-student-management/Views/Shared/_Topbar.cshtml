@@ -2,13 +2,14 @@
     Topbar - Thanh dieu huong phia tren
     Chua ten trang hien tai, o tim kiem, thong bao, va thong tin nguoi dung
 *@
+@{ Layout = null; }
 
 @{
-    var userName = User.Identity?.Name ?? "User";
-    var userRole = User.IsInRole("Admin") ? "Quan tri vien"
-                 : User.IsInRole("Teacher") ? "Giao Vien"
-                 : User.IsInRole("Student") ? "Hoc Sinh"
-                 : User.IsInRole("Parent") ? "Phu Huynh"
+    var userName = Context.User?.Identity?.Name ?? "User";
+    var userRole = Context.User?.IsInRole("Admin") == true ? "Quan tri vien"
+                 : Context.User?.IsInRole("Teacher") == true ? "Giao Vien"
+                 : Context.User?.IsInRole("Student") == true ? "Hoc Sinh"
+                 : Context.User?.IsInRole("Parent") == true ? "Phu Huynh"
                  : "Unknown";
 
     // Lay ten page hien tai lam tieu de

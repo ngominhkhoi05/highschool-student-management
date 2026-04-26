@@ -1,0 +1,344 @@
+@*
+    Trang ho so ca nhan - Hien thi thong tin nguoi dung va cac hanh dong chinh sua
+*@
+@model highschool_student_management.ViewModels.ProfileViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Ho so ca nhan";
+}
+
+<!-- Noi dung chinh -->
+<div class="max-w-[1200px] mx-auto space-y-6">
+
+    <!-- Breadcrumb -->
+    <div class="flex items-center gap-2 text-sm text-slate-500">
+        <a asp-action="Index" asp-controller="Home" class="hover:text-green-600 transition-colors">Trang chu</a>
+        <span class="material-symbols-outlined text-base">chevron_right</span>
+        <span class="text-slate-700 font-medium">Ho so ca nhan</span>
+    </div>
+
+    <!-- Tieu de -->
+    <div>
+        <h1 class="text-2xl font-bold text-slate-800">Ho so ca nhan</h1>
+        <p class="text-sm text-slate-500 mt-1">Xem va cap nhat thong tin cua ban</p>
+    </div>
+
+    <!-- Layout 2 cot -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- Cot trai: Avatar + Thong tin co ban -->
+        <div class="space-y-6">
+
+            <!-- The thong tin tai khoan -->
+            <div class="bg-white rounded-2xl border border-green-100 shadow-sm overflow-hidden">
+                <!-- Header -->
+                <div class="h-24 bg-gradient-to-r from-green-600 to-green-700"></div>
+                <!-- Body -->
+                <div class="px-6 pb-6">
+                    <!-- Avatar -->
+                    <div class="-mt-12 mb-4">
+                        <div class="w-24 h-24 rounded-full border-4 border-white bg-green-600 flex items-center justify-center text-white text-3xl font-bold shadow-md mx-auto">
+                            @(string.IsNullOrEmpty(Model.FullName) ? Model.Username[0].ToString().ToUpper() : Model.FullName[0].ToString().ToUpper())
+                        </div>
+                    </div>
+                    <!-- Ten + Role -->
+                    <div class="text-center">
+                        <h2 class="text-xl font-bold text-slate-800">@(Model.FullName ?? Model.Username)</h2>
+                        <span class="inline-block mt-2 px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full uppercase tracking-wide">
+                            @Model.RoleDisplayName
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- The hanh dong -->
+            <div class="bg-white rounded-2xl border border-green-100 shadow-sm p-6 space-y-3">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Hanh dong</p>
+                <button class="btn-render-modal w-full flex items-center gap-3 bg-green-50 text-green-700 px-4 py-3 rounded-xl hover:bg-green-100 transition-all font-medium text-sm"
+                        data-url="@Url.Action("EditProfile", "User")"
+                        data-title="Chinh sua ho so">
+                    <span class="material-symbols-outlined text-lg">edit</span>
+                    Chinh sua ho so
+                </button>
+                <button class="btn-render-modal w-full flex items-center gap-3 bg-slate-50 text-slate-700 px-4 py-3 rounded-xl hover:bg-slate-100 transition-all font-medium text-sm"
+                        data-url="@Url.Action("ChangePassword", "User")"
+                        data-title="Doi mat khau">
+                    <span class="material-symbols-outlined text-lg">lock</span>
+                    Doi mat khau
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Cot phai: Thong tin chi tiet -->
+        <div class="lg:col-span-2 space-y-6">
+
+            <!-- Thong tin tai khoan -->
+            <div class="bg-white rounded-2xl border border-green-100 shadow-sm p-6">
+                <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-green-600 text-lg">account_circle</span>
+                    Thong tin tai khoan
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="info-item">
+                        <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Ten dang nhap</p>
+                        <p class="text-sm font-medium text-slate-700 mt-1">@Model.Username</p>
+                    </div>
+                    <div class="info-item">
+                        <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Email</p>
+                        <p class="text-sm font-medium text-slate-700 mt-1">@(string.IsNullOrEmpty(Model.Email) ? "Chua cap nhat" : Model.Email)</p>
+                    </div>
+                    <div class="info-item">
+                        <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Vai tro</p>
+                        <p class="text-sm font-medium text-slate-700 mt-1">@Model.RoleDisplayName</p>
+                    </div>
+                    <div class="info-item">
+                        <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">So dien thoai</p>
+                        <p class="text-sm font-medium text-slate-700 mt-1">@(string.IsNullOrEmpty(Model.Phone) ? "Chua cap nhat" : Model.Phone)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thong tin ca nhan -->
+            <div class="bg-white rounded-2xl border border-green-100 shadow-sm p-6">
+                <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-green-600 text-lg">person</span>
+                    Thong tin ca nhan
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="info-item">
+                        <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Ho va ten</p>
+                        <p class="text-sm font-medium text-slate-700 mt-1">@(string.IsNullOrEmpty(Model.FullName) ? "Chua cap nhat" : Model.FullName)</p>
+                    </div>
+                    <div class="info-item">
+                        <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Gioi tinh</p>
+                        <p class="text-sm font-medium text-slate-700 mt-1">@Model.GenderName</p>
+                    </div>
+                    <div class="info-item">
+                        <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Ngay sinh</p>
+                        <p class="text-sm font-medium text-slate-700 mt-1">@(Model.DateOfBirth?.ToString("dd/MM/yyyy") ?? "Chua cap nhat")</p>
+                    </div>
+                    <div class="info-item">
+                        <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Dia chi</p>
+                        <p class="text-sm font-medium text-slate-700 mt-1">@(string.IsNullOrEmpty(Model.Address) ? "Chua cap nhat" : Model.Address)</p>
+                    </div>
+                </div>
+            </div>
+
+            @* === Thong tin rieng theo tung vai tro === *@
+
+            @* Giao vien *@
+            @if (Model.RelatedType?.ToLower() == "teacher")
+            {
+                <div class="bg-white rounded-2xl border border-green-100 shadow-sm p-6">
+                    <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-green-600 text-lg">school</span>
+                        Thong tin giao vien
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="info-item">
+                            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Chuyen mon</p>
+                            <p class="text-sm font-medium text-slate-700 mt-1">@(string.IsNullOrEmpty(Model.Specialization) ? "Chua cap nhat" : Model.Specialization)</p>
+                        </div>
+                        <div class="info-item">
+                            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Ngay gia nhap</p>
+                            <p class="text-sm font-medium text-slate-700 mt-1">@(Model.JoinDate?.ToString("dd/MM/yyyy") ?? "Chua cap nhat")</p>
+                        </div>
+                        <div class="info-item">
+                            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Trang thai</p>
+                            <p class="text-sm font-medium text-slate-700 mt-1">
+                                @(Model.TeacherStatus switch
+                                {
+                                    1 => "Dang day",
+                                    2 => "Nghi phep",
+                                    3 => "Nghi viec",
+                                    _ => "Khong xac dinh"
+                                })
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @* Hoc sinh *@
+            @if (Model.RelatedType?.ToLower() == "student")
+            {
+                <div class="bg-white rounded-2xl border border-green-100 shadow-sm p-6">
+                    <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-green-600 text-lg">student</span>
+                        Thong tin hoc sinh
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="info-item">
+                            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Ma hoc sinh</p>
+                            <p class="text-sm font-medium text-slate-700 mt-1">@(string.IsNullOrEmpty(Model.StudentCode) ? "Chua cap nhat" : Model.StudentCode)</p>
+                        </div>
+                        <div class="info-item">
+                            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Noi sinh</p>
+                            <p class="text-sm font-medium text-slate-700 mt-1">@(string.IsNullOrEmpty(Model.PlaceOfBirth) ? "Chua cap nhat" : Model.PlaceOfBirth)</p>
+                        </div>
+                        <div class="info-item">
+                            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Dan toc</p>
+                            <p class="text-sm font-medium text-slate-700 mt-1">@(string.IsNullOrEmpty(Model.Ethnicity) ? "Chua cap nhat" : Model.Ethnicity)</p>
+                        </div>
+                        <div class="info-item">
+                            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Ton giao</p>
+                            <p class="text-sm font-medium text-slate-700 mt-1">@(string.IsNullOrEmpty(Model.Religion) ? "Chua cap nhat" : Model.Religion)</p>
+                        </div>
+                        <div class="info-item">
+                            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Ngay nhap hoc</p>
+                            <p class="text-sm font-medium text-slate-700 mt-1">@(Model.EnrollmentDate?.ToString("dd/MM/yyyy") ?? "Chua cap nhat")</p>
+                        </div>
+                        <div class="info-item">
+                            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Trang thai</p>
+                            <p class="text-sm font-medium text-slate-700 mt-1">
+                                @(Model.StudentStatus switch
+                                {
+                                    1 => "Dang hoc",
+                                    2 => "Nghi hoc",
+                                    3 => "Tot nghiep",
+                                    4 => "Chuyen truong",
+                                    _ => "Khong xac dinh"
+                                })
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @* Phu huynh *@
+            @if (Model.RelatedType?.ToLower() == "parent")
+            {
+                <div class="bg-white rounded-2xl border border-green-100 shadow-sm p-6">
+                    <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-green-600 text-lg">family_restroom</span>
+                        Thong tin phu huynh
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="info-item">
+                            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Nghe nghiep</p>
+                            <p class="text-sm font-medium text-slate-700 mt-1">@(string.IsNullOrEmpty(Model.Occupation) ? "Chua cap nhat" : Model.Occupation)</p>
+                        </div>
+                        <div class="info-item">
+                            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Quan he voi hoc sinh</p>
+                            <p class="text-sm font-medium text-slate-700 mt-1">
+                                @(Model.Relationship switch
+                                {
+                                    1 => "Cha",
+                                    2 => "Me",
+                                    3 => "Nguoi giam ho",
+                                    _ => "Khong xac dinh"
+                                })
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+
+            // === Xu ly form cap nhat ho so trong modal ===
+            $(document).on('submit', '#formEditProfile', function(e) {
+                e.preventDefault();
+                var form = $(this);
+                var url = form.attr('action');
+                var formData = form.serialize();
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: formData,
+                    success: function(result) {
+                        if (result.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Thanh cong',
+                                text: result.message,
+                                confirmButtonColor: '#006b2c'
+                            }).then(function() {
+                                $('#modalContainer').fadeOut().addClass('hidden').removeClass('flex');
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Loi',
+                                text: result.message,
+                                confirmButtonColor: '#006b2c'
+                            });
+                        }
+                    },
+                    error: function() {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Loi',
+                            text: 'Khong the luu du lieu. Vui long thu lai.',
+                            confirmButtonColor: '#006b2c'
+                        });
+                    }
+                });
+            });
+
+            // === Xu ly form doi mat khau trong modal ===
+            $(document).on('submit', '#formChangePassword', function(e) {
+                e.preventDefault();
+                var form = $(this);
+                var url = form.attr('action');
+                var formData = form.serialize();
+
+                // Kiem tra mat khau moi va xac nhan co khop khong
+                var newPass = $('#NewPassword').val();
+                var confirmPass = $('#ConfirmPassword').val();
+                if (newPass !== confirmPass) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Loi',
+                        text: 'Mat khau xac nhan khong khop.',
+                        confirmButtonColor: '#006b2c'
+                    });
+                    return;
+                }
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: formData,
+                    success: function(result) {
+                        if (result.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Thanh cong',
+                                text: result.message,
+                                confirmButtonColor: '#006b2c'
+                            }).then(function() {
+                                $('#modalContainer').fadeOut().addClass('hidden').removeClass('flex');
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Loi',
+                                text: result.message,
+                                confirmButtonColor: '#006b2c'
+                            });
+                        }
+                    },
+                    error: function() {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Loi',
+                            text: 'Khong the luu du lieu. Vui long thu lai.',
+                            confirmButtonColor: '#006b2c'
+                        });
+                    }
+                });
+            });
+
+        });
+    </script>
+}
