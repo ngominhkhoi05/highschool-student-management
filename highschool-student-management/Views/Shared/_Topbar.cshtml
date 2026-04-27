@@ -1,0 +1,116 @@
+@*
+    Topbar - Thanh điều hướng phía trên
+    Chứa tên trang hiện tại, ô tìm kiếm, thông báo, và thông tin người dùng
+*@
+@{ Layout = null; }
+
+@{
+    var userName = Context.User?.Identity?.Name ?? "User";
+    var userRole = Context.User?.IsInRole("Admin") == true ? "Quản trị viên"
+                 : Context.User?.IsInRole("Teacher") == true ? "Giáo viên"
+                 : Context.User?.IsInRole("Student") == true ? "Học sinh"
+                 : Context.User?.IsInRole("Parent") == true ? "Phụ huynh"
+                 : "Unknown";
+
+    // Lấy tên page hiện tại làm tiêu đề
+    var pageTitle = ViewData["Title"] as string ?? "Bảng điều khiển";
+}
+
+<!-- Topbar: Sticky h=64px -->
+<header class="sticky top-0 ml-[280px] h-16 bg-white/90 backdrop-blur-sm border-b border-green-100 z-30 flex items-center justify-between px-8 font-['Lexend']">
+
+    <!-- Bên trái: Tiêu đề trang + ô tìm kiếm -->
+    <div class="flex items-center gap-4">
+        <h2 class="text-lg font-semibold text-slate-800">@pageTitle</h2>
+        <div class="h-4 w-[1px] bg-slate-200"></div>
+        <div class="relative group">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+            <input class="pl-9 pr-4 py-1.5 bg-slate-100 border-none rounded-full text-sm focus:ring-2 focus:ring-green-600/20 w-64 transition-all"
+                   placeholder="Tìm kiếm nhanh..." type="text"/>
+        </div>
+    </div>
+
+    <!-- Bên phải: Nút thông báo, help, và thông tin người dùng -->
+    <div class="flex items-center gap-6">
+
+        <!-- Nút thông báo -->
+        <a asp-area="" asp-controller="Notifications" asp-action="Index"
+           class="relative text-slate-500 hover:text-green-600 transition-colors active:opacity-80 cursor-pointer">
+            <span class="material-symbols-outlined">notifications</span>
+            @{
+                // Nếu có biến count từ controller truyền xuống thì hiển thị
+                var notifCount = ViewData["NotifCount"] as int? ?? 0;
+            }
+            @if (notifCount > 0)
+            {
+                <span class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] flex items-center justify-center rounded-full border-2 border-white">
+                    @(notifCount > 9 ? "9+" : notifCount.ToString())
+                </span>
+            }
+        </a>
+
+        <!-- Nút trợ giúp -->
+        <button class="text-slate-500 hover:text-green-600 transition-colors active:opacity-80 cursor-pointer"
+                title="Trợ giúp">
+            <span class="material-symbols-outlined">help</span>
+        </button>
+
+        <!-- Nút menu mobile: Hiển thị trên màn nhỏ nhất -->
+        <button id="btnToggleSidebar" class="hidden max-md:block text-slate-500 hover:text-green-600 transition-colors cursor-pointer">
+            <span class="material-symbols-outlined">menu</span>
+        </button>
+
+        <!-- Thông tin người dùng + Dropdown -->
+        <div class="relative flex items-center gap-3 pl-6 border-l border-slate-100">
+
+            <input type="checkbox" id="userDropdown" class="hidden peer"/>
+
+            <label for="userDropdown" class="flex items-center gap-3 cursor-pointer select-none">
+                <div class="text-right hidden sm:block">
+                    <p class="text-sm font-bold text-slate-800 leading-none">@userName</p>
+                    <p class="text-[11px] text-green-600 font-semibold mt-1">@userRole</p>
+                </div>
+                <div class="relative">
+                    @{
+                        var initial = string.IsNullOrEmpty(userName) ? "U" : userName[0].ToString().ToUpper();
+                    }
+                    <div class="w-10 h-10 rounded-full border-2 border-green-100 bg-green-600 flex items-center justify-center text-white font-bold text-sm peer-checked:ring-2 peer-checked:ring-green-400">
+                        @initial
+                    </div>
+                    <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+                </div>
+            </label>
+
+            <!-- Dropdown menu -->
+            <div class="absolute top-full right-0 mt-2 w-52 bg-white rounded-xl shadow-lg border border-slate-100 py-2 z-50 hidden peer-checked:block animate-in fade-in slide-in-from-top-2 duration-200">
+                <div class="px-4 py-2 border-b border-slate-100 mb-1">
+                    <p class="text-xs text-slate-500">Đăng nhập với</p>
+                    <p class="text-sm font-semibold text-slate-800 truncate">@userName</p>
+                </div>
+                <a asp-area="" asp-controller="User" asp-action="Index"
+                   class="flex items-center gap-3 px-4 py-2.5 text-slate-600 hover:bg-green-50 hover:text-green-700 transition-colors">
+                    <span class="material-symbols-outlined text-lg">account_circle</span>
+                    Xem hồ sơ
+                </a>
+                <button class="btn-render-modal w-full flex items-center gap-3 px-4 py-2.5 text-slate-600 hover:bg-green-50 hover:text-green-700 transition-colors"
+                        data-url="@Url.Action("ChangePassword", "User")"
+                        data-title="Đổi mật khẩu">
+                    <span class="material-symbols-outlined text-lg">lock</span>
+                    Đổi mật khẩu
+                </button>
+                <div class="border-t border-slate-100 mt-1 pt-1">
+                    <form asp-area="" asp-controller="Auth" asp-action="Logout" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="w-full flex items-center gap-3 px-4 py-2.5 text-red-500 hover:bg-red-50 transition-colors">
+                            <span class="material-symbols-outlined text-lg">logout</span>
+                            Đăng xuất
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</header>

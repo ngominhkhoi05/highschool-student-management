@@ -1,0 +1,133 @@
+@*
+    Popup chỉnh sửa hồ sơ cá nhân - Partial View load qua AJAX
+*@
+@model highschool_student_management.ViewModels.ProfileViewModel
+
+<div class="bg-white w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden font-['Lexend']">
+
+    <!-- Header -->
+    <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-green-50/50">
+        <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+            <span class="material-symbols-outlined text-green-600">edit</span>
+            Chỉnh sửa hồ sơ
+        </h3>
+        <button onclick="$('#modalContainer').fadeOut().addClass('hidden').removeClass('flex')"
+                class="text-slate-400 hover:text-slate-600 transition-colors cursor-pointer">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+    </div>
+
+    <!-- Body -->
+    <div class="p-6 max-h-[70vh] overflow-y-auto">
+
+        <form id="formEditProfile"
+              asp-action="UpdateProfile"
+              method="POST"
+              class="space-y-4">
+
+            <!-- Thông tin tài khoản (chỉ hiển thị, không cho sửa) -->
+            <div class="grid grid-cols-2 gap-4 pb-4 border-b border-slate-100">
+                <div>
+                    <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Tên đăng nhập</p>
+                    <p class="text-sm font-medium text-slate-700 mt-1">@Model.Username</p>
+                </div>
+                <div>
+                    <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Vai trò</p>
+                    <p class="text-sm font-medium text-slate-700 mt-1">@Model.RoleDisplayName</p>
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Email</label>
+                <input type="email"
+                       name="Email"
+                       value="@Model.Email"
+                       class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:ring-2 focus:ring-green-600/20 focus:border-green-600 outline-none transition-all"
+                       placeholder="Nhập địa chỉ email"/>
+            </div>
+
+            <!-- Họ tên -->
+            <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">
+                    @(Model.RelatedType?.ToLower() == "student" ? "Họ và tên" : "Họ và tên")
+                </label>
+                <input type="text"
+                       name="FullName"
+                       value="@Model.FullName"
+                       class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:ring-2 focus:ring-green-600/20 focus:border-green-600 outline-none transition-all"
+                       placeholder="Nhập họ và tên"/>
+            </div>
+
+            <!-- Giới tính + Ngày sinh -->
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Giới tính</label>
+                    <select name="Gender"
+                            class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:ring-2 focus:ring-green-600/20 focus:border-green-600 outline-none transition-all">
+                        <option value="">-- Chọn giới tính --</option>
+                        <option value="1" selected="@(Model.Gender == 1)">Nam</option>
+                        <option value="2" selected="@(Model.Gender == 2)">Nữ</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Ngày sinh</label>
+                    <input type="date"
+                           name="DateOfBirth"
+                           value="@(Model.DateOfBirth?.ToString("yyyy-MM-dd"))"
+                           class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:ring-2 focus:ring-green-600/20 focus:border-green-600 outline-none transition-all"/>
+                </div>
+            </div>
+
+            <!-- Số điện thoại -->
+            <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Số điện thoại</label>
+                <input type="text"
+                       name="Phone"
+                       value="@Model.Phone"
+                       class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:ring-2 focus:ring-green-600/20 focus:border-green-600 outline-none transition-all"
+                       placeholder="Nhập số điện thoại"/>
+            </div>
+
+            <!-- Địa chỉ -->
+            <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Địa chỉ</label>
+                <textarea name="Address"
+                         rows="2"
+                         class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:ring-2 focus:ring-green-600/20 focus:border-green-600 outline-none transition-all resize-none"
+                         placeholder="Nhập địa chỉ">@Model.Address</textarea>
+            </div>
+
+            <!-- Trường riêng của Giáo viên -->
+            @if (Model.RelatedType?.ToLower() == "teacher")
+            {
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Chuyên môn</label>
+                    <input type="text"
+                           name="Specialization"
+                           value="@Model.Specialization"
+                           class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:ring-2 focus:ring-green-600/20 focus:border-green-600 outline-none transition-all"
+                           placeholder="VD: Toán học, Ngữ Văn..."/>
+                </div>
+            }
+
+        </form>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="px-6 py-4 border-t border-slate-100 flex justify-end gap-3 bg-slate-50">
+        <button type="button"
+                onclick="$('#modalContainer').fadeOut().addClass('hidden').removeClass('flex')"
+                class="px-5 py-2 text-slate-600 font-semibold hover:bg-slate-100 rounded-lg transition-colors">
+            Hủy bỏ
+        </button>
+        <button type="submit"
+                form="formEditProfile"
+                class="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow-sm hover:bg-green-700 transition-colors flex items-center gap-2">
+            <span class="material-symbols-outlined text-lg">save</span>
+            Lưu thay đổi
+        </button>
+    </div>
+
+</div>

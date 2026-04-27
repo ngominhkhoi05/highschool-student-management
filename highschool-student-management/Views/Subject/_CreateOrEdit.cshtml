@@ -1,0 +1,210 @@
+@model QuanLyHocSinh.Models.Subject
+
+@{
+    var isEdit = Model.Id > 0;
+    var pageTitle = isEdit ? "Sua mon hoc" : "Them mon hoc moi";
+}
+
+<div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-auto overflow-hidden">
+    <!-- Header -->
+    <div class="bg-green-600 px-6 py-4 flex items-center justify-between">
+        <h3 class="text-white font-bold text-lg">@pageTitle</h3>
+        <button type="button" onclick="closeModal()"
+                class="text-white/70 hover:text-white transition-colors">
+            <span class="material-symbols-outlined text-2xl">close</span>
+        </button>
+    </div>
+
+    <!-- Form -->
+    <form id="formSubject" class="p-6 space-y-4">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="Id" value="@Model.Id" />
+
+        <!-- Ten mon hoc -->
+        <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5">
+                Ten mon hoc <span class="text-red-500">*</span>
+            </label>
+            <input type="text"
+                   name="Name"
+                   id="subjectName"
+                   value="@Model.Name"
+                   placeholder="VD: Toan hoc"
+                   class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all placeholder:text-slate-300"
+                   required />
+        </div>
+
+        <!-- Ma mon hoc -->
+        <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5">
+                Ma mon hoc <span class="text-red-500">*</span>
+            </label>
+            <input type="text"
+                   name="Code"
+                   id="subjectCode"
+                   value="@Model.Code"
+                   placeholder="VD: MATH, LIT, ENG"
+                   class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all placeholder:text-slate-300 uppercase"
+                   required />
+            <p class="text-xs text-slate-400 mt-1">VD: MATH, LIT, ENG, PHY, CHEM</p>
+        </div>
+
+        <!-- Khoi lop -->
+        <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5">
+                Khoi lop
+            </label>
+            <select name="GradeLevel"
+                    class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all bg-white">
+                <option value="">-- Tat ca khoi --</option>
+                @if (Model.GradeLevel == 10)
+                {
+                    <option value="10" selected>Khoi 10</option>
+                }
+                else
+                {
+                    <option value="10">Khoi 10</option>
+                }
+                @if (Model.GradeLevel == 11)
+                {
+                    <option value="11" selected>Khoi 11</option>
+                }
+                else
+                {
+                    <option value="11">Khoi 11</option>
+                }
+                @if (Model.GradeLevel == 12)
+                {
+                    <option value="12" selected>Khoi 12</option>
+                }
+                else
+                {
+                    <option value="12">Khoi 12</option>
+                }
+            </select>
+            <p class="text-xs text-slate-400 mt-1">Bo trong = ap dung tat ca khoi</p>
+        </div>
+
+        <!-- So tiet/tuan -->
+        <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5">
+                So tiet/tuan
+            </label>
+            <input type="number"
+                   name="PeriodsPerWeek"
+                   value="@(Model.PeriodsPerWeek.HasValue ? Model.PeriodsPerWeek.Value.ToString() : "")"
+                   placeholder="VD: 4"
+                   min="1"
+                   max="20"
+                   class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all placeholder:text-slate-300" />
+        </div>
+
+        <!-- Trang thai -->
+        <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5">
+                Trang thai
+            </label>
+            <select name="IsActive"
+                    class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all bg-white">
+                @if (Model.IsActive == 1)
+                {
+                    <option value="1" selected>Dang day</option>
+                }
+                else
+                {
+                    <option value="1">Dang day</option>
+                }
+                @if (Model.IsActive == 0)
+                {
+                    <option value="0" selected>Ngung</option>
+                }
+                else
+                {
+                    <option value="0">Ngung</option>
+                }
+            </select>
+        </div>
+
+        <!-- Footer -->
+        <div class="flex items-center justify-end gap-3 pt-2 border-t border-slate-100 mt-4">
+            <button type="button"
+                    onclick="closeModal()"
+                    class="px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors">
+                Huy bo
+            </button>
+            <button type="button"
+                    onclick="submitSubjectForm()"
+                    class="px-6 py-2.5 text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-xl shadow-sm transition-all">
+                @(isEdit ? "Luu thay doi" : "Them mon hoc")
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function closeModal() {
+        $('#modalContainer').fadeOut().addClass('hidden').removeClass('flex');
+    }
+
+    function submitSubjectForm() {
+        var name = $('#subjectName').val();
+        var code = $('#subjectCode').val();
+
+        if (!name || !name.trim()) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Loi',
+                text: 'Ten mon hoc khong duoc de trong.',
+                confirmButtonColor: '#006b2c'
+            });
+            return;
+        }
+
+        if (!code || !code.trim()) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Loi',
+                text: 'Ma mon hoc khong duoc de trong.',
+                confirmButtonColor: '#006b2c'
+            });
+            return;
+        }
+
+        var form = $('#formSubject');
+        var formData = form.serialize();
+
+        $.ajax({
+            url: '@Url.Action("SaveSubject", "Subject")',
+            type: 'POST',
+            data: formData,
+            success: function(result) {
+                if (result.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thanh cong!',
+                        text: result.message,
+                        confirmButtonColor: '#006b2c'
+                    }).then(function() {
+                        closeModal();
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Loi',
+                        text: result.message,
+                        confirmButtonColor: '#006b2c'
+                    });
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Loi',
+                    text: 'Khong the luu du lieu. Vui long thu lai.',
+                    confirmButtonColor: '#006b2c'
+                });
+            }
+        });
+    }
+</script>

@@ -1,0 +1,183 @@
+@model List<highschool_student_management.ViewModels.NotificationViewModel>
+
+@{
+    var unreadCount = (int)(ViewData["UnreadCount"] ?? 0);
+    ViewData["Title"] = "Thong bao";
+}
+
+<div class="p-6 space-y-6">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-3xl text-green-600">notifications</span>
+            <div>
+                <h1 class="text-2xl font-bold text-slate-800">Thong bao</h1>
+                <p class="text-sm text-slate-500">
+                    @(unreadCount > 0 ? unreadCount + " thong bao chua doc" : "Tat ca da doc")
+                </p>
+            </div>
+        </div>
+
+        @if (User.IsInRole("Admin"))
+        {
+            <button onclick="openCreateNotificationModal()"
+                    class="px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-xl shadow-sm transition-all flex items-center gap-2">
+                <span class="material-symbols-outlined text-base">add</span>
+                Tao thong bao
+            </button>
+        }
+    </div>
+
+    <!-- Danh sach thong bao -->
+    @if (!Model.Any())
+    {
+        <div class="bg-white rounded-2xl shadow-sm border border-green-100 p-12 text-center">
+            <span class="material-symbols-outlined text-5xl text-slate-300">notifications_off</span>
+            <p class="mt-3 text-slate-500 font-medium">Chua co thong bao nao</p>
+        </div>
+    }
+    else
+    {
+        <div class="space-y-3">
+            @foreach (var notif in Model)
+            {
+                <div class="bg-white rounded-2xl border border-green-100 p-5 cursor-pointer
+                            transition-all hover:shadow-md hover:border-green-200
+                            @(notif.IsRead == 0 ? "border-l-4 border-l-green-500" : "opacity-70")
+                            notification-item"
+                     data-id="@notif.Id"
+                     onclick="handleNotificationClick(this, @notif.Id)">
+                    <div class="flex items-start gap-4">
+                        <!-- Icon loai thong bao -->
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 @notif.TypeColor">
+                            <span class="material-symbols-outlined text-lg">@notif.TypeIcon</span>
+                        </div>
+
+                        <!-- Noi dung -->
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h3 class="font-semibold text-slate-800 @(notif.IsRead == 0 ? "text-base" : "text-sm text-slate-600")">
+                                    @notif.Title
+                                </h3>
+                                @if (notif.IsRead == 0)
+                                {
+                                    <span class="w-2 h-2 bg-green-500 rounded-full flex-shrink-0" title="Chua doc"></span>
+                                }
+                                @if (notif.Type == 4)
+                                {
+                                    <span class="px-2 py-0.5 bg-red-100 text-red-700 text-xs font-semibold rounded-full">Khan</span>
+                                }
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(notif.Content))
+                            {
+                                <p class="text-sm text-slate-500 mt-1 line-clamp-2">@notif.Content</p>
+                            }
+
+                            <div class="flex items-center gap-3 mt-2 text-xs text-slate-400">
+                                <span>@notif.SenderName</span>
+                                <span>-</span>
+                                <span>@notif.CreatedAt.ToString("dd/MM/yyyy HH:mm")</span>
+                                @if (notif.IsRead == 1 && notif.ReadAt.HasValue)
+                                {
+                                    <span class="text-green-500">Da doc luc @notif.ReadAt.Value.ToString("dd/MM HH:mm")</span>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Nut action -->
+                        @if (notif.IsRead == 0)
+                        {
+                            <button onclick="event.stopPropagation(); markAsRead(@notif.Id)"
+                                    class="px-3 py-1.5 text-xs font-medium text-green-700 bg-green-50 hover:bg-green-100 rounded-lg transition-all flex-shrink-0"
+                                    title="Danh dau da doc">
+                                Da doc
+                            </button>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<!-- Modal Tao thong bao -->
+<div id="createNotificationModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden max-h-[90vh] flex flex-col">
+        <div class="bg-green-600 px-6 py-4 flex items-center justify-between flex-shrink-0">
+            <h3 class="text-white font-bold text-lg flex items-center gap-2">
+                <span class="material-symbols-outlined">campaign</span>
+                Tao thong bao moi
+            </h3>
+            <button onclick="closeCreateNotificationModal()" class="text-white/80 hover:text-white transition-colors">
+                <span class="material-symbols-outlined text-2xl">close</span>
+            </button>
+        </div>
+
+        <div id="createNotificationFormContainer" class="flex-1 overflow-y-auto">
+            <!-- Partial view se load o day -->
+            <div class="p-6 text-center text-slate-400">
+                <span class="material-symbols-outlined text-3xl animate-spin">sync</span>
+                <p class="mt-2 text-sm">Dang tai...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function openCreateNotificationModal() {
+            $('#createNotificationFormContainer').html(
+                '<div class="p-6 text-center text-slate-400"><span class="material-symbols-outlined text-3xl animate-spin">sync</span><p class="mt-2 text-sm">Dang tai...</p></div>'
+            );
+            $('#createNotificationModal').removeClass('hidden').addClass('flex');
+
+            $.get('@Url.Action("_CreateNotification", "Notification")', function(html) {
+                $('#createNotificationFormContainer').html(html);
+            }).fail(function() {
+                $('#createNotificationFormContainer').html(
+                    '<div class="p-6 text-center text-red-400"><p>Khong the tai form. Vui long thu lai.</p></div>'
+                );
+            });
+        }
+
+        function closeCreateNotificationModal() {
+            $('#createNotificationModal').removeClass('flex').addClass('hidden');
+        }
+
+        function handleNotificationClick(el, id) {
+            var item = $(el);
+            if (item.find('.bg-green-500.rounded-full').length > 0) {
+                markAsRead(id);
+            }
+        }
+
+        function markAsRead(id) {
+            $.ajax({
+                url: '@Url.Action("MarkAsRead", "Notification")',
+                type: 'POST',
+                headers: { 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() },
+                data: { notificationId: id },
+                success: function(result) {
+                    if (result.success) {
+                        var item = $('[data-id="' + id + '"]');
+                        item.find('.bg-green-500.rounded-full').remove();
+                        item.find('h3').removeClass('font-semibold text-base').addClass('text-sm text-slate-600 font-normal');
+                        item.find('button').remove();
+                        item.removeClass('border-l-4 border-l-green-500').addClass('opacity-70');
+                        item.off('click');
+
+                        // Cap nhat so thong bao chua doc
+                        var badge = $('.sidebar-unread-badge');
+                        if (badge.length) {
+                            var count = parseInt(badge.text()) - 1;
+                            if (count > 0) badge.text(count).removeClass('hidden');
+                            else badge.addClass('hidden');
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+}

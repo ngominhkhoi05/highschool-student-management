@@ -1,0 +1,305 @@
+@{
+    ViewData["Title"] = "So diem";
+}
+
+<div class="max-w-[98%] mx-auto">
+    <!-- Thong tin loc -->
+    <div class="bg-green-50 rounded-xl p-4 mb-4 flex flex-wrap gap-3 items-end">
+        <div class="flex-1 min-w-[160px]">
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Lop hoc</label>
+            <select id="filterClass"
+                    class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 bg-white">
+                <option value="">-- Chon lop --</option>
+            </select>
+        </div>
+        <div class="flex-1 min-w-[160px]">
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Mon hoc</label>
+            <select id="filterSubject"
+                    class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 bg-white">
+                <option value="">-- Chon mon --</option>
+            </select>
+        </div>
+        <div class="flex-1 min-w-[160px]">
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Hoc ky</label>
+            <select id="filterSemester"
+                    class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 bg-white">
+                <option value="">-- Chon hoc ky --</option>
+            </select>
+        </div>
+        <button type="button"
+                onclick="loadScoreGrid()"
+                class="px-5 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg shadow-sm transition-all">
+            Tai bang diem
+        </button>
+    </div>
+
+    <!-- Nut luu -->
+    <div class="flex justify-end mb-3">
+        <button type="button"
+                id="btnSaveScores"
+                onclick="saveBulkScores()"
+                disabled
+                class="px-6 py-2.5 bg-green-600 hover:bg-green-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl shadow-sm transition-all flex items-center gap-2">
+            <span class="material-symbols-outlined text-base">save</span>
+            Luu toan bo
+        </button>
+    </div>
+
+    <!-- Bang diem -->
+    <div class="bg-white rounded-2xl shadow-sm border border-green-100 overflow-hidden">
+        <div class="bg-green-600 px-6 py-3">
+            <h3 class="text-white font-bold" id="gridTitle">Chon lop, mon va hoc ky de tai bang diem</h3>
+        </div>
+        <div id="scoreGridContainer">
+            <div class="p-12 text-center text-slate-400">
+                <span class="material-symbols-outlined text-4xl">grid_on</span>
+                <p class="mt-2">Vui long chon day du thong tin va bam "Tai bang diem".</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var gClassId = 0;
+    var gSubjectId = 0;
+    var gSemesterId = 0;
+
+    $(document).ready(function() {
+        loadFilterDataScore();
+    });
+
+    function loadFilterDataScore() {
+        $.ajax({
+            url: '@Url.Action("GetFilterData", "TeacherScore")',
+            type: 'GET',
+            success: function(result) {
+                if (result.success) {
+                    $('#filterClass').empty().append('<option value="">-- Chon lop --</option>');
+                    result.classes.forEach(function(c) {
+                        var label = c.className + ' (' + c.semesterName + ')';
+                        $('#filterClass').append('<option value="' + c.classId + '|' + c.semesterId + '" data-semester-id="' + c.semesterId + '">' + label + '</option>');
+                    });
+
+                    // Lop rong -> xoa mon
+                    $('#filterSubject').empty().append('<option value="">-- Chon mon --</option>');
+
+                    $('#filterSemester').empty().append('<option value="">-- Chon hoc ky --</option>');
+                    result.semesters.forEach(function(s) {
+                        $('#filterSemester').append('<option value="' + s.id + '">' + s.name + '</option>');
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Loi',
+                        text: result.message,
+                        confirmButtonColor: '#006b2c'
+                    });
+                }
+            }
+        });
+    }
+
+    // Khi chon lop -> load mon cua lop do, dong thoi dat hoc ky tu lop
+    $('#filterClass').on('change', function() {
+        var val = $(this).val();
+        if (!val) {
+            $('#filterSubject').empty().append('<option value="">-- Chon mon --</option>');
+            gClassId = 0;
+            gSemesterId = 0;
+            return;
+        }
+
+        var parts = val.split('|');
+        var classId = parseInt(parts[0]);
+        var semesterId = parseInt(parts[1]);
+        gClassId = classId;
+
+        // Dat hoc ky theo lop da chon
+        $('#filterSemester').val(semesterId);
+        gSemesterId = semesterId;
+
+        // Load mon hoc ma giao vien day lop nay
+        $.ajax({
+            url: '@Url.Action("GetSubjectsByClass", "TeacherScore")',
+            type: 'GET',
+            data: { classId: classId, semesterId: semesterId },
+            success: function(result) {
+                $('#filterSubject').empty().append('<option value="">-- Chon mon --</option>');
+                if (result.success && result.subjects.length > 0) {
+                    result.subjects.forEach(function(s) {
+                        $('#filterSubject').append('<option value="' + s.id + '">' + s.name + ' (' + s.code + ')</option>');
+                    });
+                } else {
+                    $('#filterSubject').append('<option value="">-- Khong co mon --</option>');
+                }
+            }
+        });
+    });
+
+    $('#filterSubject').on('change', function() {
+        gSubjectId = parseInt($(this).val()) || 0;
+    });
+
+    $('#filterSemester').on('change', function() {
+        gSemesterId = parseInt($(this).val()) || 0;
+    });
+
+    function loadScoreGrid() {
+        var classVal = $('#filterClass').val();
+        var subjectId = parseInt($('#filterSubject').val()) || 0;
+        var semesterId = parseInt($('#filterSemester').val()) || 0;
+
+        if (!classVal) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Chua chon lop',
+                text: 'Vui long chon lop hoc.',
+                confirmButtonColor: '#006b2c'
+            });
+            return;
+        }
+
+        if (!subjectId) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Chua chon mon',
+                text: 'Vui long chon mon hoc.',
+                confirmButtonColor: '#006b2c'
+            });
+            return;
+        }
+
+        var parts = classVal.split('|');
+        var classId = parseInt(parts[0]);
+
+        gClassId = classId;
+        gSubjectId = subjectId;
+        gSemesterId = semesterId;
+
+        var className = $('#filterClass option:selected').text();
+        var subjectName = $('#filterSubject option:selected').text();
+        var semesterName = $('#filterSemester option:selected').text();
+
+        $('#gridTitle').text('Bang diem: ' + className + ' - ' + subjectName + ' - ' + semesterName);
+
+        $.ajax({
+            url: '@Url.Action("GetScoreGrid", "TeacherScore")',
+            type: 'GET',
+            data: {
+                classId: classId,
+                subjectId: subjectId,
+                semesterId: semesterId
+            },
+            success: function(html) {
+                $('#scoreGridContainer').html(html);
+                $('#btnSaveScores').prop('disabled', false);
+            },
+            error: function() {
+                $('#scoreGridContainer').html('<div class="p-12 text-center text-red-400"><span class="material-symbols-outlined text-4xl">error</span><p class="mt-2">Da xay ra loi khi tai bang diem.</p></div>');
+            }
+        });
+    }
+
+        gClassId = classId;
+        gSubjectId = subjectId;
+        gSemesterId = semesterId;
+
+        var className = $('#filterClass option:selected').text();
+        var subjectName = $('#filterSubject option:selected').text();
+        var semesterName = $('#filterSemester option:selected').text();
+
+        $('#gridTitle').text('Bang diem: ' + className + ' - ' + subjectName + ' - ' + semesterName);
+
+        $.ajax({
+            url: '@Url.Action("GetScoreGrid", "TeacherScore")',
+            type: 'GET',
+            data: {
+                classId: classId,
+                subjectId: subjectId,
+                semesterId: semesterId
+            },
+            success: function(html) {
+                $('#scoreGridContainer').html(html);
+                $('#btnSaveScores').prop('disabled', false);
+            },
+            error: function() {
+                $('#scoreGridContainer').html('<div class="p-12 text-center text-red-400"><span class="material-symbols-outlined text-4xl">error</span><p class="mt-2">Da xay ra loi khi tai bang diem.</p></div>');
+            }
+        });
+    }
+
+    function saveBulkScores() {
+        if (gClassId === 0 || gSubjectId === 0 || gSemesterId === 0) return;
+
+        var scores = [];
+
+        // Duyet qua tat ca cac input diem
+        $('input.score-input').each(function() {
+            var val = parseFloat($(this).val());
+            if (!isNaN(val) && val >= 0 && val <= 10) {
+                var parts = $(this).data('key').split('_');
+                var studentId = parseInt(parts[0]);
+                var scoreTypeId = parseInt(parts[1]);
+                var scoreId = parseInt($(this).data('score-id')) || 0;
+
+                scores.push({
+                    studentId: studentId,
+                    scoreTypeId: scoreTypeId,
+                    scoreId: scoreId,
+                    scoreValue: val
+                });
+            }
+        });
+
+        if (!scores.length) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Chua co diem',
+                text: 'Vui long nhap it nhat mot diem.',
+                confirmButtonColor: '#006b2c'
+            });
+            return;
+        }
+
+        $.ajax({
+            url: '@Url.Action("SaveBulkScores", "TeacherScore")',
+            type: 'POST',
+            contentType: 'application/json',
+            headers: {
+                'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+            },
+            data: JSON.stringify({
+                classId: gClassId,
+                subjectId: gSubjectId,
+                semesterId: gSemesterId,
+                scores: scores
+            }),
+            success: function(result) {
+                if (result.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thanh cong!',
+                        text: result.message,
+                        confirmButtonColor: '#006b2c'
+                    });
+                    loadScoreGrid();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Loi',
+                        text: result.message,
+                        confirmButtonColor: '#006b2c'
+                    });
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Loi',
+                    text: 'Khong the luu diem. Vui long thu lai.',
+                    confirmButtonColor: '#006b2c'
+                });
+            }
+        });
+    }
+</script>

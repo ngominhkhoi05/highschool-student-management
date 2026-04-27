@@ -12,7 +12,7 @@ using QuanLyHocSinh.Data;
 namespace highschool_student_management.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260426150346_InitialCreate")]
+    [Migration("20260427062111_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -355,6 +355,32 @@ namespace highschool_student_management.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Quản trị viên hệ thống",
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Giáo viên",
+                            Name = "Teacher"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Học sinh",
+                            Name = "Student"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Phụ huynh",
+                            Name = "Parent"
+                        });
                 });
 
             modelBuilder.Entity("QuanLyHocSinh.Models.SchoolYear", b =>
@@ -457,6 +483,43 @@ namespace highschool_student_management.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("score_types");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            MinCount = 5,
+                            Name = "Điểm miệng",
+                            Weight = 1.0m
+                        },
+                        new
+                        {
+                            Id = 2,
+                            MinCount = 3,
+                            Name = "Điểm 15 phút",
+                            Weight = 1.0m
+                        },
+                        new
+                        {
+                            Id = 3,
+                            MinCount = 2,
+                            Name = "Điểm 1 tiết",
+                            Weight = 2.0m
+                        },
+                        new
+                        {
+                            Id = 4,
+                            MinCount = 1,
+                            Name = "Điểm giữa kỳ",
+                            Weight = 2.0m
+                        },
+                        new
+                        {
+                            Id = 5,
+                            MinCount = 1,
+                            Name = "Điểm cuối kỳ",
+                            Weight = 3.0m
+                        });
                 });
 
             modelBuilder.Entity("QuanLyHocSinh.Models.Semester", b =>
@@ -700,6 +763,104 @@ namespace highschool_student_management.Migrations
                         .IsUnique();
 
                     b.ToTable("subjects");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Code = "MATH",
+                            IsActive = 1,
+                            Name = "Toán học",
+                            PeriodsPerWeek = 5
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Code = "LIT",
+                            IsActive = 1,
+                            Name = "Ngữ văn",
+                            PeriodsPerWeek = 5
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Code = "ENG",
+                            IsActive = 1,
+                            Name = "Tiếng Anh",
+                            PeriodsPerWeek = 4
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Code = "PHY",
+                            IsActive = 1,
+                            Name = "Vật lý",
+                            PeriodsPerWeek = 3
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Code = "CHEM",
+                            IsActive = 1,
+                            Name = "Hóa học",
+                            PeriodsPerWeek = 3
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Code = "BIO",
+                            IsActive = 1,
+                            Name = "Sinh học",
+                            PeriodsPerWeek = 2
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Code = "HIS",
+                            IsActive = 1,
+                            Name = "Lịch sử",
+                            PeriodsPerWeek = 2
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Code = "GEO",
+                            IsActive = 1,
+                            Name = "Địa lý",
+                            PeriodsPerWeek = 2
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Code = "CIV",
+                            IsActive = 1,
+                            Name = "Giáo dục công dân",
+                            PeriodsPerWeek = 1
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Code = "TECH",
+                            IsActive = 1,
+                            Name = "Công nghệ",
+                            PeriodsPerWeek = 2
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Code = "ART",
+                            IsActive = 1,
+                            Name = "Nghệ thuật",
+                            PeriodsPerWeek = 1
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Code = "PE",
+                            IsActive = 1,
+                            Name = "Thể dục",
+                            PeriodsPerWeek = 2
+                        });
                 });
 
             modelBuilder.Entity("QuanLyHocSinh.Models.Teacher", b =>
@@ -808,19 +969,21 @@ namespace highschool_student_management.Migrations
                     b.Property<DateTime?>("LastLogin")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<int?>("RelatedId")
+                    b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.Property<string>("RelatedType")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                    b.Property<int?>("StudentId")
+                        .HasColumnType("int");
 
-                    b.Property<int>("RoleId")
+                    b.Property<int?>("TeacherId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -833,7 +996,19 @@ namespace highschool_student_management.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ParentId")
+                        .IsUnique()
+                        .HasFilter("[ParentId] IS NOT NULL");
+
                     b.HasIndex("RoleId");
+
+                    b.HasIndex("StudentId")
+                        .IsUnique()
+                        .HasFilter("[StudentId] IS NOT NULL");
+
+                    b.HasIndex("TeacherId")
+                        .IsUnique()
+                        .HasFilter("[TeacherId] IS NOT NULL");
 
                     b.HasIndex("Username")
                         .IsUnique();
@@ -911,6 +1086,48 @@ namespace highschool_student_management.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("violation_types");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DeductPoints = 1,
+                            Description = "Không có mặt đúng giờ khi tiết học bắt đầu",
+                            Name = "Đi học muộn",
+                            Severity = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            DeductPoints = 1,
+                            Description = "Không hoàn thành bài tập hoặc không chuẩn bị bài ở nhà",
+                            Name = "Không thuộc bài",
+                            Severity = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            DeductPoints = 2,
+                            Description = "Gây ồn ào, ảnh hưởng đến việc học của các bạn khác",
+                            Name = "Nói chuyện khi đang giảng bài",
+                            Severity = 2
+                        },
+                        new
+                        {
+                            Id = 4,
+                            DeductPoints = 5,
+                            Description = "Nghỉ học mà không có lý do chính đáng và không xin phép",
+                            Name = "Vắng học không phép",
+                            Severity = 3
+                        },
+                        new
+                        {
+                            Id = 5,
+                            DeductPoints = 5,
+                            Description = "Mang vũ khí, chất kích thích hoặc các vật dụng nguy hiểm",
+                            Name = "Mang đồ cấm vào trường",
+                            Severity = 3
+                        });
                 });
 
             modelBuilder.Entity("QuanLyHocSinh.Models.Attendance", b =>
@@ -1210,13 +1427,34 @@ namespace highschool_student_management.Migrations
 
             modelBuilder.Entity("QuanLyHocSinh.Models.User", b =>
                 {
+                    b.HasOne("QuanLyHocSinh.Models.Parent", "Parent")
+                        .WithOne()
+                        .HasForeignKey("QuanLyHocSinh.Models.User", "ParentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("QuanLyHocSinh.Models.Role", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("QuanLyHocSinh.Models.Student", "Student")
+                        .WithOne()
+                        .HasForeignKey("QuanLyHocSinh.Models.User", "StudentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("QuanLyHocSinh.Models.Teacher", "Teacher")
+                        .WithOne()
+                        .HasForeignKey("QuanLyHocSinh.Models.User", "TeacherId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Parent");
+
                     b.Navigation("Role");
+
+                    b.Navigation("Student");
+
+                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("QuanLyHocSinh.Models.Violation", b =>

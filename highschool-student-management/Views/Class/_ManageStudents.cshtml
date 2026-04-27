@@ -1,0 +1,247 @@
+@model highschool_student_management.ViewModels.ManageStudentsViewModel
+
+<div class="bg-white rounded-2xl shadow-xl w-full max-w-3xl mx-auto overflow-hidden max-h-[90vh] overflow-y-auto">
+    <!-- Header -->
+    <div class="bg-green-600 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
+        <div>
+            <h3 class="text-white font-bold text-lg">Xep lop hoc sinh</h3>
+            <p class="text-green-100 text-xs mt-0.5">@Model.ClassName - @Model.SchoolYearName (si so: @Model.StudentsInClass.Count / @(Model.MaxStudents > 0 ? Model.MaxStudents.ToString() : "khong gioi han"))</p>
+        </div>
+        <button type="button" onclick="closeManageModal()"
+                class="text-white/70 hover:text-white transition-colors">
+            <span class="material-symbols-outlined text-2xl">close</span>
+        </button>
+    </div>
+
+    <div class="p-6 space-y-6">
+        <!-- Thong tin lop -->
+        <div class="bg-green-50 rounded-xl p-4 flex items-center gap-3">
+            <span class="material-symbols-outlined text-green-600 text-2xl">school</span>
+            <div>
+                <p class="font-semibold text-slate-800">@Model.ClassName</p>
+                <p class="text-xs text-slate-500">@Model.SchoolYearName - @Model.StudentsInClass.Count hoc sinh hien tai</p>
+            </div>
+        </div>
+
+        <!-- Grid 2 cot: Hoc sinh trong lop & Hoc sinh chua co lop -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Cot trai: Hoc sinh trong lop -->
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <h4 class="font-bold text-slate-700 text-sm flex items-center gap-2">
+                        <span class="material-symbols-outlined text-green-600 text-base">group</span>
+                        Hoc sinh trong lop
+                    </h4>
+                    <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">@Model.StudentsInClass.Count</span>
+                </div>
+                <div id="studentsInClassList" class="space-y-2 max-h-[300px] overflow-y-auto">
+                    @if (!Model.StudentsInClass.Any())
+                    {
+                        <div class="text-center py-8 text-slate-400">
+                            <span class="material-symbols-outlined text-3xl">person_off</span>
+                            <p class="text-xs mt-1">Chua co hoc sinh nao</p>
+                        </div>
+                    }
+                    else
+                    {
+                        foreach (var s in Model.StudentsInClass)
+                        {
+                            <div class="flex items-center justify-between bg-white border border-slate-200 rounded-xl px-4 py-2.5 hover:bg-slate-50 transition-colors" id="student-row-@s.StudentId">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-bold">
+                                        @s.FullName[0].ToString().ToUpper()
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-slate-700">@s.FullName</p>
+                                        <p class="text-xs text-slate-400">@s.StudentCode</p>
+                                    </div>
+                                </div>
+                                <button type="button"
+                                        onclick="removeStudentFromClass(@s.StudentId, '@s.FullName')"
+                                        class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                                        title="Xoa khoi lop">
+                                    <span class="material-symbols-outlined text-base">person_remove</span>
+                                </button>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <!-- Cot phai: Hoc sinh chua co lop -->
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <h4 class="font-bold text-slate-700 text-sm flex items-center gap-2">
+                        <span class="material-symbols-outlined text-blue-600 text-base">person_add</span>
+                        Hoc sinh chua co lop
+                    </h4>
+                    <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">@Model.AvailableStudents.Count</span>
+                </div>
+                <div class="max-h-[300px] overflow-y-auto space-y-2 pr-1" id="availableStudentsList">
+                    @if (!Model.AvailableStudents.Any())
+                    {
+                        <div class="text-center py-8 text-slate-400">
+                            <span class="material-symbols-outlined text-3xl">check_circle</span>
+                            <p class="text-xs mt-1">Tat ca hoc sinh da co lop</p>
+                        </div>
+                    }
+                    else
+                    {
+                        foreach (var s in Model.AvailableStudents)
+                        {
+                            <label class="flex items-center gap-3 bg-white border border-slate-200 rounded-xl px-4 py-2.5 hover:bg-blue-50 hover:border-blue-300 transition-all cursor-pointer"
+                                   id="avail-student-@s.Id">
+                                <input type="checkbox"
+                                       name="selectedStudents"
+                                       value="@s.Id"
+                                       class="w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-green-500" />
+                                <div class="flex items-center gap-3 flex-1">
+                                    <div class="w-8 h-8 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-xs font-bold">
+                                        @s.FullName[0].ToString().ToUpper()
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-slate-700">@s.FullName</p>
+                                        <p class="text-xs text-slate-400">@s.StudentCode</p>
+                                    </div>
+                                </div>
+                            </label>
+                        }
+                    }
+                </div>
+                <!-- Nut them hoc sinh -->
+                <button type="button"
+                        onclick="addStudentsToClass()"
+                        class="w-full px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-base">add</span>
+                    Them vao lop
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function closeManageModal() {
+        $('#modalContainer').fadeOut().addClass('hidden').removeClass('flex');
+    }
+
+    function reloadManageStudents() {
+        $.ajax({
+            url: '@Url.Action("_ManageStudents", "Class")',
+            type: 'GET',
+            data: { classId: @Model.ClassId },
+            success: function(html) {
+                $('#modalBody').html(html);
+            },
+            error: function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Loi',
+                    text: 'Khong the tai lai du lieu.',
+                    confirmButtonColor: '#006b2c'
+                });
+            }
+        });
+    }
+
+    function removeStudentFromClass(studentId, fullName) {
+        Swal.fire({
+            title: 'Xac nhan xoa',
+            text: 'Ban co muon xoa hoc sinh "' + fullName + '" khoi lop nay?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#94a3b8',
+            confirmButtonText: 'Xoa',
+            cancelButtonText: 'Huy bo'
+        }).then(function(result) {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '@Url.Action("RemoveStudentFromClass", "Class")',
+                    type: 'POST',
+                    data: { id: studentId, __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val() },
+                    success: function(result) {
+                        if (result.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Thanh cong!',
+                                text: result.message,
+                                confirmButtonColor: '#006b2c'
+                            });
+                            // Tai lai modal
+                            reloadManageStudents();
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Loi',
+                                text: result.message,
+                                confirmButtonColor: '#006b2c'
+                            });
+                        }
+                    },
+                    error: function() {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Loi',
+                            text: 'Khong the xoa. Vui long thu lai.',
+                            confirmButtonColor: '#006b2c'
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    function addStudentsToClass() {
+        var selected = [];
+        $('input[name="selectedStudents"]:checked').each(function() {
+            selected.push(parseInt($(this).val()));
+        });
+
+        if (selected.length === 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Chua chon hoc sinh',
+                text: 'Vui long chon it nhat mot hoc sinh de them vao lop.',
+                confirmButtonColor: '#006b2c'
+            });
+            return;
+        }
+
+        $.ajax({
+            url: '@Url.Action("AddStudentsToClass", "Class")',
+            type: 'POST',
+            data: {
+                classId: @Model.ClassId,
+                studentIds: selected,
+                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+            },
+            success: function(result) {
+                if (result.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thanh cong!',
+                        text: result.message,
+                        confirmButtonColor: '#006b2c'
+                    });
+                    reloadManageStudents();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Loi',
+                        text: result.message,
+                        confirmButtonColor: '#006b2c'
+                    });
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Loi',
+                    text: 'Khong the them hoc sinh. Vui long thu lai.',
+                    confirmButtonColor: '#006b2c'
+                });
+            }
+        });
+    }
+</script>

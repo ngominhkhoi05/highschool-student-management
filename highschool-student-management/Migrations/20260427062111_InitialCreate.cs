@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace highschool_student_management.Migrations
 {
     /// <inheritdoc />
@@ -156,34 +158,6 @@ namespace highschool_student_management.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "users",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Username = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    RoleId = table.Column<int>(type: "int", nullable: false),
-                    RelatedId = table.Column<int>(type: "int", nullable: true),
-                    RelatedType = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    IsActive = table.Column<int>(type: "int", nullable: false),
-                    LastLogin = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_users", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_users_roles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "roles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "semesters",
                 columns: table => new
                 {
@@ -264,49 +238,50 @@ namespace highschool_student_management.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "notifications",
+                name: "users",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Type = table.Column<int>(type: "int", nullable: true),
-                    SenderId = table.Column<int>(type: "int", nullable: true),
-                    TargetType = table.Column<int>(type: "int", nullable: true),
+                    Username = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    RoleId = table.Column<int>(type: "int", nullable: false),
+                    TeacherId = table.Column<int>(type: "int", nullable: true),
+                    StudentId = table.Column<int>(type: "int", nullable: true),
+                    ParentId = table.Column<int>(type: "int", nullable: true),
+                    IsActive = table.Column<int>(type: "int", nullable: false),
+                    LastLogin = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PublishedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_notifications", x => x.Id);
+                    table.PrimaryKey("PK_users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_notifications_users_SenderId",
-                        column: x => x.SenderId,
-                        principalTable: "users",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "settings",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Key = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_settings", x => x.Id);
+                        name: "FK_users_parents_ParentId",
+                        column: x => x.ParentId,
+                        principalTable: "parents",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
-                        name: "FK_settings_users_UpdatedBy",
-                        column: x => x.UpdatedBy,
-                        principalTable: "users",
-                        principalColumn: "Id");
+                        name: "FK_users_roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_users_students_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "students",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_users_teachers_TeacherId",
+                        column: x => x.TeacherId,
+                        principalTable: "teachers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -637,6 +612,52 @@ namespace highschool_student_management.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "notifications",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Type = table.Column<int>(type: "int", nullable: true),
+                    SenderId = table.Column<int>(type: "int", nullable: true),
+                    TargetType = table.Column<int>(type: "int", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PublishedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_notifications", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_notifications_users_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "settings",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Key = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedBy = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_settings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_settings_users_UpdatedBy",
+                        column: x => x.UpdatedBy,
+                        principalTable: "users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "notification_recipients",
                 columns: table => new
                 {
@@ -662,6 +683,60 @@ namespace highschool_student_management.Migrations
                         principalTable: "users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.InsertData(
+                table: "roles",
+                columns: new[] { "Id", "Description", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Quản trị viên hệ thống", "Admin" },
+                    { 2, "Giáo viên", "Teacher" },
+                    { 3, "Học sinh", "Student" },
+                    { 4, "Phụ huynh", "Parent" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "score_types",
+                columns: new[] { "Id", "MinCount", "Name", "Weight" },
+                values: new object[,]
+                {
+                    { 1, 5, "Điểm miệng", 1.0m },
+                    { 2, 3, "Điểm 15 phút", 1.0m },
+                    { 3, 2, "Điểm 1 tiết", 2.0m },
+                    { 4, 1, "Điểm giữa kỳ", 2.0m },
+                    { 5, 1, "Điểm cuối kỳ", 3.0m }
+                });
+
+            migrationBuilder.InsertData(
+                table: "subjects",
+                columns: new[] { "Id", "Code", "GradeLevel", "IsActive", "Name", "PeriodsPerWeek" },
+                values: new object[,]
+                {
+                    { 1, "MATH", null, 1, "Toán học", 5 },
+                    { 2, "LIT", null, 1, "Ngữ văn", 5 },
+                    { 3, "ENG", null, 1, "Tiếng Anh", 4 },
+                    { 4, "PHY", null, 1, "Vật lý", 3 },
+                    { 5, "CHEM", null, 1, "Hóa học", 3 },
+                    { 6, "BIO", null, 1, "Sinh học", 2 },
+                    { 7, "HIS", null, 1, "Lịch sử", 2 },
+                    { 8, "GEO", null, 1, "Địa lý", 2 },
+                    { 9, "CIV", null, 1, "Giáo dục công dân", 1 },
+                    { 10, "TECH", null, 1, "Công nghệ", 2 },
+                    { 11, "ART", null, 1, "Nghệ thuật", 1 },
+                    { 12, "PE", null, 1, "Thể dục", 2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "violation_types",
+                columns: new[] { "Id", "DeductPoints", "Description", "Name", "Severity" },
+                values: new object[,]
+                {
+                    { 1, 1, "Không có mặt đúng giờ khi tiết học bắt đầu", "Đi học muộn", 1 },
+                    { 2, 1, "Không hoàn thành bài tập hoặc không chuẩn bị bài ở nhà", "Không thuộc bài", 1 },
+                    { 3, 2, "Gây ồn ào, ảnh hưởng đến việc học của các bạn khác", "Nói chuyện khi đang giảng bài", 2 },
+                    { 4, 5, "Nghỉ học mà không có lý do chính đáng và không xin phép", "Vắng học không phép", 3 },
+                    { 5, 5, "Mang vũ khí, chất kích thích hoặc các vật dụng nguy hiểm", "Mang đồ cấm vào trường", 3 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -857,9 +932,30 @@ namespace highschool_student_management.Migrations
                 column: "TeacherId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_users_ParentId",
+                table: "users",
+                column: "ParentId",
+                unique: true,
+                filter: "[ParentId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_users_RoleId",
                 table: "users",
                 column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_users_StudentId",
+                table: "users",
+                column: "StudentId",
+                unique: true,
+                filter: "[StudentId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_users_TeacherId",
+                table: "users",
+                column: "TeacherId",
+                unique: true,
+                filter: "[TeacherId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_users_Username",
@@ -928,9 +1024,6 @@ namespace highschool_student_management.Migrations
                 name: "notifications");
 
             migrationBuilder.DropTable(
-                name: "parents");
-
-            migrationBuilder.DropTable(
                 name: "score_types");
 
             migrationBuilder.DropTable(
@@ -943,22 +1036,25 @@ namespace highschool_student_management.Migrations
                 name: "semesters");
 
             migrationBuilder.DropTable(
-                name: "students");
-
-            migrationBuilder.DropTable(
                 name: "violation_types");
 
             migrationBuilder.DropTable(
                 name: "users");
 
             migrationBuilder.DropTable(
-                name: "teachers");
-
-            migrationBuilder.DropTable(
                 name: "school_years");
 
             migrationBuilder.DropTable(
+                name: "parents");
+
+            migrationBuilder.DropTable(
                 name: "roles");
+
+            migrationBuilder.DropTable(
+                name: "students");
+
+            migrationBuilder.DropTable(
+                name: "teachers");
         }
     }
 }

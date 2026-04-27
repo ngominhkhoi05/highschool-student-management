@@ -1,0 +1,151 @@
+@model List<QuanLyHocSinh.Models.ViolationType>
+
+@{
+    ViewData["Title"] = "Quan ly loai vi pham";
+}
+
+<div class="max-w-5xl mx-auto">
+    <!-- Page Header -->
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-green-700">Quan ly loai vi pham</h1>
+            <p class="text-sm text-slate-500 mt-1">Them, sua, xoa cac loai vi pham va muc do nghiem trong</p>
+        </div>
+        <button class="btn-render-modal flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-sm transition-all duration-200 active:scale-95"
+                data-url="@Url.Action("_CreateOrEdit", "ViolationType", new { id = 0 })"
+                data-title="Them loai vi pham moi">
+            <span class="material-symbols-outlined text-lg">add</span>
+            Them loai vi pham
+        </button>
+    </div>
+
+    <!-- Bang danh sach Loai vi pham -->
+    <div class="bg-white rounded-2xl shadow-sm border border-green-100 overflow-hidden">
+        <table class="w-full text-sm">
+            <thead class="bg-green-600 text-white">
+                <tr>
+                    <th class="px-6 py-4 text-left font-semibold w-10">#</th>
+                    <th class="px-4 py-4 text-left font-semibold">Ten loai vi pham</th>
+                    <th class="px-4 py-4 text-center font-semibold">Muc do</th>
+                    <th class="px-4 py-4 text-center font-semibold">Diem tru</th>
+                    <th class="px-4 py-4 text-left font-semibold">Mo ta</th>
+                    <th class="px-4 py-4 text-center font-semibold w-32">Thao tac</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="px-6 py-12 text-center text-slate-400">
+                            <span class="material-symbols-outlined text-4xl">search_off</span>
+                            <p class="mt-2">Chua co loai vi pham nao. Nhan "Them loai vi pham" de bat dau.</p>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    var index = 1;
+                    foreach (var vt in Model)
+                    {
+                        <tr class="odd:bg-white even:bg-green-50 hover:bg-green-100/40 transition-colors">
+                            <td class="px-6 py-3.5 text-slate-400 text-xs font-medium">@index</td>
+                            <td class="px-4 py-3.5 font-medium text-slate-800">@vt.Name</td>
+                            <td class="px-4 py-3.5 text-center">
+                                @if (vt.Severity == 1)
+                                {
+                                    <span class="inline-flex items-center px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full">Nhe</span>
+                                }
+                                else if (vt.Severity == 2)
+                                {
+                                    <span class="inline-flex items-center px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded-full">Trung binh</span>
+                                }
+                                else if (vt.Severity == 3)
+                                {
+                                    <span class="inline-flex items-center px-2 py-0.5 bg-red-100 text-red-700 text-xs font-semibold rounded-full">Nang</span>
+                                }
+                                else
+                                {
+                                    <span class="text-slate-400 text-xs">-</span>
+                                }
+                            </td>
+                            <td class="px-4 py-3.5 text-center">
+                                <span class="inline-flex items-center px-2 py-0.5 bg-red-50 text-red-600 text-xs font-bold rounded">-@vt.DeductPoints</span>
+                            </td>
+                            <td class="px-4 py-3.5 text-slate-600 text-xs max-w-xs truncate">@(vt.Description ?? "-")</td>
+                            <td class="px-4 py-3.5">
+                                <div class="flex items-center justify-center gap-1">
+                                    <button type="button"
+                                            class="p-1.5 text-slate-400 hover:text-yellow-600 hover:bg-yellow-50 rounded-lg transition-all btn-render-modal"
+                                            title="Sua loai vi pham"
+                                            data-url="@Url.Action("_CreateOrEdit", "ViolationType", new { id = vt.Id })"
+                                            data-title="Sua loai vi pham">
+                                        <span class="material-symbols-outlined text-base">edit</span>
+                                    </button>
+                                    <button type="button"
+                                            class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                                            title="Xoa loai vi pham"
+                                            onclick="deleteViolationType(@vt.Id, '@vt.Name')">
+                                        <span class="material-symbols-outlined text-base">delete</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function deleteViolationType(id, name) {
+            Swal.fire({
+                title: 'Xac nhan xoa loai vi pham',
+                text: 'Ban co chac chan muon xoa loai vi pham "' + name + '"? Hanh dong nay khong the hoan tac.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#94a3b8',
+                confirmButtonText: 'Xoa',
+                cancelButtonText: 'Huy bo'
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '@Url.Action("DeleteViolationType", "ViolationType")',
+                        type: 'POST',
+                        data: { id: id, __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val() },
+                        success: function(result) {
+                            if (result.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Thanh cong!',
+                                    text: result.message,
+                                    confirmButtonColor: '#006b2c'
+                                }).then(function() {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Loi',
+                                    text: result.message,
+                                    confirmButtonColor: '#006b2c'
+                                });
+                            }
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Loi',
+                                text: 'Khong the xoa loai vi pham. Vui long thu lai.',
+                                confirmButtonColor: '#006b2c'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}

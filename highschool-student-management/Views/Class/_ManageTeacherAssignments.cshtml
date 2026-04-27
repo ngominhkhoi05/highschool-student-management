@@ -1,0 +1,255 @@
+@model highschool_student_management.ViewModels.ManageTeacherAssignmentsViewModel
+
+<div class="bg-white rounded-2xl shadow-xl w-full max-w-3xl mx-auto overflow-hidden max-h-[90vh] overflow-y-auto">
+    <!-- Header -->
+    <div class="bg-green-600 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
+        <div>
+            <h3 class="text-white font-bold text-lg">Phan cong giao vien</h3>
+            <p class="text-green-100 text-xs mt-0.5">@Model.ClassName</p>
+        </div>
+        <button type="button" onclick="closeManageModal()"
+                class="text-white/70 hover:text-white transition-colors">
+            <span class="material-symbols-outlined text-2xl">close</span>
+        </button>
+    </div>
+
+    <div class="p-6 space-y-6">
+        <!-- Form them phan cong moi -->
+        <div class="bg-green-50 rounded-xl p-4 space-y-3">
+            <h4 class="font-bold text-slate-700 text-sm flex items-center gap-2">
+                <span class="material-symbols-outlined text-green-600 text-base">add_circle</span>
+                Them phan cong moi
+            </h4>
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Mon hoc</label>
+                    <select id="newSubjectId"
+                            class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all bg-white">
+                        <option value="">-- Chon mon --</option>
+                        @foreach (var s in Model.Subjects)
+                        {
+                            <option value="@s.Id">@s.Name (@s.Code)</option>
+                        }
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Giao vien</label>
+                    <select id="newTeacherId"
+                            class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all bg-white">
+                        <option value="">-- Chon giao vien --</option>
+                        @foreach (var t in Model.Teachers)
+                        {
+                            <option value="@t.Id">@t.FullName @(string.IsNullOrEmpty(t.Specialization) ? "" : $"({t.Specialization})")</option>
+                        }
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Hoc ky</label>
+                    <select id="newSemesterId"
+                            class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all bg-white">
+                        <option value="">-- Chon hoc ky --</option>
+                        @foreach (var sem in Model.Semesters)
+                        {
+                            <option value="@sem.Id">@sem.Name</option>
+                        }
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">So tiet/tuan</label>
+                    <input type="number"
+                           id="newPeriodsPerWeek"
+                           min="1" max="20"
+                           placeholder="VD: 4"
+                           class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all placeholder:text-slate-300" />
+                </div>
+            </div>
+            <button type="button"
+                    onclick="saveAssignment()"
+                    class="w-full px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-base">add</span>
+                Phan cong
+            </button>
+        </div>
+
+        <!-- Danh sach phan cong hien tai -->
+        <div class="space-y-3">
+            <h4 class="font-bold text-slate-700 text-sm flex items-center gap-2">
+                <span class="material-symbols-outlined text-green-600 text-base">list</span>
+                Cac phan cong hien tai
+                <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full ml-1">@Model.CurrentAssignments.Count</span>
+            </h4>
+            <div id="assignmentsList" class="space-y-2 max-h-[350px] overflow-y-auto">
+                @if (!Model.CurrentAssignments.Any())
+                {
+                    <div class="text-center py-8 text-slate-400">
+                        <span class="material-symbols-outlined text-3xl">assignment_turned_in</span>
+                        <p class="text-xs mt-1">Chua co phan cong nao</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="bg-slate-50 text-slate-600">
+                                <tr>
+                                    <th class="px-4 py-2.5 text-left font-semibold text-xs">Mon hoc</th>
+                                    <th class="px-4 py-2.5 text-left font-semibold text-xs">Giao vien</th>
+                                    <th class="px-4 py-2.5 text-left font-semibold text-xs">Hoc ky</th>
+                                    <th class="px-4 py-2.5 text-center font-semibold text-xs w-20">So tiet</th>
+                                    <th class="px-4 py-2.5 text-center font-semibold text-xs w-16">Xoa</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var a in Model.CurrentAssignments)
+                                {
+                                    <tr class="border-b border-slate-100 hover:bg-green-50/30 transition-colors" id="assignment-row-@a.Id">
+                                        <td class="px-4 py-2.5 font-medium text-slate-700">@a.SubjectName</td>
+                                        <td class="px-4 py-2.5 text-slate-600">@a.TeacherName</td>
+                                        <td class="px-4 py-2.5 text-slate-600 text-xs">@a.SemesterName</td>
+                                        <td class="px-4 py-2.5 text-center text-slate-600">@(a.PeriodsPerWeek?.ToString() ?? "-")</td>
+                                        <td class="px-4 py-2.5 text-center">
+                                            <button type="button"
+                                                    onclick="removeAssignment(@a.Id, '@a.SubjectName')"
+                                                    class="p-1 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-all"
+                                                    title="Xoa phan cong">
+                                                <span class="material-symbols-outlined text-base">delete</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function closeManageModal() {
+        $('#modalContainer').fadeOut().addClass('hidden').removeClass('flex');
+    }
+
+    function reloadAssignments() {
+        $.ajax({
+            url: '@Url.Action("_ManageTeacherAssignments", "Class")',
+            type: 'GET',
+            data: { classId: @Model.ClassId },
+            success: function(html) {
+                $('#modalBody').html(html);
+            },
+            error: function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Loi',
+                    text: 'Khong the tai lai du lieu.',
+                    confirmButtonColor: '#006b2c'
+                });
+            }
+        });
+    }
+
+    function saveAssignment() {
+        var subjectId = parseInt($('#newSubjectId').val());
+        var teacherId = parseInt($('#newTeacherId').val());
+        var semesterId = parseInt($('#newSemesterId').val());
+        var periods = parseInt($('#newPeriodsPerWeek').val()) || null;
+
+        if (!subjectId || !teacherId || !semesterId) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Chua dien day thong tin',
+                text: 'Vui long chon day du Mon hoc, Giao vien va Hoc ky.',
+                confirmButtonColor: '#006b2c'
+            });
+            return;
+        }
+
+        $.ajax({
+            url: '@Url.Action("SaveTeacherAssignment", "Class")',
+            type: 'POST',
+            data: {
+                classId: @Model.ClassId,
+                subjectId: subjectId,
+                teacherId: teacherId,
+                semesterId: semesterId,
+                periodsPerWeek: periods,
+                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+            },
+            success: function(result) {
+                if (result.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thanh cong!',
+                        text: result.message,
+                        confirmButtonColor: '#006b2c'
+                    });
+                    reloadAssignments();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Loi',
+                        text: result.message,
+                        confirmButtonColor: '#006b2c'
+                    });
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Loi',
+                    text: 'Khong the luu. Vui long thu lai.',
+                    confirmButtonColor: '#006b2c'
+                });
+            }
+        });
+    }
+
+    function removeAssignment(id, subjectName) {
+        Swal.fire({
+            title: 'Xac nhan xoa',
+            text: 'Ban co muon xoa phan cong mon "' + subjectName + '"?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#94a3b8',
+            confirmButtonText: 'Xoa',
+            cancelButtonText: 'Huy bo'
+        }).then(function(result) {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '@Url.Action("RemoveTeacherAssignment", "Class")',
+                    type: 'POST',
+                    data: { id: id, __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val() },
+                    success: function(result) {
+                        if (result.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Thanh cong!',
+                                text: result.message,
+                                confirmButtonColor: '#006b2c'
+                            });
+                            reloadAssignments();
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Loi',
+                                text: result.message,
+                                confirmButtonColor: '#006b2c'
+                            });
+                        }
+                    },
+                    error: function() {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Loi',
+                            text: 'Khong the xoa. Vui long thu lai.',
+                            confirmButtonColor: '#006b2c'
+                        });
+                    }
+                });
+            }
+        });
+    }
+</script>

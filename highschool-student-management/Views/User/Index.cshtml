@@ -1,0 +1,344 @@
+@*
+    Trang hồ sơ cá nhân - Hiển thị thông tin người dùng và các hành động chỉnh sửa
+*@
+@model highschool_student_management.ViewModels.ProfileViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Hồ sơ cá nhân";
+}
+
+<!-- Nội dung chính -->
+<div class="max-w-[1200px] mx-auto space-y-6">
+
+    <!-- Breadcrumb -->
+    <div class="flex items-center gap-2 text-sm text-slate-500">
+        <a asp-action="Index" asp-controller="Home" class="hover:text-green-600 transition-colors">Trang chủ</a>
+        <span class="material-symbols-outlined text-base">chevron_right</span>
+        <span class="text-slate-700 font-medium">Hồ sơ cá nhân</span>
+    </div>
+
+    <!-- Tiêu đề -->
+    <div>
+        <h1 class="text-2xl font-bold text-slate-800">Hồ sơ cá nhân</h1>
+        <p class="text-sm text-slate-500 mt-1">Xem và cập nhật thông tin của bạn</p>
+    </div>
+
+    <!-- Layout 2 cột -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- Cột trái: Avatar + Thông tin cơ bản -->
+        <div class="space-y-6">
+
+            <!-- Thẻ thông tin tài khoản -->
+            <div class="bg-white rounded-2xl border border-green-100 shadow-sm overflow-hidden">
+                <!-- Header -->
+                <div class="h-24 bg-gradient-to-r from-green-600 to-green-700"></div>
+                <!-- Body -->
+                <div class="px-6 pb-6">
+                    <!-- Avatar -->
+                    <div class="-mt-12 mb-4">
+                        <div class="w-24 h-24 rounded-full border-4 border-white bg-green-600 flex items-center justify-center text-white text-3xl font-bold shadow-md mx-auto">
+                            @(string.IsNullOrEmpty(Model.FullName) ? Model.Username[0].ToString().ToUpper() : Model.FullName[0].ToString().ToUpper())
+                        </div>
+                    </div>
+                    <!-- Tên + Role -->
+                    <div class="text-center">
+                        <h2 class="text-xl font-bold text-slate-800">@(Model.FullName ?? Model.Username)</h2>
+                        <span class="inline-block mt-2 px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full uppercase tracking-wide">
+                            @Model.RoleDisplayName
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thẻ hành động -->
+            <div class="bg-white rounded-2xl border border-green-100 shadow-sm p-6 space-y-3">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Hành động</p>
+                <button class="btn-render-modal w-full flex items-center gap-3 bg-green-50 text-green-700 px-4 py-3 rounded-xl hover:bg-green-100 transition-all font-medium text-sm"
+                        data-url="@Url.Action("EditProfile", "User")"
+                        data-title="Chỉnh sửa hồ sơ">
+                    <span class="material-symbols-outlined text-lg">edit</span>
+                    Chỉnh sửa hồ sơ
+                </button>
+                <button class="btn-render-modal w-full flex items-center gap-3 bg-slate-50 text-slate-700 px-4 py-3 rounded-xl hover:bg-slate-100 transition-all font-medium text-sm"
+                        data-url="@Url.Action("ChangePassword", "User")"
+                        data-title="Đổi mật khẩu">
+                    <span class="material-symbols-outlined text-lg">lock</span>
+                    Đổi mật khẩu
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Cột phải: Thông tin chi tiết -->
+        <div class="lg:col-span-2 space-y-6">
+
+            <!-- Thông tin tài khoản -->
+            <div class="bg-white rounded-2xl border border-green-100 shadow-sm p-6">
+                <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-green-600 text-lg">account_circle</span>
+                    Thông tin tài khoản
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="info-item">
+                        <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Tên đăng nhập</p>
+                        <p class="text-sm font-medium text-slate-700 mt-1">@Model.Username</p>
+                    </div>
+                    <div class="info-item">
+                        <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Email</p>
+                        <p class="text-sm font-medium text-slate-700 mt-1">@(string.IsNullOrEmpty(Model.Email) ? "Chưa cập nhật" : Model.Email)</p>
+                    </div>
+                    <div class="info-item">
+                        <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Vai trò</p>
+                        <p class="text-sm font-medium text-slate-700 mt-1">@Model.RoleDisplayName</p>
+                    </div>
+                    <div class="info-item">
+                        <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Số điện thoại</p>
+                        <p class="text-sm font-medium text-slate-700 mt-1">@(string.IsNullOrEmpty(Model.Phone) ? "Chưa cập nhật" : Model.Phone)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thông tin cá nhân -->
+            <div class="bg-white rounded-2xl border border-green-100 shadow-sm p-6">
+                <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-green-600 text-lg">person</span>
+                    Thông tin cá nhân
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="info-item">
+                        <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Họ và tên</p>
+                        <p class="text-sm font-medium text-slate-700 mt-1">@(string.IsNullOrEmpty(Model.FullName) ? "Chưa cập nhật" : Model.FullName)</p>
+                    </div>
+                    <div class="info-item">
+                        <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Giới tính</p>
+                        <p class="text-sm font-medium text-slate-700 mt-1">@Model.GenderName</p>
+                    </div>
+                    <div class="info-item">
+                        <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Ngày sinh</p>
+                        <p class="text-sm font-medium text-slate-700 mt-1">@(Model.DateOfBirth?.ToString("dd/MM/yyyy") ?? "Chưa cập nhật")</p>
+                    </div>
+                    <div class="info-item">
+                        <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Địa chỉ</p>
+                        <p class="text-sm font-medium text-slate-700 mt-1">@(string.IsNullOrEmpty(Model.Address) ? "Chưa cập nhật" : Model.Address)</p>
+                    </div>
+                </div>
+            </div>
+
+            @* === Thông tin riêng theo từng vai trò === *@
+
+            @* Giáo viên *@
+            @if (Model.RelatedType?.ToLower() == "teacher")
+            {
+                <div class="bg-white rounded-2xl border border-green-100 shadow-sm p-6">
+                    <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-green-600 text-lg">school</span>
+                        Thông tin giáo viên
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="info-item">
+                            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Chuyên môn</p>
+                            <p class="text-sm font-medium text-slate-700 mt-1">@(string.IsNullOrEmpty(Model.Specialization) ? "Chưa cập nhật" : Model.Specialization)</p>
+                        </div>
+                        <div class="info-item">
+                            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Ngày gia nhập</p>
+                            <p class="text-sm font-medium text-slate-700 mt-1">@(Model.JoinDate?.ToString("dd/MM/yyyy") ?? "Chưa cập nhật")</p>
+                        </div>
+                        <div class="info-item">
+                            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Trạng thái</p>
+                            <p class="text-sm font-medium text-slate-700 mt-1">
+                                @(Model.TeacherStatus switch
+                                {
+                                    1 => "Đang dạy",
+                                    2 => "Nghỉ phép",
+                                    3 => "Nghỉ việc",
+                                    _ => "Không xác định"
+                                })
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @* Học sinh *@
+            @if (Model.RelatedType?.ToLower() == "student")
+            {
+                <div class="bg-white rounded-2xl border border-green-100 shadow-sm p-6">
+                    <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-green-600 text-lg">student</span>
+                        Thông tin học sinh
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="info-item">
+                            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Mã học sinh</p>
+                            <p class="text-sm font-medium text-slate-700 mt-1">@(string.IsNullOrEmpty(Model.StudentCode) ? "Chưa cập nhật" : Model.StudentCode)</p>
+                        </div>
+                        <div class="info-item">
+                            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Nơi sinh</p>
+                            <p class="text-sm font-medium text-slate-700 mt-1">@(string.IsNullOrEmpty(Model.PlaceOfBirth) ? "Chưa cập nhật" : Model.PlaceOfBirth)</p>
+                        </div>
+                        <div class="info-item">
+                            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Dân tộc</p>
+                            <p class="text-sm font-medium text-slate-700 mt-1">@(string.IsNullOrEmpty(Model.Ethnicity) ? "Chưa cập nhật" : Model.Ethnicity)</p>
+                        </div>
+                        <div class="info-item">
+                            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Tôn giáo</p>
+                            <p class="text-sm font-medium text-slate-700 mt-1">@(string.IsNullOrEmpty(Model.Religion) ? "Chưa cập nhật" : Model.Religion)</p>
+                        </div>
+                        <div class="info-item">
+                            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Ngày nhập học</p>
+                            <p class="text-sm font-medium text-slate-700 mt-1">@(Model.EnrollmentDate?.ToString("dd/MM/yyyy") ?? "Chưa cập nhật")</p>
+                        </div>
+                        <div class="info-item">
+                            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Trạng thái</p>
+                            <p class="text-sm font-medium text-slate-700 mt-1">
+                                @(Model.StudentStatus switch
+                                {
+                                    1 => "Đang học",
+                                    2 => "Nghỉ học",
+                                    3 => "Tốt nghiệp",
+                                    4 => "Chuyển trường",
+                                    _ => "Không xác định"
+                                })
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @* Phụ huynh *@
+            @if (Model.RelatedType?.ToLower() == "parent")
+            {
+                <div class="bg-white rounded-2xl border border-green-100 shadow-sm p-6">
+                    <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-green-600 text-lg">family_restroom</span>
+                        Thông tin phụ huynh
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="info-item">
+                            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Nghề nghiệp</p>
+                            <p class="text-sm font-medium text-slate-700 mt-1">@(string.IsNullOrEmpty(Model.Occupation) ? "Chưa cập nhật" : Model.Occupation)</p>
+                        </div>
+                        <div class="info-item">
+                            <p class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Quan hệ với học sinh</p>
+                            <p class="text-sm font-medium text-slate-700 mt-1">
+                                @(Model.Relationship switch
+                                {
+                                    1 => "Cha",
+                                    2 => "Mẹ",
+                                    3 => "Người giám hộ",
+                                    _ => "Không xác định"
+                                })
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+
+            // === Xử lý form cập nhật hồ sơ trong modal ===
+            $(document).on('submit', '#formEditProfile', function(e) {
+                e.preventDefault();
+                var form = $(this);
+                var url = form.attr('action');
+                var formData = form.serialize();
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: formData,
+                    success: function(result) {
+                        if (result.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Thành công',
+                                text: result.message,
+                                confirmButtonColor: '#006b2c'
+                            }).then(function() {
+                                $('#modalContainer').fadeOut().addClass('hidden').removeClass('flex');
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Lỗi',
+                                text: result.message,
+                                confirmButtonColor: '#006b2c'
+                            });
+                        }
+                    },
+                    error: function() {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: 'Không thể lưu dữ liệu. Vui lòng thử lại.',
+                            confirmButtonColor: '#006b2c'
+                        });
+                    }
+                });
+            });
+
+            // === Xử lý form đổi mật khẩu trong modal ===
+            $(document).on('submit', '#formChangePassword', function(e) {
+                e.preventDefault();
+                var form = $(this);
+                var url = form.attr('action');
+                var formData = form.serialize();
+
+                // Kiểm tra mật khẩu mới và xác nhận có khớp không
+                var newPass = $('#NewPassword').val();
+                var confirmPass = $('#ConfirmPassword').val();
+                if (newPass !== confirmPass) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Mật khẩu xác nhận không khớp.',
+                        confirmButtonColor: '#006b2c'
+                    });
+                    return;
+                }
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: formData,
+                    success: function(result) {
+                        if (result.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Thành công',
+                                text: result.message,
+                                confirmButtonColor: '#006b2c'
+                            }).then(function() {
+                                $('#modalContainer').fadeOut().addClass('hidden').removeClass('flex');
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Lỗi',
+                                text: result.message,
+                                confirmButtonColor: '#006b2c'
+                            });
+                        }
+                    },
+                    error: function() {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: 'Không thể lưu dữ liệu. Vui lòng thử lại.',
+                            confirmButtonColor: '#006b2c'
+                        });
+                    }
+                });
+            });
+
+        });
+    </script>
+}

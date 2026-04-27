@@ -1,0 +1,372 @@
+@{
+    ViewData["Title"] = "So diem danh";
+}
+
+<div class="max-w-4xl mx-auto">
+    <!-- Thong tin loc -->
+    <div class="bg-green-50 rounded-xl p-4 mb-4 flex flex-wrap gap-3 items-end">
+        <div class="flex-1 min-w-[160px]">
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Lop hoc</label>
+            <select id="filterClass"
+                    class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 bg-white">
+                <option value="">-- Chon lop --</option>
+            </select>
+        </div>
+        <div class="flex-1 min-w-[160px]">
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Mon hoc</label>
+            <select id="filterSubject"
+                    class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 bg-white">
+                <option value="">-- Chon mon --</option>
+            </select>
+        </div>
+        <div class="w-36">
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Ngay diem danh</label>
+            <input type="date"
+                   id="filterDate"
+                   value="@DateTime.Now.ToString("yyyy-MM-dd")"
+                   class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 bg-white" />
+        </div>
+        <div class="w-28">
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Tiet</label>
+            <select id="filterPeriod"
+                    class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 bg-white">
+                <option value="0">Ca ngay</option>
+                @for (int i = 1; i <= 10; i++)
+                {
+                    <option value="@i">Tiet @i</option>
+                }
+            </select>
+        </div>
+        <button type="button"
+                onclick="loadAttendanceList()"
+                class="px-5 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg shadow-sm transition-all">
+            Tai danh sach
+        </button>
+    </div>
+
+    <!-- Nut hanh dong -->
+    <div class="flex justify-end gap-3 mb-3">
+        <button type="button"
+                id="btnBulkUpdate"
+                onclick="openBulkUpdateModal()"
+                disabled
+                class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl shadow-sm transition-all flex items-center gap-2">
+            <span class="material-symbols-outlined text-base">edit</span>
+            Cap nhat hang loat
+        </button>
+        <button type="button"
+                id="btnSaveBulk"
+                onclick="saveBulkAttendance()"
+                disabled
+                class="px-6 py-2.5 bg-green-600 hover:bg-green-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl shadow-sm transition-all flex items-center gap-2">
+            <span class="material-symbols-outlined text-base">save</span>
+            Luu toan bo
+        </button>
+    </div>
+
+    <!-- Popup cap nhat hang loat -->
+    <div id="bulkUpdateModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
+            <div class="bg-blue-600 px-6 py-4 flex items-center justify-between">
+                <h3 class="text-white font-bold text-lg flex items-center gap-2">
+                    <span class="material-symbols-outlined">edit</span>
+                    Cap nhat hang loat
+                </h3>
+                <button onclick="closeBulkUpdateModal()" class="text-white/80 hover:text-white transition-colors">
+                    <span class="material-symbols-outlined text-2xl">close</span>
+                </button>
+            </div>
+            <div class="p-6 space-y-5">
+                <p id="bulkSelectedCount" class="text-sm text-slate-500"></p>
+
+                <div>
+                    <label class="block text-sm font-semibold text-slate-600 mb-2">Trang thai</label>
+                    <select id="bulkStatus"
+                            class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 bg-white">
+                        <option value="0">-- Giữ nguyên --</option>
+                        <option value="1">Co mat</option>
+                        <option value="2">Vang co phep</option>
+                        <option value="3">Vang khong phep</option>
+                        <option value="4">Di tre</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-slate-600 mb-2">Ghi chu</label>
+                    <input type="text"
+                           id="bulkNote"
+                           placeholder="Nhap ghi chu hoac de trong de giu nguyen..."
+                           class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 bg-white placeholder:text-slate-300" />
+                </div>
+
+                <div class="flex gap-3 pt-2">
+                    <button type="button"
+                            onclick="closeBulkUpdateModal()"
+                            class="flex-1 px-4 py-2.5 border border-slate-200 text-slate-600 hover:bg-slate-50 text-sm font-semibold rounded-xl transition-all">
+                        Dong
+                    </button>
+                    <button type="button"
+                            onclick="applyBulkUpdate()"
+                            class="flex-1 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-base">check</span>
+                        Ap dung
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Danh sach hoc sinh -->
+    <div class="bg-white rounded-2xl shadow-sm border border-green-100 overflow-hidden">
+        <div class="bg-green-600 px-6 py-3">
+            <h3 class="text-white font-bold" id="listTitle">Chon lop de bat dau diem danh</h3>
+        </div>
+        <div id="attendanceListContainer">
+            <div class="p-8 text-center text-slate-400">
+                <span class="material-symbols-outlined text-4xl">table_chart</span>
+                <p class="mt-2">Vui long chon lop, mon va ngay de tai danh sach hoc sinh.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var gClassId = 0;
+    var gSubjectId = 0;
+    var gDate = '';
+    var gPeriod = 0;
+
+    $(document).ready(function() {
+        loadFilterData();
+        $('#filterDate').val(new Date().toISOString().split('T')[0]);
+    });
+
+    function loadFilterData() {
+        $.ajax({
+            url: '@Url.Action("GetFilterData", "TeacherAttendance")',
+            type: 'GET',
+            success: function(result) {
+                if (result.success) {
+                    $('#filterClass').empty().append('<option value="">-- Chon lop --</option>');
+                    result.classes.forEach(function(c) {
+                        $('#filterClass').append('<option value="' + c.classId + '|' + c.semesterId + '">' + c.className + ' (' + c.semesterName + ')</option>');
+                    });
+
+                    // Lop rong -> xoa mon
+                    $('#filterSubject').empty().append('<option value="">-- Chon mon --</option>');
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Loi',
+                        text: result.message,
+                        confirmButtonColor: '#006b2c'
+                    });
+                }
+            }
+        });
+    }
+
+    // Khi chon lop -> load mon cua lop do
+    $('#filterClass').on('change', function() {
+        var val = $(this).val();
+        if (!val) {
+            $('#filterSubject').empty().append('<option value="">-- Chon mon --</option>');
+            gClassId = 0;
+            return;
+        }
+
+        var parts = val.split('|');
+        var classId = parseInt(parts[0]);
+        var semesterId = parseInt(parts[1]);
+        gClassId = classId;
+
+        $.ajax({
+            url: '@Url.Action("GetSubjectsByClass", "TeacherAttendance")',
+            type: 'GET',
+            data: { classId: classId, semesterId: semesterId },
+            success: function(result) {
+                $('#filterSubject').empty().append('<option value="">-- Chon mon --</option>');
+                if (result.success && result.subjects.length > 0) {
+                    result.subjects.forEach(function(s) {
+                        $('#filterSubject').append('<option value="' + s.id + '">' + s.name + ' (' + s.code + ')</option>');
+                    });
+                } else {
+                    $('#filterSubject').append('<option value="">-- Khong co mon --</option>');
+                }
+            }
+        });
+    });
+
+    $('#filterSubject').on('change', function() {
+        gSubjectId = parseInt($(this).val()) || 0;
+    });
+
+    function loadAttendanceList() {
+        var classVal = $('#filterClass').val();
+        var subjectId = parseInt($('#filterSubject').val()) || 0;
+        var dateStr = $('#filterDate').val();
+        var period = parseInt($('#filterPeriod').val()) || 0;
+
+        if (!classVal) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Chua chon lop',
+                text: 'Vui long chon lop hoc.',
+                confirmButtonColor: '#006b2c'
+            });
+            return;
+        }
+
+        var parts = classVal.split('|');
+        var classId = parseInt(parts[0]);
+
+        gClassId = classId;
+        gSubjectId = subjectId;
+        gDate = dateStr;
+        gPeriod = period;
+
+        var className = $('#filterClass option:selected').text();
+        var subjectName = $('#filterSubject option:selected').text();
+
+        $('#listTitle').text('Danh sach diem danh - ' + className + (subjectId > 0 ? ' - ' + subjectName : '') + ' - ' + dateStr + (period > 0 ? ' - Tiet ' + period : ' - Ca ngay'));
+
+        $.ajax({
+            url: '@Url.Action("GetStudentListForAttendance", "TeacherAttendance")',
+            type: 'GET',
+            data: {
+                classId: classId,
+                subjectId: subjectId,
+                date: dateStr,
+                period: period
+            },
+            success: function(html) {
+                $('#attendanceListContainer').html(html);
+                $('#btnSaveBulk').prop('disabled', false);
+                $('#btnBulkUpdate').prop('disabled', true);
+                updateSelectedCount();
+            },
+            error: function() {
+                $('#attendanceListContainer').html('<div class="p-8 text-center text-red-400"><span class="material-symbols-outlined text-4xl">error</span><p class="mt-2">Da xay ra loi khi tai danh sach.</p></div>');
+            }
+        });
+    }
+
+    function saveBulkAttendance() {
+        if (gClassId === 0) return;
+
+        var items = [];
+
+        $('#attendanceTable tbody tr').each(function() {
+            var studentId = parseInt($(this).data('student-id'));
+            var status = parseInt($(this).find('.status-select').val()) || 0;
+            var note = $(this).find('.note-input').val();
+
+            if (status > 0) {
+                items.push({
+                    studentId: studentId,
+                    status: status,
+                    note: note || null
+                });
+            }
+        });
+
+        if (!items.length) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Chua co du lieu',
+                text: 'Vui long danh gia it nhat mot hoc sinh.',
+                confirmButtonColor: '#006b2c'
+            });
+            return;
+        }
+
+        $.ajax({
+            url: '@Url.Action("SaveBulkAttendance", "TeacherAttendance")',
+            type: 'POST',
+            contentType: 'application/json',
+            headers: {
+                'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+            },
+            data: JSON.stringify({
+                classId: gClassId,
+                subjectId: gSubjectId,
+                date: gDate,
+                period: gPeriod,
+                items: items
+            }),
+            success: function(result) {
+                if (result.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thanh cong!',
+                        text: result.message,
+                        confirmButtonColor: '#006b2c'
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Loi',
+                        text: result.message,
+                        confirmButtonColor: '#006b2c'
+                    });
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Loi',
+                    text: 'Khong the luu. Vui long thu lai.',
+                    confirmButtonColor: '#006b2c'
+                });
+            }
+        });
+    }
+
+    function toggleAllAttendance(checkbox) {
+        $('.attendance-check').prop('checked', $(checkbox).prop('checked'));
+        updateSelectedCount();
+    }
+
+    function updateSelectedCount() {
+        var count = $('.attendance-check:checked').length;
+        $('#selectedCount').text(count > 0 ? '(' + count + ')' : '');
+        $('#btnBulkUpdate').prop('disabled', count === 0);
+    }
+
+    function openBulkUpdateModal() {
+        var checked = $('.attendance-check:checked');
+        if (!checked.length) return;
+
+        $('#bulkSelectedCount').text('Dang cap nhat ' + checked.length + ' hoc sinh duoc chon.');
+        $('#bulkStatus').val('0');
+        $('#bulkNote').val('');
+
+        var modal = $('#bulkUpdateModal');
+        modal.removeClass('hidden').addClass('flex');
+    }
+
+    function closeBulkUpdateModal() {
+        var modal = $('#bulkUpdateModal');
+        modal.removeClass('flex').addClass('hidden');
+    }
+
+    function applyBulkUpdate() {
+        var checked = $('.attendance-check:checked');
+        var bulkStatus = parseInt($('#bulkStatus').val()) || 0;
+        var bulkNote = $('#bulkNote').val();
+
+        checked.each(function() {
+            var row = $(this).closest('tr');
+
+            if (bulkStatus > 0) {
+                row.find('.status-select').val(bulkStatus);
+            }
+            if (bulkNote !== '') {
+                row.find('.note-input').val(bulkNote);
+            }
+        });
+
+        closeBulkUpdateModal();
+        updateSelectedCount();
+    }
+</script>

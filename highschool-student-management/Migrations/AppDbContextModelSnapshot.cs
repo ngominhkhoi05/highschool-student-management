@@ -966,19 +966,21 @@ namespace highschool_student_management.Migrations
                     b.Property<DateTime?>("LastLogin")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<int?>("RelatedId")
+                    b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.Property<string>("RelatedType")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                    b.Property<int?>("StudentId")
+                        .HasColumnType("int");
 
-                    b.Property<int>("RoleId")
+                    b.Property<int?>("TeacherId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -991,7 +993,19 @@ namespace highschool_student_management.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ParentId")
+                        .IsUnique()
+                        .HasFilter("[ParentId] IS NOT NULL");
+
                     b.HasIndex("RoleId");
+
+                    b.HasIndex("StudentId")
+                        .IsUnique()
+                        .HasFilter("[StudentId] IS NOT NULL");
+
+                    b.HasIndex("TeacherId")
+                        .IsUnique()
+                        .HasFilter("[TeacherId] IS NOT NULL");
 
                     b.HasIndex("Username")
                         .IsUnique();
@@ -1410,13 +1424,34 @@ namespace highschool_student_management.Migrations
 
             modelBuilder.Entity("QuanLyHocSinh.Models.User", b =>
                 {
+                    b.HasOne("QuanLyHocSinh.Models.Parent", "Parent")
+                        .WithOne()
+                        .HasForeignKey("QuanLyHocSinh.Models.User", "ParentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("QuanLyHocSinh.Models.Role", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("QuanLyHocSinh.Models.Student", "Student")
+                        .WithOne()
+                        .HasForeignKey("QuanLyHocSinh.Models.User", "StudentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("QuanLyHocSinh.Models.Teacher", "Teacher")
+                        .WithOne()
+                        .HasForeignKey("QuanLyHocSinh.Models.User", "TeacherId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Parent");
+
                     b.Navigation("Role");
+
+                    b.Navigation("Student");
+
+                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("QuanLyHocSinh.Models.Violation", b =>

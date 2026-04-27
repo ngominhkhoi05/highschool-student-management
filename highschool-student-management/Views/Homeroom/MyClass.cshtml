@@ -1,0 +1,126 @@
+@model highschool_student_management.ViewModels.HomeroomClassViewModel
+
+@{
+    ViewData["Title"] = "Lop chu nhiem";
+}
+
+@if (ViewData["NoClass"] != null && (bool)ViewData["NoClass"] == true)
+{
+    <div class="bg-white rounded-2xl shadow-sm border border-green-100 p-12 text-center">
+        <span class="material-symbols-outlined text-6xl text-slate-300">school</span>
+        <h3 class="mt-4 text-lg font-semibold text-slate-500">Ban chua co lop chu nhiem</h3>
+        <p class="mt-2 text-sm text-slate-400">Vui long lien he quan tri de duoc phan cong lop chu nhiem.</p>
+    </div>
+}
+else
+{
+    <div class="max-w-5xl mx-auto">
+        <!-- Thong tin lop -->
+        <div class="bg-white rounded-2xl shadow-sm border border-green-100 overflow-hidden mb-6">
+            <div class="bg-green-600 px-6 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-white text-2xl">meeting_room</span>
+                    <div>
+                        <h2 class="text-white font-bold text-lg">@Model.ClassName</h2>
+                        <p class="text-green-200 text-xs">@Model.SchoolYearName</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-6 text-green-100 text-sm">
+                    <div class="text-center">
+                        <p class="text-2xl font-bold text-white">@Model.StudentCount</p>
+                        <p class="text-xs">Hoc sinh</p>
+                    </div>
+                    @if (Model.GradeLevel != null)
+                    {
+                        <div class="text-center">
+                            <p class="text-2xl font-bold text-white">@Model.GradeLevel</p>
+                            <p class="text-xs">Khoi</p>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Room))
+                    {
+                        <div class="text-center">
+                            <span class="material-symbols-outlined text-white text-xl">room</span>
+                            <p class="text-xs">@Model.Room</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Danh sach hoc sinh -->
+        <div class="bg-white rounded-2xl shadow-sm border border-green-100 overflow-hidden">
+            <div class="bg-green-600 px-6 py-3">
+                <h3 class="text-white font-bold">Danh sach hoc sinh</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-green-50 text-slate-600">
+                        <tr>
+                            <th class="px-4 py-3 text-center font-semibold w-12">STT</th>
+                            <th class="px-4 py-3 text-left font-semibold">Ma HS</th>
+                            <th class="px-4 py-3 text-left font-semibold">Ho va ten</th>
+                            <th class="px-4 py-3 text-center font-semibold">Gioi tinh</th>
+                            <th class="px-4 py-3 text-center font-semibold">Ngay sinh</th>
+                            <th class="px-4 py-3 text-center font-semibold">So dien thoai</th>
+                            <th class="px-4 py-3 text-center font-semibold">Trang thai</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var stt = 1;
+                            foreach (var s in Model.Students)
+                            {
+                                <tr class="odd:bg-white even:bg-green-50/30 hover:bg-green-100/30 transition-colors">
+                                    <td class="px-4 py-3 text-center text-slate-400 text-xs font-medium">@stt</td>
+                                    <td class="px-4 py-3 font-medium text-green-700">@s.StudentCode</td>
+                                    <td class="px-4 py-3 font-semibold text-slate-800">@s.FullName</td>
+                                    <td class="px-4 py-3 text-center">
+                                        @if (s.Gender == 1)
+                                        {
+                                            <span class="text-blue-500">Nam</span>
+                                        }
+                                        else if (s.Gender == 2)
+                                        {
+                                            <span class="text-pink-500">Nu</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-slate-400">-</span>
+                                        }
+                                    </td>
+                                    <td class="px-4 py-3 text-center text-slate-600">
+                                        @(s.DateOfBirth?.ToString("dd/MM/yyyy") ?? "-")
+                                    </td>
+                                    <td class="px-4 py-3 text-center text-slate-600">
+                                        @(s.Phone ?? "-")
+                                    </td>
+                                    <td class="px-4 py-3 text-center">
+                                        @{
+                                            var statusClass = s.Status switch
+                                            {
+                                                1 => "bg-green-100 text-green-700",
+                                                2 => "bg-yellow-100 text-yellow-700",
+                                                3 => "bg-blue-100 text-blue-700",
+                                                _ => "bg-slate-100 text-slate-600"
+                                            };
+                                            var statusText = s.Status switch
+                                            {
+                                                1 => "Dang hoc",
+                                                2 => "Nghi hoc",
+                                                3 => "Tot nghiep",
+                                                _ => "Khac"
+                                            };
+                                        }
+                                        <span class="px-2 py-1 rounded-full text-xs font-semibold @statusClass">@statusText</span>
+                                    </td>
+                                </tr>
+                                stt++;
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
