@@ -22,12 +22,14 @@ namespace QuanLyHocSinh.Models
         [ForeignKey("Role")]
         public int RoleId { get; set; }
 
-        public int? RelatedId { get; set; }
-        // ID tương ứng trong bảng teachers / students / parents
+        public int? TeacherId { get; set; }
+        public int? StudentId { get; set; }
+        public int? ParentId { get; set; }
 
-        [MaxLength(20)]
-        public string? RelatedType { get; set; }
-        // "teacher", "student", "parent", "admin"
+        // Navigation
+        public Teacher? Teacher { get; set; }
+        public Student? Student { get; set; }
+        public Parent? Parent { get; set; }
 
         public int IsActive { get; set; } = 1;
         // 1: đang hoạt động, 0: bị khóa

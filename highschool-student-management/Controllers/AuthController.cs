@@ -76,8 +76,9 @@ namespace highschool_student_management.Controllers
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Username),
                 new Claim(ClaimTypes.Role, user.Role.Name),
-                new Claim("RelatedType", user.RelatedType ?? string.Empty),
-                new Claim("RelatedId", user.RelatedId?.ToString() ?? string.Empty),
+                new Claim("TeacherId", user.TeacherId?.ToString() ?? string.Empty),
+                new Claim("StudentId", user.StudentId?.ToString() ?? string.Empty),
+                new Claim("ParentId", user.ParentId?.ToString() ?? string.Empty),
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

@@ -220,6 +220,25 @@ namespace QuanLyHocSinh.Data
                 .HasForeignKey(sc => sc.SchoolYearId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // User - Teacher/Student/Parent nullable FK
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Teacher)
+                .WithOne()
+                .HasForeignKey<User>(u => u.TeacherId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Student)
+                .WithOne()
+                .HasForeignKey<User>(u => u.StudentId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Parent)
+                .WithOne()
+                .HasForeignKey<User>(u => u.ParentId)
+                .OnDelete(DeleteBehavior.SetNull);
+
             // ===== STATIC DATA (HasData) =====
 
             // Role — 4 vai trò hệ thống

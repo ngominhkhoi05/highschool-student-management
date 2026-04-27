@@ -30,6 +30,9 @@ namespace highschool_student_management.Controllers
 
             var user = await _context.Users
                 .Include(u => u.Role)
+                .Include(u => u.Teacher)
+                .Include(u => u.Student)
+                .Include(u => u.Parent)
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null)
@@ -43,57 +46,55 @@ namespace highschool_student_management.Controllers
                 Username = user.Username,
                 Email = user.Email,
                 RoleName = user.Role.Name,
-                RelatedId = user.RelatedId,
-                RelatedType = user.RelatedType,
+                TeacherId = user.TeacherId,
+                StudentId = user.StudentId,
+                ParentId = user.ParentId,
             };
 
-            // Lay thong tin chi tiet tu bang lien quan dua tren RelatedType
-            switch (user.RelatedType?.ToLower())
+            // Lay thong tin chi tiet tu bang lien quan dua tren Role
+            switch (user.Role.Name)
             {
-                case "teacher":
-                    var teacher = await _context.Teachers.FirstOrDefaultAsync(t => t.Id == user.RelatedId);
-                    if (teacher != null)
+                case "Teacher":
+                    if (user.Teacher != null)
                     {
-                        profile.FullName = teacher.FullName;
-                        profile.Gender = teacher.Gender;
-                        profile.DateOfBirth = teacher.DateOfBirth;
-                        profile.Address = teacher.Address;
-                        profile.Phone = teacher.Phone;
-                        profile.Specialization = teacher.Specialization;
-                        profile.JoinDate = teacher.JoinDate;
-                        profile.TeacherStatus = teacher.Status;
+                        profile.FullName = user.Teacher.FullName;
+                        profile.Gender = user.Teacher.Gender;
+                        profile.DateOfBirth = user.Teacher.DateOfBirth;
+                        profile.Address = user.Teacher.Address;
+                        profile.Phone = user.Teacher.Phone;
+                        profile.Specialization = user.Teacher.Specialization;
+                        profile.JoinDate = user.Teacher.JoinDate;
+                        profile.TeacherStatus = user.Teacher.Status;
                     }
                     break;
 
-                case "student":
-                    var student = await _context.Students.FirstOrDefaultAsync(s => s.Id == user.RelatedId);
-                    if (student != null)
+                case "Student":
+                    if (user.Student != null)
                     {
-                        profile.FullName = student.FullName;
-                        profile.Gender = student.Gender;
-                        profile.DateOfBirth = student.DateOfBirth;
-                        profile.Address = student.Address;
-                        profile.Phone = student.Phone;
-                        profile.StudentCode = student.StudentCode;
-                        profile.PlaceOfBirth = student.PlaceOfBirth;
-                        profile.Ethnicity = student.Ethnicity;
-                        profile.Religion = student.Religion;
-                        profile.EnrollmentDate = student.EnrollmentDate;
-                        profile.StudentStatus = student.Status;
+                        profile.FullName = user.Student.FullName;
+                        profile.Gender = user.Student.Gender;
+                        profile.DateOfBirth = user.Student.DateOfBirth;
+                        profile.Address = user.Student.Address;
+                        profile.Phone = user.Student.Phone;
+                        profile.StudentCode = user.Student.StudentCode;
+                        profile.PlaceOfBirth = user.Student.PlaceOfBirth;
+                        profile.Ethnicity = user.Student.Ethnicity;
+                        profile.Religion = user.Student.Religion;
+                        profile.EnrollmentDate = user.Student.EnrollmentDate;
+                        profile.StudentStatus = user.Student.Status;
                     }
                     break;
 
-                case "parent":
-                    var parent = await _context.Parents.FirstOrDefaultAsync(p => p.Id == user.RelatedId);
-                    if (parent != null)
+                case "Parent":
+                    if (user.Parent != null)
                     {
-                        profile.FullName = parent.FullName;
-                        profile.Gender = parent.Gender;
-                        profile.DateOfBirth = parent.DateOfBirth;
-                        profile.Address = parent.Address;
-                        profile.Phone = parent.Phone;
-                        profile.Occupation = parent.Occupation;
-                        profile.Relationship = parent.Relationship;
+                        profile.FullName = user.Parent.FullName;
+                        profile.Gender = user.Parent.Gender;
+                        profile.DateOfBirth = user.Parent.DateOfBirth;
+                        profile.Address = user.Parent.Address;
+                        profile.Phone = user.Parent.Phone;
+                        profile.Occupation = user.Parent.Occupation;
+                        profile.Relationship = user.Parent.Relationship;
                     }
                     break;
 
@@ -119,6 +120,9 @@ namespace highschool_student_management.Controllers
 
             var user = await _context.Users
                 .Include(u => u.Role)
+                .Include(u => u.Teacher)
+                .Include(u => u.Student)
+                .Include(u => u.Parent)
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null)
@@ -132,46 +136,44 @@ namespace highschool_student_management.Controllers
                 Username = user.Username,
                 Email = user.Email,
                 RoleName = user.Role.Name,
-                RelatedId = user.RelatedId,
-                RelatedType = user.RelatedType,
+                TeacherId = user.TeacherId,
+                StudentId = user.StudentId,
+                ParentId = user.ParentId,
             };
 
-            switch (user.RelatedType?.ToLower())
+            switch (user.Role.Name)
             {
-                case "teacher":
-                    var teacher = await _context.Teachers.FirstOrDefaultAsync(t => t.Id == user.RelatedId);
-                    if (teacher != null)
+                case "Teacher":
+                    if (user.Teacher != null)
                     {
-                        profile.FullName = teacher.FullName;
-                        profile.Gender = teacher.Gender;
-                        profile.DateOfBirth = teacher.DateOfBirth;
-                        profile.Address = teacher.Address;
-                        profile.Phone = teacher.Phone;
-                        profile.Specialization = teacher.Specialization;
+                        profile.FullName = user.Teacher.FullName;
+                        profile.Gender = user.Teacher.Gender;
+                        profile.DateOfBirth = user.Teacher.DateOfBirth;
+                        profile.Address = user.Teacher.Address;
+                        profile.Phone = user.Teacher.Phone;
+                        profile.Specialization = user.Teacher.Specialization;
                     }
                     break;
 
-                case "student":
-                    var student = await _context.Students.FirstOrDefaultAsync(s => s.Id == user.RelatedId);
-                    if (student != null)
+                case "Student":
+                    if (user.Student != null)
                     {
-                        profile.FullName = student.FullName;
-                        profile.Gender = student.Gender;
-                        profile.DateOfBirth = student.DateOfBirth;
-                        profile.Address = student.Address;
-                        profile.Phone = student.Phone;
+                        profile.FullName = user.Student.FullName;
+                        profile.Gender = user.Student.Gender;
+                        profile.DateOfBirth = user.Student.DateOfBirth;
+                        profile.Address = user.Student.Address;
+                        profile.Phone = user.Student.Phone;
                     }
                     break;
 
-                case "parent":
-                    var parent = await _context.Parents.FirstOrDefaultAsync(p => p.Id == user.RelatedId);
-                    if (parent != null)
+                case "Parent":
+                    if (user.Parent != null)
                     {
-                        profile.FullName = parent.FullName;
-                        profile.Gender = parent.Gender;
-                        profile.DateOfBirth = parent.DateOfBirth;
-                        profile.Address = parent.Address;
-                        profile.Phone = parent.Phone;
+                        profile.FullName = user.Parent.FullName;
+                        profile.Gender = user.Parent.Gender;
+                        profile.DateOfBirth = user.Parent.DateOfBirth;
+                        profile.Address = user.Parent.Address;
+                        profile.Phone = user.Parent.Phone;
                     }
                     break;
 
@@ -196,6 +198,9 @@ namespace highschool_student_management.Controllers
 
             var user = await _context.Users
                 .Include(u => u.Role)
+                .Include(u => u.Teacher)
+                .Include(u => u.Student)
+                .Include(u => u.Parent)
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null)
@@ -211,42 +216,39 @@ namespace highschool_student_management.Controllers
             }
 
             // Cap nhat bang chi tiet
-            switch (user.RelatedType?.ToLower())
+            switch (user.Role.Name)
             {
-                case "teacher":
-                    var teacher = await _context.Teachers.FirstOrDefaultAsync(t => t.Id == user.RelatedId);
-                    if (teacher != null)
+                case "Teacher":
+                    if (user.Teacher != null)
                     {
-                        if (!string.IsNullOrEmpty(model.FullName)) teacher.FullName = model.FullName;
-                        if (model.Gender.HasValue) teacher.Gender = model.Gender;
-                        if (model.DateOfBirth.HasValue) teacher.DateOfBirth = model.DateOfBirth;
-                        if (model.Address != null) teacher.Address = model.Address;
-                        if (model.Phone != null) teacher.Phone = model.Phone;
-                        if (model.Specialization != null) teacher.Specialization = model.Specialization;
+                        if (!string.IsNullOrEmpty(model.FullName)) user.Teacher.FullName = model.FullName;
+                        if (model.Gender.HasValue) user.Teacher.Gender = model.Gender;
+                        if (model.DateOfBirth.HasValue) user.Teacher.DateOfBirth = model.DateOfBirth;
+                        if (model.Address != null) user.Teacher.Address = model.Address;
+                        if (model.Phone != null) user.Teacher.Phone = model.Phone;
+                        if (model.Specialization != null) user.Teacher.Specialization = model.Specialization;
                     }
                     break;
 
-                case "student":
-                    var student = await _context.Students.FirstOrDefaultAsync(s => s.Id == user.RelatedId);
-                    if (student != null)
+                case "Student":
+                    if (user.Student != null)
                     {
-                        if (!string.IsNullOrEmpty(model.FullName)) student.FullName = model.FullName;
-                        if (model.Gender.HasValue) student.Gender = model.Gender;
-                        if (model.DateOfBirth.HasValue) student.DateOfBirth = model.DateOfBirth;
-                        if (model.Address != null) student.Address = model.Address;
-                        if (model.Phone != null) student.Phone = model.Phone;
+                        if (!string.IsNullOrEmpty(model.FullName)) user.Student.FullName = model.FullName;
+                        if (model.Gender.HasValue) user.Student.Gender = model.Gender;
+                        if (model.DateOfBirth.HasValue) user.Student.DateOfBirth = model.DateOfBirth;
+                        if (model.Address != null) user.Student.Address = model.Address;
+                        if (model.Phone != null) user.Student.Phone = model.Phone;
                     }
                     break;
 
-                case "parent":
-                    var parent = await _context.Parents.FirstOrDefaultAsync(p => p.Id == user.RelatedId);
-                    if (parent != null)
+                case "Parent":
+                    if (user.Parent != null)
                     {
-                        if (!string.IsNullOrEmpty(model.FullName)) parent.FullName = model.FullName;
-                        if (model.Gender.HasValue) parent.Gender = model.Gender;
-                        if (model.DateOfBirth.HasValue) parent.DateOfBirth = model.DateOfBirth;
-                        if (model.Address != null) parent.Address = model.Address;
-                        if (model.Phone != null) parent.Phone = model.Phone;
+                        if (!string.IsNullOrEmpty(model.FullName)) user.Parent.FullName = model.FullName;
+                        if (model.Gender.HasValue) user.Parent.Gender = model.Gender;
+                        if (model.DateOfBirth.HasValue) user.Parent.DateOfBirth = model.DateOfBirth;
+                        if (model.Address != null) user.Parent.Address = model.Address;
+                        if (model.Phone != null) user.Parent.Phone = model.Phone;
                     }
                     break;
             }

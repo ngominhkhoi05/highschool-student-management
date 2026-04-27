@@ -76,7 +76,6 @@ namespace QuanLyHocSinh.Data
                 Password = BCrypt.Net.BCrypt.HashPassword(DefaultPassword),
                 Email = "admin@school.edu.vn",
                 RoleId = roleAdminId,
-                RelatedType = "admin",
                 IsActive = 1,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
@@ -122,8 +121,7 @@ namespace QuanLyHocSinh.Data
                     Password = BCrypt.Net.BCrypt.HashPassword(DefaultPassword),
                     Email = teachers[i].Email,
                     RoleId = roleTeacherId,
-                    RelatedId = teachers[i].Id,
-                    RelatedType = "teacher",
+                    TeacherId = teachers[i].Id,
                     IsActive = 1,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now
@@ -167,8 +165,7 @@ namespace QuanLyHocSinh.Data
                     Password = BCrypt.Net.BCrypt.HashPassword(DefaultPassword),
                     Email = fakerVi.Internet.Email(students[i].FullName.ToLower().Replace(" ", "")),
                     RoleId = roleStudentId,
-                    RelatedId = students[i].Id,
-                    RelatedType = "student",
+                    StudentId = students[i].Id,
                     IsActive = 1,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now
@@ -211,8 +208,7 @@ namespace QuanLyHocSinh.Data
                     Password = BCrypt.Net.BCrypt.HashPassword(DefaultPassword),
                     Email = parents[i].Email,
                     RoleId = roleParentId,
-                    RelatedId = parents[i].Id,
-                    RelatedType = "parent",
+                    ParentId = parents[i].Id,
                     IsActive = 1,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now

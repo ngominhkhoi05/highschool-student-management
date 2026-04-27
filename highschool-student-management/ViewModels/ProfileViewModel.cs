@@ -10,10 +10,10 @@ namespace highschool_student_management.ViewModels
         public string? Email { get; set; }
         public string RoleName { get; set; } = string.Empty;
 
-        // === Thong tin ca nhan tu bang lien quan ===
-        public int? RelatedId { get; set; }
-        public string? RelatedType { get; set; }
-        // RelatedType: "teacher", "student", "parent", "admin"
+        // === FK rieng cho tung loai nguoi dung ===
+        public int? TeacherId { get; set; }
+        public int? StudentId { get; set; }
+        public int? ParentId { get; set; }
 
         // === Cac truong chung cho Teacher/Student/Parent ===
         public string? FullName { get; set; }
@@ -58,5 +58,8 @@ namespace highschool_student_management.ViewModels
             "Parent" => "Phu huynh",
             _ => RoleName
         };
+
+        // === Helper: Tra ve RelatedType tu Role de xac dinh loai nguoi dung ===
+        public string RelatedType => RoleName;
     }
 }
