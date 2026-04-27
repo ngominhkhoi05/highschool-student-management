@@ -1,0 +1,192 @@
+@model List<highschool_student_management.ViewModels.ParentIndexViewModel>
+
+@{
+    ViewData["Title"] = "Phu huynh";
+}
+
+<div class="max-w-6xl mx-auto">
+    <!-- Page Header -->
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-green-700">Phu huynh</h1>
+            <p class="text-sm text-slate-500 mt-1">Quan ly danh sach phu huynh</p>
+        </div>
+        <button class="btn-render-modal flex items-center gap-2 px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-xl transition-all shadow-sm"
+                data-url="@Url.Action("_CreateOrEdit", "Parent", new { id = 0 })"
+                data-title="Them phu huynh moi">
+            <span class="material-symbols-outlined text-lg">add</span>
+            Them phu huynh
+        </button>
+    </div>
+
+    <!-- Bang danh sach -->
+    <div class="bg-white rounded-2xl shadow-sm border border-green-100 overflow-hidden">
+        <!-- Thanh tim kiem -->
+        <div class="p-4 border-b border-green-100 flex items-center gap-3">
+            <form method="get" class="flex-1 flex items-center gap-3">
+                <div class="relative flex-1 max-w-md">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+                    <input type="text"
+                           name="search"
+                           value="@ViewData["Search"]"
+                           placeholder="Tim kiem theo ten hoac so dien thoai..."
+                           class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all placeholder:text-slate-300" />
+                </div>
+                <button type="submit"
+                        class="px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-xl transition-all shadow-sm">
+                    Tim kiem
+                </button>
+                @if (!string.IsNullOrEmpty(ViewData["Search"] as string))
+                {
+                    <a asp-action="Index"
+                       class="px-4 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-all">
+                        Xoa loc
+                    </a>
+                }
+            </form>
+        </div>
+
+        <!-- Bang du lieu -->
+        <table class="w-full text-sm">
+            <thead class="bg-green-600 text-white">
+                <tr>
+                    <th class="px-4 py-4 text-left font-semibold w-12">#</th>
+                    <th class="px-4 py-4 text-left font-semibold">Ho va ten</th>
+                    <th class="px-4 py-4 text-left font-semibold">Quan he</th>
+                    <th class="px-4 py-4 text-left font-semibold">So dien thoai</th>
+                    <th class="px-4 py-4 text-left font-semibold">Nghe nghiep</th>
+                    <th class="px-4 py-4 text-left font-semibold">Hoc sinh duoc gan</th>
+                    <th class="px-4 py-4 text-center font-semibold w-44">Thao tac</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="7" class="px-6 py-12 text-center text-slate-400">
+                            <span class="material-symbols-outlined text-4xl">family_restroom</span>
+                            <p class="mt-2">Chua co phu huynh nao.</p>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    var idx = 1;
+                    foreach (var parent in Model)
+                    {
+                        <tr class="odd:bg-white even:bg-green-50/30 hover:bg-green-100/30 transition-colors">
+                            <td class="px-4 py-3 text-slate-400 text-xs font-medium">@idx</td>
+                            <td class="px-4 py-3">
+                                <p class="font-semibold text-slate-800">@parent.FullName</p>
+                                <p class="text-xs text-slate-400">@parent.Email</p>
+                            </td>
+                            <td class="px-4 py-3 text-slate-600">@parent.RelationshipName</td>
+                            <td class="px-4 py-3 text-slate-600">@parent.Phone</td>
+                            <td class="px-4 py-3 text-slate-600">@(string.IsNullOrEmpty(parent.Occupation) ? "-" : parent.Occupation)</td>
+                            <td class="px-4 py-3">
+                                @if (parent.AssignedStudentNames.Any())
+                                {
+                                    <div class="flex flex-wrap gap-1">
+                                        @foreach (var name in parent.AssignedStudentNames.Take(3))
+                                        {
+                                            <span class="inline-flex items-center px-2 py-0.5 bg-blue-50 text-blue-600 text-xs font-medium rounded-full">
+                                                @name
+                                            </span>
+                                        }
+                                        @if (parent.AssignedStudentNames.Count > 3)
+                                        {
+                                            <span class="inline-flex items-center px-2 py-0.5 bg-slate-100 text-slate-500 text-xs font-medium rounded-full">
+                                                +@(parent.AssignedStudentNames.Count - 3)
+                                            </span>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="text-slate-400 text-xs">Chua gan</span>
+                                }
+                            </td>
+                            <td class="px-4 py-3">
+                                <div class="flex items-center justify-center gap-1">
+                                    <button type="button"
+                                            class="p-1.5 text-slate-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all btn-render-modal"
+                                            title="Gan hoc sinh"
+                                            data-url="@Url.Action("_AssignStudents", "Parent", new { parentId = parent.Id })"
+                                            data-title="Gan hoc sinh cho phu huynh">
+                                        <span class="material-symbols-outlined text-base">manage_accounts</span>
+                                    </button>
+                                    <button type="button"
+                                            class="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all btn-render-modal"
+                                            title="Sua"
+                                            data-url="@Url.Action("_CreateOrEdit", "Parent", new { id = parent.Id })"
+                                            data-title="Sua phu huynh">
+                                        <span class="material-symbols-outlined text-base">edit</span>
+                                    </button>
+                                    <button type="button"
+                                            class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                                            title="Xoa"
+                                            onclick="deleteParent(@parent.Id, '@parent.FullName')">
+                                        <span class="material-symbols-outlined text-base">delete</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        idx++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function deleteParent(id, name) {
+            Swal.fire({
+                title: 'Xac nhan xoa',
+                text: 'Ban co muon xoa phu huynh "' + name + '" khong? Hanh dong nay se xoa ca tai khoan lien quan.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#94a3b8',
+                confirmButtonText: 'Xoa',
+                cancelButtonText: 'Huy bo'
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '@Url.Action("Delete", "Parent")',
+                        type: 'POST',
+                        data: { id: id, __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val() },
+                        success: function(result) {
+                            if (result.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Thanh cong!',
+                                    text: result.message,
+                                    confirmButtonColor: '#006b2c'
+                                }).then(function() {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Loi',
+                                    text: result.message,
+                                    confirmButtonColor: '#006b2c'
+                                });
+                            }
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Loi',
+                                text: 'Khong the xoa. Vui long thu lai.',
+                                confirmButtonColor: '#006b2c'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}

@@ -1,0 +1,259 @@
+@model highschool_student_management.ViewModels.TeacherFormViewModel
+
+@{
+    var isEdit = Model.Id > 0;
+    var pageTitle = isEdit ? "Sua giao vien" : "Them giao vien moi";
+}
+
+<div class="bg-white rounded-2xl shadow-xl w-full max-w-lg mx-auto overflow-hidden max-h-[90vh] overflow-y-auto">
+    <!-- Header -->
+    <div class="bg-green-600 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
+        <h3 class="text-white font-bold text-lg">@pageTitle</h3>
+        <button type="button" onclick="closeModal()"
+                class="text-white/70 hover:text-white transition-colors">
+            <span class="material-symbols-outlined text-2xl">close</span>
+        </button>
+    </div>
+
+    <!-- Form -->
+    <form id="formTeacher" class="p-6 space-y-4">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="Id" value="@Model.Id" />
+        <input type="hidden" name="UserId" value="@Model.UserId" />
+        <input type="hidden" name="Avatar" value="@Model.Avatar" />
+
+        <!-- Avatar -->
+        <div class="flex flex-col items-center gap-3">
+            @if (!string.IsNullOrEmpty(Model.Avatar))
+            {
+                <img id="avatarPreview" src="@Model.Avatar" alt="Avatar" class="w-24 h-24 rounded-full object-cover border-2 border-green-200" />
+            }
+            else
+            {
+                <div id="avatarPreview" class="w-24 h-24 rounded-full bg-green-200 text-green-700 flex items-center justify-center text-3xl font-bold border-2 border-green-200">
+                    @(string.IsNullOrEmpty(Model.FullName) ? "?" : Model.FullName[0].ToString().ToUpper())
+                </div>
+            }
+            <label class="cursor-pointer px-4 py-2 text-sm font-semibold text-green-600 hover:text-green-700 hover:bg-green-50 rounded-lg transition-all">
+                <span class="material-symbols-outlined text-base align-middle mr-1">upload</span>
+                Chon anh dai dien
+                <input type="file" name="AvatarFile" id="avatarInput" accept="image/*" class="hidden" onchange="previewAvatar(this)" />
+            </label>
+        </div>
+
+        <!-- Ho va ten -->
+        <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5">
+                Ho va ten <span class="text-red-500">*</span>
+            </label>
+            <input type="text"
+                   name="FullName"
+                   id="fullName"
+                   value="@Model.FullName"
+                   placeholder="VD: Nguyen Van A"
+                   class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all placeholder:text-slate-300"
+                   required />
+        </div>
+
+        <!-- Gioi tinh & Ngay sinh -->
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Gioi tinh</label>
+                <select name="Gender"
+                        class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all bg-white">
+                    <option value="">-- Chon --</option>
+                    @if (Model.Gender == 1)
+                    {
+                        <option value="1" selected>Nam</option>
+                    }
+                    else
+                    {
+                        <option value="1">Nam</option>
+                    }
+                    @if (Model.Gender == 2)
+                    {
+                        <option value="2" selected>Nu</option>
+                    }
+                    else
+                    {
+                        <option value="2">Nu</option>
+                    }
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Ngay sinh</label>
+                <input type="date"
+                       name="DateOfBirth"
+                       value="@(Model.DateOfBirth.HasValue ? Model.DateOfBirth.Value.ToString("yyyy-MM-dd") : "")"
+                       class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all" />
+            </div>
+        </div>
+
+        <!-- So dien thoai & Email -->
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">So dien thoai</label>
+                <input type="text"
+                       name="Phone"
+                       value="@Model.Phone"
+                       placeholder="VD: 0912345678"
+                       class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all placeholder:text-slate-300" />
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Email</label>
+                <input type="email"
+                       name="Email"
+                       value="@Model.Email"
+                       placeholder="VD: teacher@school.edu.vn"
+                       class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all placeholder:text-slate-300" />
+            </div>
+        </div>
+
+        <!-- Dia chi -->
+        <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Dia chi</label>
+            <input type="text"
+                   name="Address"
+                   value="@Model.Address"
+                   placeholder="VD: 123 Duong ABC, Quan 1, TP.HCM"
+                   class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all placeholder:text-slate-300" />
+        </div>
+
+        <!-- Chuyen mon & Ngay gia nhap -->
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Chuyen mon</label>
+                <input type="text"
+                       name="Specialization"
+                       value="@Model.Specialization"
+                       placeholder="VD: Toan hoc"
+                       class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all placeholder:text-slate-300" />
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Ngay gia nhap</label>
+                <input type="date"
+                       name="JoinDate"
+                       value="@(Model.JoinDate.HasValue ? Model.JoinDate.Value.ToString("yyyy-MM-dd") : DateTime.Now.ToString("yyyy-MM-dd"))"
+                       class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all" />
+            </div>
+        </div>
+
+        <!-- Trang thai -->
+        <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Trang thai</label>
+            <select name="Status"
+                    class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all bg-white">
+                @if (Model.Status == 1)
+                {
+                    <option value="1" selected>Dang day</option>
+                }
+                else
+                {
+                    <option value="1">Dang day</option>
+                }
+                @if (Model.Status == 2)
+                {
+                    <option value="2" selected>Nghi phep</option>
+                }
+                else
+                {
+                    <option value="2">Nghi phep</option>
+                }
+                @if (Model.Status == 3)
+                {
+                    <option value="3" selected>Nghi viec</option>
+                }
+                else
+                {
+                    <option value="3">Nghi viec</option>
+                }
+            </select>
+        </div>
+
+        <!-- Footer -->
+        <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 mt-4">
+            <button type="button"
+                    onclick="closeModal()"
+                    class="px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors">
+                Huy bo
+            </button>
+            <button type="button"
+                    onclick="submitTeacherForm()"
+                    class="px-6 py-2.5 text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-xl shadow-sm transition-all">
+                @(isEdit ? "Luu thay doi" : "Them giao vien")
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function closeModal() {
+        $('#modalContainer').fadeOut().addClass('hidden').removeClass('flex');
+    }
+
+    function previewAvatar(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var preview = document.getElementById('avatarPreview');
+                preview.outerHTML = '<img id="avatarPreview" src="' + e.target.result + '" alt="Avatar" class="w-24 h-24 rounded-full object-cover border-2 border-green-200" />';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function submitTeacherForm() {
+        var fullName = $('#fullName').val();
+        if (!fullName || !fullName.trim()) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Loi',
+                text: 'Ho ten khong duoc de trong.',
+                confirmButtonColor: '#006b2c'
+            });
+            return;
+        }
+
+        var form = document.getElementById('formTeacher');
+        var formData = new FormData(form);
+
+        $.ajax({
+            url: '@Url.Action("Save", "Teacher")',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+            },
+            success: function(result) {
+                if (result.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thanh cong!',
+                        text: result.message,
+                        confirmButtonColor: '#006b2c'
+                    }).then(function() {
+                        closeModal();
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Loi',
+                        text: result.message,
+                        confirmButtonColor: '#006b2c'
+                    });
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Loi',
+                    text: 'Khong the luu du lieu. Vui long thu lai.',
+                    confirmButtonColor: '#006b2c'
+                });
+            }
+        });
+    }
+</script>
