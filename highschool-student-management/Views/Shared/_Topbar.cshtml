@@ -99,7 +99,8 @@
                     Đổi mật khẩu
                 </button>
                 <div class="border-t border-slate-100 mt-1 pt-1">
-                    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post">
+                    <form asp-area="" asp-controller="Auth" asp-action="Logout" method="post">
+                        @Html.AntiForgeryToken()
                         <button type="submit" class="w-full flex items-center gap-3 px-4 py-2.5 text-red-500 hover:bg-red-50 transition-colors">
                             <span class="material-symbols-outlined text-lg">logout</span>
                             Đăng xuất

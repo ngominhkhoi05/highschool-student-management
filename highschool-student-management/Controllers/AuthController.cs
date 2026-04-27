@@ -105,18 +105,10 @@ namespace highschool_student_management.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        // GET: /Auth/Logout
-        [HttpGet]
-        public async Task<IActionResult> Logout()
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Login", "Auth");
-        }
-
-        // POST: /Auth/Logout (neu muon dung form POST)
+        // POST: /Auth/Logout
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LogoutPost()
+        public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login", "Auth");
