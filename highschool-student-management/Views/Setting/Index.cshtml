@@ -1,0 +1,143 @@
+@model List<QuanLyHocSinh.Models.Setting>
+
+@{
+    ViewData["Title"] = "Cau hinh he thong";
+}
+
+<div class="max-w-5xl mx-auto">
+    <!-- Page Header -->
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-green-700">Cau hinh he thong</h1>
+            <p class="text-sm text-slate-500 mt-1">Them, sua, xoa cac thong so cau hinh he thong</p>
+        </div>
+        <button class="btn-render-modal flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-sm transition-all duration-200 active:scale-95"
+                data-url="@Url.Action("_CreateOrEdit", "Setting", new { id = 0 })"
+                data-title="Them cau hinh moi">
+            <span class="material-symbols-outlined text-lg">add</span>
+            Them cau hinh
+        </button>
+    </div>
+
+    <!-- Bang danh sach Cau hinh -->
+    <div class="bg-white rounded-2xl shadow-sm border border-green-100 overflow-hidden">
+        <table class="w-full text-sm">
+            <thead class="bg-green-600 text-white">
+                <tr>
+                    <th class="px-6 py-4 text-left font-semibold w-10">#</th>
+                    <th class="px-4 py-4 text-left font-semibold">Khoa</th>
+                    <th class="px-4 py-4 text-left font-semibold">Gia tri</th>
+                    <th class="px-4 py-4 text-left font-semibold">Mo ta</th>
+                    <th class="px-4 py-4 text-left font-semibold">Cap nhat lan cuoi</th>
+                    <th class="px-4 py-4 text-center font-semibold w-32">Thao tac</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="px-6 py-12 text-center text-slate-400">
+                            <span class="material-symbols-outlined text-4xl">search_off</span>
+                            <p class="mt-2">Chua co cau hinh nao. Nhan "Them cau hinh" de bat dau.</p>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    var index = 1;
+                    foreach (var setting in Model)
+                    {
+                        <tr class="odd:bg-white even:bg-green-50 hover:bg-green-100/40 transition-colors">
+                            <td class="px-6 py-3.5 text-slate-400 text-xs font-medium">@index</td>
+                            <td class="px-4 py-3.5">
+                                <span class="font-mono font-semibold text-slate-700">@setting.Key</span>
+                            </td>
+                            <td class="px-4 py-3.5">
+                                <span class="text-slate-600">@(string.IsNullOrEmpty(setting.Value) ? "-" : setting.Value)</span>
+                            </td>
+                            <td class="px-4 py-3.5 text-slate-600 text-xs max-w-xs truncate">@(setting.Description ?? "-")</td>
+                            <td class="px-4 py-3.5 text-slate-500 text-xs">
+                                @setting.UpdatedAt.ToString("dd/MM/yyyy HH:mm")
+                                @if (setting.UpdatedByUser != null)
+                                {
+                                    <br />
+                                    <span class="text-slate-400">boi @(setting.UpdatedByUser.Username ?? "?" )</span>
+                                }
+                            </td>
+                            <td class="px-4 py-3.5">
+                                <div class="flex items-center justify-center gap-1">
+                                    <button type="button"
+                                            class="p-1.5 text-slate-400 hover:text-yellow-600 hover:bg-yellow-50 rounded-lg transition-all btn-render-modal"
+                                            title="Sua cau hinh"
+                                            data-url="@Url.Action("_CreateOrEdit", "Setting", new { id = setting.Id })"
+                                            data-title="Sua cau hinh">
+                                        <span class="material-symbols-outlined text-base">edit</span>
+                                    </button>
+                                    <button type="button"
+                                            class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                                            title="Xoa cau hinh"
+                                            onclick="deleteSetting(@setting.Id, '@setting.Key')">
+                                        <span class="material-symbols-outlined text-base">delete</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function deleteSetting(id, key) {
+            Swal.fire({
+                title: 'Xac nhan xoa cau hinh',
+                text: 'Ban co chac chan muon xoa cau hinh "' + key + '"? Hanh dong nay khong the hoan tac.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#94a3b8',
+                confirmButtonText: 'Xoa',
+                cancelButtonText: 'Huy bo'
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '@Url.Action("DeleteSetting", "Setting")',
+                        type: 'POST',
+                        data: { id: id, __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val() },
+                        success: function(result) {
+                            if (result.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Thanh cong!',
+                                    text: result.message,
+                                    confirmButtonColor: '#006b2c'
+                                }).then(function() {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Loi',
+                                    text: result.message,
+                                    confirmButtonColor: '#006b2c'
+                                });
+                            }
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Loi',
+                                text: 'Khong the xoa cau hinh. Vui long thu lai.',
+                                confirmButtonColor: '#006b2c'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}

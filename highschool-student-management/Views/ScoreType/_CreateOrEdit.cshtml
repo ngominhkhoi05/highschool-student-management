@@ -1,0 +1,154 @@
+@model QuanLyHocSinh.Models.ScoreType
+
+@{
+    var isEdit = Model.Id > 0;
+    var pageTitle = isEdit ? "Sua loai diem" : "Them loai diem moi";
+}
+
+<div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-auto overflow-hidden">
+    <!-- Header -->
+    <div class="bg-green-600 px-6 py-4 flex items-center justify-between">
+        <h3 class="text-white font-bold text-lg">@pageTitle</h3>
+        <button type="button" onclick="closeModal()"
+                class="text-white/70 hover:text-white transition-colors">
+            <span class="material-symbols-outlined text-2xl">close</span>
+        </button>
+    </div>
+
+    <!-- Form -->
+    <form id="formScoreType" class="p-6 space-y-4">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="Id" value="@Model.Id" />
+
+        <!-- Ten loai diem -->
+        <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5">
+                Ten loai diem <span class="text-red-500">*</span>
+            </label>
+            <input type="text"
+                   name="Name"
+                   id="scoreTypeName"
+                   value="@Model.Name"
+                   placeholder="VD: Diem mieng"
+                   class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all placeholder:text-slate-300"
+                   required />
+            <p class="text-xs text-slate-400 mt-1">VD: Diem mieng, 15 phut, 1 tiet, Giua ky, Cuoi ky</p>
+        </div>
+
+        <!-- He so -->
+        <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5">
+                He so <span class="text-red-500">*</span>
+            </label>
+            <input type="number"
+                   name="Weight"
+                   id="scoreTypeWeight"
+                   value="@Model.Weight"
+                   placeholder="VD: 1.0"
+                   step="0.1"
+                   min="0.1"
+                   max="10"
+                   class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all placeholder:text-slate-300"
+                   required />
+            <p class="text-xs text-slate-400 mt-1">VD: 1.0 (diem thuong), 2.0 (dien giua/cuoi ky)</p>
+        </div>
+
+        <!-- So lan toi thieu -->
+        <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5">
+                So lan kiem tra toi thieu/hoc ky <span class="text-red-500">*</span>
+            </label>
+            <input type="number"
+                   name="MinCount"
+                   id="scoreTypeMinCount"
+                   value="@Model.MinCount"
+                   placeholder="VD: 3"
+                   min="0"
+                   class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all placeholder:text-slate-300"
+                   required />
+            <p class="text-xs text-slate-400 mt-1">So lan kiem tra bat buoc trong moi hoc ky</p>
+        </div>
+
+        <!-- Footer -->
+        <div class="flex items-center justify-end gap-3 pt-2 border-t border-slate-100 mt-4">
+            <button type="button"
+                    onclick="closeModal()"
+                    class="px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors">
+                Huy bo
+            </button>
+            <button type="button"
+                    onclick="submitScoreTypeForm()"
+                    class="px-6 py-2.5 text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-xl shadow-sm transition-all">
+                @(isEdit ? "Luu thay doi" : "Them loai diem")
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function closeModal() {
+        $('#modalContainer').fadeOut().addClass('hidden').removeClass('flex');
+    }
+
+    function submitScoreTypeForm() {
+        var name = $('#scoreTypeName').val();
+        var weight = parseFloat($('#scoreTypeWeight').val());
+        var minCount = parseInt($('#scoreTypeMinCount').val());
+
+        if (!name || !name.trim()) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Loi',
+                text: 'Ten loai diem khong duoc de trong.',
+                confirmButtonColor: '#006b2c'
+            });
+            return;
+        }
+
+        if (!weight || weight <= 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Loi',
+                text: 'He so phai lon hon 0.',
+                confirmButtonColor: '#006b2c'
+            });
+            return;
+        }
+
+        var formData = $('#formScoreType').serialize();
+
+        $.ajax({
+            url: '@Url.Action("SaveScoreType", "ScoreType")',
+            type: 'POST',
+            data: formData,
+            success: function(result) {
+                if (result.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thanh cong!',
+                        text: result.message,
+                        confirmButtonColor: '#006b2c'
+                    }).then(function() {
+                        closeModal();
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Loi',
+                        text: result.message,
+                        confirmButtonColor: '#006b2c'
+                    });
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Loi',
+                    text: 'Khong the luu du lieu. Vui long thu lai.',
+                    confirmButtonColor: '#006b2c'
+                });
+            }
+        });
+    }
+</script>
