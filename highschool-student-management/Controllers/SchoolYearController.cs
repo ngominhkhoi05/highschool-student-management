@@ -217,6 +217,8 @@ namespace highschool_student_management.Controllers
                 }
             }
             ViewBag.SchoolYearName = schoolYear.Name;
+            ViewBag.SchoolYearStart = schoolYear.StartDate?.ToString("yyyy-MM-dd") ?? "";
+            ViewBag.SchoolYearEnd = schoolYear.EndDate?.ToString("yyyy-MM-dd") ?? "";
             return PartialView(model);
         }
 
@@ -245,18 +247,106 @@ namespace highschool_student_management.Controllers
                     return Json(new { success = false, message = "Nam hoc khong ton tai." });
                 }
 
-                if (model.StartDate.HasValue && model.EndDate.HasValue && model.StartDate > model.EndDate)
+                if (model.SemesterNumber != 1 && model.SemesterNumber != 2)
                 {
-                    return Json(new { success = false, message = "Ngay bat dau phai nho hon ngay ket thuc." });
+                    return Json(new { success = false, message = "So thu tu hoc ky chi duoc phep la 1 hoac 2." });
                 }
 
+                if (model.StartDate.HasValue && model.EndDate.HasValue && model.StartDate > model.EndDate)
+                {
+                    return Json(new { success = false, message = "Ngay bat dau phai nho hon hoac bang ngay ket thuc." });
+                }
+
+                // Lay tat ca hoc ky cua nam hoc (tru chinh no)
+                var existingSemesters = _context.Semesters
+                    .Where(s => s.SchoolYearId == model.SchoolYearId && s.Id != model.Id)
+                    .OrderBy(s => s.SemesterNumber)
+                    .ToList();
+
                 // Kiem tra so hoc ky trung
-                var existingSemester = _context.Semesters
-                    .Where(s => s.SchoolYearId == model.SchoolYearId && s.SemesterNumber == model.SemesterNumber && s.Id != model.Id)
-                    .FirstOrDefault();
-                if (existingSemester != null)
+                if (existingSemesters.Any(s => s.SemesterNumber == model.SemesterNumber))
                 {
                     return Json(new { success = false, message = $"Da ton tai hoc ky {model.SemesterNumber} trong nam hoc nay. Vui long chon so khac." });
+                }
+
+                // Kiem tra hoc ky nam trong khoang nam hoc
+                if (model.StartDate.HasValue)
+                {
+                    if (schoolYear.StartDate.HasValue && model.StartDate < schoolYear.StartDate)
+                    {
+                        return Json(new { success = false, message = $"Ngay bat dau hoc ky phai tu ngay {schoolYear.StartDate:dd/MM/yyyy} (ngay bat dau nam hoc)." });
+                    }
+                    if (schoolYear.EndDate.HasValue && model.StartDate > schoolYear.EndDate)
+                    {
+                        return Json(new { success = false, message = $"Ngay bat dau hoc ky phai truoc hoac bang ngay {schoolYear.EndDate:dd/MM/yyyy} (ngay ket thuc nam hoc)." });
+                    }
+                }
+                if (model.EndDate.HasValue)
+                {
+                    if (schoolYear.EndDate.HasValue && model.EndDate > schoolYear.EndDate)
+                    {
+                        return Json(new { success = false, message = $"Ngay ket thuc hoc ky phai truoc hoac bang ngay {schoolYear.EndDate:dd/MM/yyyy} (ngay ket thuc nam hoc)." });
+                    }
+                    if (schoolYear.StartDate.HasValue && model.EndDate < schoolYear.StartDate)
+                    {
+                        return Json(new { success = false, message = $"Ngay ket thuc hoc ky phai tu ngay {schoolYear.StartDate:dd/MM/yyyy} (ngay bat dau nam hoc)." });
+                    }
+                }
+
+                // Kiem tra khong bi de len nhau
+                foreach (var existing in existingSemesters)
+                {
+                    if (existing.StartDate.HasValue && existing.EndDate.HasValue)
+                    {
+                        var eStart = existing.StartDate.Value;
+                        var eEnd = existing.EndDate.Value;
+                        var mStart = model.StartDate;
+                        var mEnd = model.EndDate;
+
+                        // De len nhau: (model.Start < existing.End) && (model.End > existing.Start)
+                        bool overlaps = false;
+                        if (mStart.HasValue && mEnd.HasValue)
+                        {
+                            overlaps = mStart.Value < eEnd && mEnd.Value > eStart;
+                        }
+                        else if (mStart.HasValue)
+                        {
+                            overlaps = mStart.Value <= eEnd;
+                        }
+                        else if (mEnd.HasValue)
+                        {
+                            overlaps = mEnd.Value >= eStart;
+                        }
+
+                        if (overlaps)
+                        {
+                            return Json(new { success = false, message = $"Hoc ky {model.SemesterNumber} bi trung voi hoc ky {existing.SemesterNumber} ({existing.Name}). Cac hoc ky khong duoc nam chong len nhau." });
+                        }
+                    }
+                }
+
+                // Kiem tra thu tu: HK1 phai ket thuc truoc khi HK2 bat dau
+                if (model.SemesterNumber == 2)
+                {
+                    var hk1 = existingSemesters.FirstOrDefault(s => s.SemesterNumber == 1);
+                    if (hk1 != null)
+                    {
+                        if (hk1.EndDate.HasValue && model.StartDate.HasValue && hk1.EndDate.Value >= model.StartDate.Value)
+                        {
+                            return Json(new { success = false, message = $"Hoc ky 1 phai ket thuc truoc khi hoc ky 2 bat dau. HK1 ket thuc: {hk1.EndDate:dd/MM/yyyy}." });
+                        }
+                    }
+                }
+                if (model.SemesterNumber == 1)
+                {
+                    var hk2 = existingSemesters.FirstOrDefault(s => s.SemesterNumber == 2);
+                    if (hk2 != null)
+                    {
+                        if (model.EndDate.HasValue && hk2.StartDate.HasValue && model.EndDate.Value >= hk2.StartDate.Value)
+                        {
+                            return Json(new { success = false, message = $"Hoc ky 1 phai ket thuc truoc khi hoc ky 2 bat dau. HK2 bat dau: {hk2.StartDate:dd/MM/yyyy}." });
+                        }
+                    }
                 }
 
                 if (model.Id == 0)
