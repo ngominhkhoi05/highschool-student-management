@@ -74,6 +74,23 @@ namespace highschool_student_management.Controllers
                     return Json(new { success = false, message = "Ngay bat dau phai nho hon ngay ket thuc." });
                 }
 
+                // Kiem tra nam hoc khong bi trung voi nam hoc khac
+                var allSchoolYears = _context.SchoolYears
+                    .Where(sy => sy.Id != model.Id)
+                    .ToList();
+
+                foreach (var sy in allSchoolYears)
+                {
+                    if (!sy.StartDate.HasValue || !sy.EndDate.HasValue || !model.StartDate.HasValue || !model.EndDate.HasValue)
+                        continue;
+
+                    bool overlaps = model.StartDate.Value < sy.EndDate.Value && model.EndDate.Value > sy.StartDate.Value;
+                    if (overlaps)
+                    {
+                        return Json(new { success = false, message = $"Nam hoc nay bi trung voi nam hoc '{sy.Name}' ({sy.StartDate:dd/MM/yyyy} - {sy.EndDate:dd/MM/yyyy}). Cac nam hoc khong duoc nam chong len nhau." });
+                    }
+                }
+
                 if (model.Id == 0)
                 {
                     // Tao moi
