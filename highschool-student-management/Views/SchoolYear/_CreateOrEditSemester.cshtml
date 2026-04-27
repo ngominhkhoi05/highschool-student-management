@@ -1,0 +1,181 @@
+@model QuanLyHocSinh.Models.Semester
+
+@{
+    var isEdit = Model.Id > 0;
+    var pageTitle = isEdit ? "Sua hoc ky" : "Them hoc ky moi";
+}
+
+<div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-auto overflow-hidden">
+    <!-- Header -->
+    <div class="bg-green-600 px-6 py-4 flex items-center justify-between">
+        <h3 class="text-white font-bold text-lg">@pageTitle</h3>
+        <button type="button" onclick="$('#modalContainer').fadeOut().addClass('hidden').removeClass('flex')"
+                class="text-white/70 hover:text-white transition-colors">
+            <span class="material-symbols-outlined text-2xl">close</span>
+        </button>
+    </div>
+
+    <!-- Form -->
+    <form id="formSemester" method="post" action="@Url.Action("SaveSemester", "SchoolYear")" class="p-6 space-y-4">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="Id" value="@Model.Id" />
+        <input type="hidden" name="SchoolYearId" value="@Model.SchoolYearId" />
+
+        <!-- Thong tin nam hoc -->
+        <div class="flex items-center gap-2 px-3 py-2 bg-slate-50 rounded-lg text-sm text-slate-600">
+            <span class="material-symbols-outlined text-base text-green-600">calendar_today</span>
+            <span>Nam hoc: <strong class="text-slate-800">@ViewBag.SchoolYearName</strong></span>
+        </div>
+
+        <!-- Ten hoc ky -->
+        <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5">
+                Ten hoc ky <span class="text-red-500">*</span>
+            </label>
+            <input type="text"
+                   name="Name"
+                   value="@Model.Name"
+                   placeholder="VD: Hoc ky 1"
+                   class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all placeholder:text-slate-300"
+                   required />
+            <p class="text-xs text-slate-400 mt-1">VD: Hoc ky 1, Hoc ky 2</p>
+        </div>
+
+        <!-- So thu tu hoc ky -->
+        <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5">
+                So thu tu <span class="text-red-500">*</span>
+            </label>
+            <select name="SemesterNumber"
+                    class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all bg-white">
+                <option value="">-- Chon hoc ky --</option>
+                @if (Model.SemesterNumber == 1)
+                {
+                    <option value="1" selected>1 - Hoc ky 1</option>
+                }
+                else
+                {
+                    <option value="1">1 - Hoc ky 1</option>
+                }
+                @if (Model.SemesterNumber == 2)
+                {
+                    <option value="2" selected>2 - Hoc ky 2</option>
+                }
+                else
+                {
+                    <option value="2">2 - Hoc ky 2</option>
+                }
+                @if (Model.SemesterNumber == 3)
+                {
+                    <option value="3" selected>3 - Hoc ky 3</option>
+                }
+                else
+                {
+                    <option value="3">3 - Hoc ky 3</option>
+                }
+            </select>
+        </div>
+
+        <!-- Tu ngay -->
+        <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5">
+                Tu ngay
+            </label>
+            <input type="date"
+                   name="StartDate"
+                   value="@(Model.StartDate?.ToString("yyyy-MM-dd") ?? "")"
+                   class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all" />
+        </div>
+
+        <!-- Den ngay -->
+        <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5">
+                Den ngay
+            </label>
+            <input type="date"
+                   name="EndDate"
+                   value="@(Model.EndDate?.ToString("yyyy-MM-dd") ?? "")"
+                   class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all" />
+        </div>
+
+        <!-- Footer -->
+        <div class="flex items-center justify-end gap-3 pt-2 border-t border-slate-100 mt-4">
+            <button type="button"
+                    onclick="$('#modalContainer').fadeOut().addClass('hidden').removeClass('flex')"
+                    class="px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors">
+                Huy bo
+            </button>
+            <button type="submit"
+                    class="px-6 py-2.5 text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-xl shadow-sm transition-all">
+                @(isEdit ? "Luu thay doi" : "Tao hoc ky")
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // Tu dong fill ten khi chon so thu tu
+        $('select[name="SemesterNumber"]').on('change', function() {
+            var num = $(this).val();
+            var nameInput = $('input[name="Name"]');
+            if (!nameInput.val() || nameInput.val().match(/^Hoc ky \d$/)) {
+                if (num) {
+                    nameInput.val('Hoc ky ' + num);
+                }
+            }
+        });
+
+        $('#formSemester').on('submit', function(e) {
+            e.preventDefault();
+
+            // Validate SemesterNumber
+            if (!$('select[name="SemesterNumber"]').val()) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Loi',
+                    text: 'Vui long chon so thu tu hoc ky.',
+                    confirmButtonColor: '#006b2c'
+                });
+                return;
+            }
+
+            var form = $(this);
+            var formData = form.serialize();
+
+            $.ajax({
+                url: form.attr('action'),
+                type: 'POST',
+                data: formData,
+                success: function(result) {
+                    if (result.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thanh cong!',
+                            text: result.message,
+                            confirmButtonColor: '#006b2c'
+                        }).then(function() {
+                            $('#modalContainer').fadeOut().addClass('hidden').removeClass('flex');
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Loi',
+                            text: result.message,
+                            confirmButtonColor: '#006b2c'
+                        });
+                    }
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Loi',
+                        text: 'Khong the luu du lieu. Vui long thu lai.',
+                        confirmButtonColor: '#006b2c'
+                    });
+                }
+            });
+        });
+    });
+</script>

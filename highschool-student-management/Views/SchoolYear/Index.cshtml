@@ -1,0 +1,374 @@
+@model List<QuanLyHocSinh.Models.SchoolYear>
+
+@{
+    ViewData["Title"] = "Quan ly nam hoc";
+}
+
+<div class="max-w-5xl mx-auto" x-data="{ openSections: {} }">
+    <!-- Page Header -->
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800">Quan ly nam hoc</h1>
+            <p class="text-sm text-slate-500 mt-1">Them, sua, xoa nam hoc va hoc ky</p>
+        </div>
+        <button class="btn-render-modal flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-sm transition-all duration-200 active:scale-95"
+                data-url="@Url.Action("_CreateOrEdit", "SchoolYear", new { id = 0 })"
+                data-title="Them nam hoc moi">
+            <span class="material-symbols-outlined text-lg">add</span>
+            Them nam hoc
+        </button>
+    </div>
+
+    <!-- Bang danh sach Nam hoc -->
+    <div class="bg-white rounded-2xl shadow-sm border border-green-100 overflow-hidden">
+        <table class="w-full text-sm">
+            <thead class="bg-green-600 text-white">
+                <tr>
+                    <th class="px-6 py-4 text-left font-semibold w-10">#</th>
+                    <th class="px-4 py-4 text-left font-semibold">Nam hoc</th>
+                    <th class="px-4 py-4 text-left font-semibold">Tu ngay</th>
+                    <th class="px-4 py-4 text-left font-semibold">Den ngay</th>
+                    <th class="px-4 py-4 text-center font-semibold">Trang thai</th>
+                    <th class="px-4 py-4 text-center font-semibold w-44">Thao tac</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="px-6 py-12 text-center text-slate-400">
+                            <span class="material-symbols-outlined text-4xl">search_off</span>
+                            <p class="mt-2">Chua co nam hoc nao. Nhan "Them nam hoc" de bat dau.</p>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    var index = 1;
+                    foreach (var sy in Model)
+                    {
+                        var isOpen = (ViewData["InitiallyOpen"] as List<int>)?.Contains(sy.Id) == true;
+                        <tbody class="divide-y divide-green-50">
+                            <!-- DONG CHA: Nam hoc -->
+                            <tr class="hover:bg-green-50/40 transition-colors group">
+                                <td class="px-6 py-3.5 text-slate-400 text-xs font-medium">@index</td>
+                                <td class="px-4 py-3.5">
+                                    <div class="flex items-center gap-2">
+                                        <button type="button"
+                                                class="text-slate-400 hover:text-green-600 transition-colors"
+                                                onclick="toggleSection(@sy.Id)">
+                                            <span id="icon-@sy.Id" class="material-symbols-outlined text-lg transition-transform duration-200 @(sy.Semesters?.Any() == true ? "" : "opacity-30 pointer-events-none")">
+                                                @(isOpen ? "expand_less" : "expand_more")
+                                            </span>
+                                        </button>
+                                        <span class="font-bold text-slate-800">@sy.Name</span>
+                                        @if (sy.IsCurrent == 1)
+                                        {
+                                            <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-green-100 text-green-700 text-[10px] font-bold rounded-full uppercase tracking-wide">
+                                                <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
+                                                Hien tai
+                                            </span>
+                                        }
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3.5 text-slate-600">
+                                    @(sy.StartDate?.ToString("dd/MM/yyyy") ?? "-")
+                                </td>
+                                <td class="px-4 py-3.5 text-slate-600">
+                                    @(sy.EndDate?.ToString("dd/MM/yyyy") ?? "-")
+                                </td>
+                                <td class="px-4 py-3.5 text-center">
+                                    @if (sy.IsCurrent == 1)
+                                    {
+                                        <span class="inline-flex items-center gap-1 text-green-600 font-semibold text-xs">
+                                            <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                                            Dang su dung
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="inline-flex items-center gap-1 text-slate-400 text-xs">
+                                            <span class="w-2 h-2 bg-slate-300 rounded-full"></span>
+                                            Khong su dung
+                                        </span>
+                                    }
+                                </td>
+                                <td class="px-4 py-3.5">
+                                    <div class="flex items-center justify-center gap-1">
+                                        <!-- Nut Dat hien tai -->
+                                        @if (sy.IsCurrent != 1)
+                                        {
+                                            <button type="button"
+                                                    class="p-1.5 text-slate-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all"
+                                                    title="Dat lam nam hoc hien tai"
+                                                    onclick="setCurrent(@sy.Id)">
+                                                <span class="material-symbols-outlined text-base">check_circle</span>
+                                            </button>
+                                        }
+
+                                        <!-- Nut Quan ly hoc ky -->
+                                        <button type="button"
+                                                class="p-1.5 text-slate-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all"
+                                                title="Quan ly hoc ky"
+                                                onclick="toggleSection(@sy.Id)">
+                                            <span class="material-symbols-outlined text-base">date_range</span>
+                                        </button>
+
+                                        <!-- Nut Sua -->
+                                        <button type="button"
+                                                class="p-1.5 text-slate-400 hover:text-yellow-600 hover:bg-yellow-50 rounded-lg transition-all btn-render-modal"
+                                                title="Sua nam hoc"
+                                                data-url="@Url.Action("_CreateOrEdit", "SchoolYear", new { id = sy.Id })"
+                                                data-title="Sua nam hoc">
+                                            <span class="material-symbols-outlined text-base">edit</span>
+                                        </button>
+
+                                        <!-- Nut Xoa -->
+                                        <button type="button"
+                                                class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                                                title="Xoa nam hoc"
+                                                onclick="deleteSchoolYear(@sy.Id, '@sy.Name')">
+                                            <span class="material-symbols-outlined text-base">delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- DONG CON: Danh sach Hoc ky (an/hien) -->
+                            <tr id="section-@sy.Id" class="hidden">
+                                <td colspan="6" class="px-0 py-0 bg-green-50/30">
+                                    <div class="px-8 py-3">
+                                        <!-- Header cua bang hoc ky -->
+                                        <div class="flex items-center justify-between mb-2">
+                                            <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider">Hoc ky thuoc nam @sy.Name</h3>
+                                            <button type="button"
+                                                    class="flex items-center gap-1.5 text-xs font-semibold text-green-700 hover:text-green-800 hover:bg-green-100 px-3 py-1.5 rounded-lg transition-all btn-render-modal"
+                                                    data-url="@Url.Action("_CreateOrEditSemester", "SchoolYear", new { schoolYearId = sy.Id, id = 0 })"
+                                                    data-title="Them hoc ky moi">
+                                                <span class="material-symbols-outlined text-sm">add</span>
+                                                Them hoc ky
+                                            </button>
+                                        </div>
+
+                                        @if (sy.Semesters == null || sy.Semesters.Count == 0)
+                                        {
+                                            <p class="text-xs text-slate-400 italic py-2">Chua co hoc ky nao. Nhan "Them hoc ky" de them moi.</p>
+                                        }
+                                        else
+                                        {
+                                            <table class="w-full text-xs">
+                                                <thead>
+                                                    <tr class="text-slate-500 border-b border-green-100">
+                                                        <th class="pb-2 text-left font-semibold pl-2">Hoc ky</th>
+                                                        <th class="pb-2 text-left font-semibold">So thu tu</th>
+                                                        <th class="pb-2 text-left font-semibold">Tu ngay</th>
+                                                        <th class="pb-2 text-left font-semibold">Den ngay</th>
+                                                        <th class="pb-2 text-right font-semibold pr-2">Thao tac</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var sem in sy.Semesters)
+                                                    {
+                                                        <tr class="border-b border-green-50 last:border-0 hover:bg-green-50/40">
+                                                            <td class="py-2.5 pl-2 font-medium text-slate-700">@sem.Name</td>
+                                                            <td class="py-2.5 text-slate-600">@sem.SemesterNumber</td>
+                                                            <td class="py-2.5 text-slate-600">@(sem.StartDate?.ToString("dd/MM/yyyy") ?? "-")</td>
+                                                            <td class="py-2.5 text-slate-600">@(sem.EndDate?.ToString("dd/MM/yyyy") ?? "-")</td>
+                                                            <td class="py-2.5 pr-2">
+                                                                <div class="flex items-center justify-end gap-1">
+                                                                    <button type="button"
+                                                                            class="p-1 text-slate-400 hover:text-yellow-600 hover:bg-yellow-50 rounded transition-all btn-render-modal"
+                                                                            data-url="@Url.Action("_CreateOrEditSemester", "SchoolYear", new { schoolYearId = sy.Id, id = sem.Id })"
+                                                                            data-title="Sua hoc ky">
+                                                                        <span class="material-symbols-outlined text-sm">edit</span>
+                                                                    </button>
+                                                                    <button type="button"
+                                                                            class="p-1 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-all"
+                                                                            onclick="deleteSemester(@sem.Id, '@sem.Name')">
+                                                                        <span class="material-symbols-outlined text-sm">delete</span>
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        index++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // ==== TOGGLE COLLAPSE HOC KY ====
+        function toggleSection(id) {
+            var row = document.getElementById('section-' + id);
+            var icon = document.getElementById('icon-' + id);
+            if (!row) return;
+
+            var isHidden = row.classList.contains('hidden');
+            if (isHidden) {
+                row.classList.remove('hidden');
+                icon.textContent = 'expand_less';
+            } else {
+                row.classList.add('hidden');
+                icon.textContent = 'expand_more';
+            }
+        }
+
+        // ==== SET CURRENT SCHOOL YEAR ====
+        function setCurrent(id) {
+            Swal.fire({
+                title: 'Xac nhan dat nam hoc hien tai',
+                text: 'Nam hoc nay se duoc dat lam nam hoc hien tai. Cac nam hoc khac se tu dong chuyen ve trang thai khong su dung.',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#006b2c',
+                cancelButtonColor: '#94a3b8',
+                confirmButtonText: 'Xac nhan',
+                cancelButtonText: 'Huy bo'
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '@Url.Action("SetCurrentSchoolYear", "SchoolYear")',
+                        type: 'POST',
+                        data: { id: id, __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val() },
+                        success: function(result) {
+                            if (result.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Thanh cong!',
+                                    text: result.message,
+                                    confirmButtonColor: '#006b2c'
+                                }).then(function() {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Loi',
+                                    text: result.message,
+                                    confirmButtonColor: '#006b2c'
+                                });
+                            }
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Loi',
+                                text: 'Khong the dat nam hoc hien tai. Vui long thu lai.',
+                                confirmButtonColor: '#006b2c'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+        // ==== DELETE SCHOOL YEAR ====
+        function deleteSchoolYear(id, name) {
+            Swal.fire({
+                title: 'Xac nhan xoa nam hoc',
+                text: 'Ban co chac chan muon xoa nam hoc "' + name + '"? Hanh dong nay khong the hoan tac.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#94a3b8',
+                confirmButtonText: 'Xoa',
+                cancelButtonText: 'Huy bo'
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '@Url.Action("DeleteSchoolYear", "SchoolYear")',
+                        type: 'POST',
+                        data: { id: id, __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val() },
+                        success: function(result) {
+                            if (result.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Thanh cong!',
+                                    text: result.message,
+                                    confirmButtonColor: '#006b2c'
+                                }).then(function() {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Loi',
+                                    text: result.message,
+                                    confirmButtonColor: '#006b2c'
+                                });
+                            }
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Loi',
+                                text: 'Khong the xoa nam hoc. Vui long thu lai.',
+                                confirmButtonColor: '#006b2c'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+        // ==== DELETE SEMESTER ====
+        function deleteSemester(id, name) {
+            Swal.fire({
+                title: 'Xac nhan xoa hoc ky',
+                text: 'Ban co chac chan muon xoa hoc ky "' + name + '"? Hanh dong nay khong the hoan tac.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#94a3b8',
+                confirmButtonText: 'Xoa',
+                cancelButtonText: 'Huy bo'
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '@Url.Action("DeleteSemester", "SchoolYear")',
+                        type: 'POST',
+                        data: { id: id, __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val() },
+                        success: function(result) {
+                            if (result.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Thanh cong!',
+                                    text: result.message,
+                                    confirmButtonColor: '#006b2c'
+                                }).then(function() {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Loi',
+                                    text: result.message,
+                                    confirmButtonColor: '#006b2c'
+                                });
+                            }
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Loi',
+                                text: 'Khong the xoa hoc ky. Vui long thu lai.',
+                                confirmButtonColor: '#006b2c'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}
