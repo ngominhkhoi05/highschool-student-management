@@ -118,6 +118,23 @@
                             </a>
                         </div>
 
+                        <!-- Giao vien bo mon -->
+                        <div class="space-y-1 mt-2">
+                            <p class="px-4 py-2 text-xs font-semibold text-slate-500">Giao vien bo mon</p>
+
+                            <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                               asp-area="" asp-controller="TeacherAttendance" asp-action="Index">
+                                <span class="material-symbols-outlined text-lg">how_to_reg</span>
+                                <span>So diem danh</span>
+                            </a>
+
+                            <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                               asp-area="" asp-controller="TeacherScore" asp-action="Index">
+                                <span class="material-symbols-outlined text-lg">grade</span>
+                                <span>So diem</span>
+                            </a>
+                        </div>
+
                         <!-- Nhân sự -->
                         <div class="space-y-1 mt-2">
                             <p class="px-4 py-2 text-xs font-semibold text-slate-500">Nhân sự</p>
@@ -186,15 +203,15 @@
                             <p class="px-4 py-2 text-xs font-semibold text-slate-500">Công tác giảng dạy</p>
 
                             <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
-                               asp-area="" asp-controller="Scores" asp-action="Index">
+                               asp-area="" asp-controller="TeacherScore" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">assignment</span>
-                                <span>Sổ điểm</span>
+                                <span>So diem</span>
                             </a>
 
                             <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
-                               asp-area="" asp-controller="Attendances" asp-action="Index">
+                               asp-area="" asp-controller="TeacherAttendance" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">how_to_reg</span>
-                                <span>Điểm danh</span>
+                                <span>Diem danh</span>
                             </a>
                         </div>
 
@@ -203,19 +220,19 @@
                             <p class="px-4 py-2 text-xs font-semibold text-slate-500">Công tác chủ nhiệm</p>
 
                             <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
-                               asp-area="" asp-controller="Classes" asp-action="MyClass">
+                               asp-area="" asp-controller="Homeroom" asp-action="MyClass">
                                 <span class="material-symbols-outlined text-lg">meeting_room</span>
                                 <span>Lớp chủ nhiệm</span>
                             </a>
 
                             <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
-                               asp-area="" asp-controller="Violations" asp-action="Index">
+                               asp-area="" asp-controller="Homeroom" asp-action="Violations">
                                 <span class="material-symbols-outlined text-lg">report</span>
-                                <span>Nềp lệ</span>
+                                <span>Vi phạm</span>
                             </a>
 
                             <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
-                               asp-area="" asp-controller="ConductScores" asp-action="Index">
+                               asp-area="" asp-controller="Homeroom" asp-action="ConductScores">
                                 <span class="material-symbols-outlined text-lg">stars</span>
                                 <span>Hạnh kiểm</span>
                             </a>

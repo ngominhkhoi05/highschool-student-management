@@ -1,0 +1,111 @@
+@model List<highschool_student_management.ViewModels.StudentAttendanceItem>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="p-8 text-center text-slate-400">
+        <span class="material-symbols-outlined text-4xl">person_off</span>
+        <p class="mt-2">Khong co hoc sinh nao trong lop nay.</p>
+    </div>
+}
+else
+{
+    <!-- Bulk action bar -->
+    <div class="px-4 py-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+        <label class="flex items-center gap-2 text-sm text-slate-600 select-none cursor-pointer">
+            <input type="checkbox" id="selectAllAttendance"
+                   class="w-4 h-4 accent-green-600 rounded cursor-pointer"
+                   onclick="toggleAllAttendance(this)" />
+            <span class="font-medium">Chon tat ca</span>
+            <span id="selectedCount" class="text-slate-400 text-xs"></span>
+        </label>
+        <span class="text-xs text-slate-400">Chon hoc sinh roi bam "Cap nhat hang loat" de ap dung.</span>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table id="attendanceTable" class="w-full text-sm">
+            <thead class="bg-green-600 text-white">
+                <tr>
+                    <th class="px-4 py-3 text-center font-semibold w-12">
+                        <span class="sr-only">Chon</span>
+                    </th>
+                    <th class="px-4 py-3 text-center font-semibold w-12">STT</th>
+                    <th class="px-4 py-3 text-left font-semibold">Ma HS</th>
+                    <th class="px-4 py-3 text-left font-semibold">Ho va ten</th>
+                    <th class="px-4 py-3 text-center font-semibold w-48">Trang thai</th>
+                    <th class="px-4 py-3 text-left font-semibold w-48">Ghi chu</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var stt = 1;
+                    foreach (var s in Model)
+                    {
+                        <tr data-student-id="@s.StudentId"
+                            data-existing-status="@(s.ExistingStatus ?? 0)"
+                            data-existing-note="@(System.Web.HttpUtility.HtmlEncode(s.ExistingNote ?? ""))"
+                            class="attendance-row odd:bg-white even:bg-green-50/30 hover:bg-green-100/30 transition-colors">
+                            <td class="px-4 py-3 text-center">
+                                <input type="checkbox"
+                                       class="attendance-check w-4 h-4 accent-green-600 rounded cursor-pointer"
+                                       onclick="updateSelectedCount()" />
+                            </td>
+                            <td class="px-4 py-3 text-center text-slate-400 text-xs font-medium">@stt</td>
+                            <td class="px-4 py-3 font-medium text-green-700">@s.StudentCode</td>
+                            <td class="px-4 py-3 font-semibold text-slate-800">@s.FullName</td>
+                            <td class="px-4 py-3">
+                                <select name="status_@s.StudentId"
+                                        class="status-select w-full px-2 py-1.5 border rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 bg-white @(s.HasExistingRecord ? "border-green-400 bg-green-50" : "border-slate-200")">
+                                    <option value="0">-- Chon --</option>
+                                    @if (s.ExistingStatus == 1)
+                                    {
+                                        <option value="1" selected>Co mat</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="1">Co mat</option>
+                                    }
+                                    @if (s.ExistingStatus == 2)
+                                    {
+                                        <option value="2" selected>Vang co phep</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="2">Vang co phep</option>
+                                    }
+                                    @if (s.ExistingStatus == 3)
+                                    {
+                                        <option value="3" selected>Vang khong phep</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="3">Vang khong phep</option>
+                                    }
+                                    @if (s.ExistingStatus == 4)
+                                    {
+                                        <option value="4" selected>Di tre</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="4">Di tre</option>
+                                    }
+                                </select>
+                            </td>
+                            <td class="px-4 py-3">
+                                <input type="text"
+                                       name="note_@s.StudentId"
+                                       class="note-input w-full px-3 py-1.5 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 placeholder:text-slate-300"
+                                       placeholder="Ghi chu..."
+                                       value="@s.ExistingNote" />
+                            </td>
+                        </tr>
+                        stt++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="px-4 py-3 bg-slate-50 text-xs text-slate-400 flex items-center gap-2">
+        <span class="material-symbols-outlined text-base">info</span>
+        Dong duoc to cham thanh xanh la lich su diem danh.
+    </div>
+}

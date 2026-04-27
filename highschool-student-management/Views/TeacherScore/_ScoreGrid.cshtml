@@ -1,0 +1,72 @@
+@model highschool_student_management.ViewModels.ScoreGridViewModel
+
+@if (Model == null || !Model.StudentRows.Any())
+{
+    <div class="p-12 text-center text-slate-400">
+        <span class="material-symbols-outlined text-4xl">person_off</span>
+        <p class="mt-2">Lop nay chua co hoc sinh nao.</p>
+    </div>
+}
+else
+{
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead class="bg-green-600 text-white">
+                <tr>
+                    <th class="px-3 py-3 text-center font-semibold sticky left-0 bg-green-600 z-10 w-10">STT</th>
+                    <th class="px-3 py-3 text-left font-semibold sticky left-0 bg-green-600 z-10 w-28">Ma HS</th>
+                    <th class="px-3 py-3 text-left font-semibold sticky left-0 bg-green-600 z-10 w-48">Ho va ten</th>
+                    @foreach (var st in Model.ScoreTypes)
+                    {
+                        <th class="px-2 py-3 text-center font-semibold min-w-[60px]">
+                            <div>@st.Name</div>
+                            <div class="text-xs font-normal opacity-70">HS @st.Weight.ToString("F1")</div>
+                        </th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var stt = 1;
+                    foreach (var row in Model.StudentRows)
+                    {
+                        <tr class="odd:bg-white even:bg-green-50/30 hover:bg-green-100/30 transition-colors">
+                            <td class="px-3 py-2 text-center text-slate-400 text-xs font-medium sticky left-0 bg-inherit z-10">@stt</td>
+                            <td class="px-3 py-2 font-medium text-green-700 sticky left-0 bg-inherit z-10">@row.StudentCode</td>
+                            <td class="px-3 py-2 font-semibold text-slate-800 sticky left-0 bg-inherit z-10">@row.FullName</td>
+                            @foreach (var scoreCell in row.Scores)
+                            {
+                                <td class="px-2 py-2 text-center">
+                                    @{
+                                        var inputId = $"score_{scoreCell.StudentId}_{scoreCell.ScoreTypeId}";
+                                        var hasValue = scoreCell.Value.HasValue;
+                                    }
+                                    <input type="number"
+                                           id="@inputId"
+                                           data-key="@(scoreCell.StudentId)_@(scoreCell.ScoreTypeId)"
+                                           data-score-id="@scoreCell.ScoreId"
+                                           value="@(hasValue ? scoreCell.Value.Value.ToString("F1") : "")"
+                                           min="0"
+                                           max="10"
+                                           step="0.1"
+                                           placeholder="-"
+                                           class="score-input w-16 text-center px-1 py-1 border rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all @(hasValue ? "border-green-400 bg-green-50 font-semibold text-green-700" : "border-slate-200")" />
+                                </td>
+                            }
+                        </tr>
+                        stt++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="px-4 py-3 bg-slate-50 text-xs text-slate-400 flex items-center gap-4">
+        <span class="flex items-center gap-1">
+            <span class="w-3 h-3 inline-block border border-green-400 bg-green-50 rounded"></span> Da co diem
+        </span>
+        <span class="flex items-center gap-1">
+            <span class="w-3 h-3 inline-block border border-slate-200 rounded"></span> Chua co diem
+        </span>
+        <span>Diem tu 0 den 10, thang 1 chu so thap phan.</span>
+    </div>
+}

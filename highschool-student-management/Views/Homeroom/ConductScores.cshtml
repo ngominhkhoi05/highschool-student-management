@@ -1,0 +1,106 @@
+@model List<highschool_student_management.ViewModels.ConductScoreIndexViewModel>
+
+@{
+    var semesters = ViewData["Semesters"] as List<highschool_student_management.ViewModels.SemesterDropdown> ?? new();
+    var selectedSemesterId = (int)(ViewData["SelectedSemesterId"] ?? 0);
+    var classId = (int)(ViewData["ClassId"] ?? 0);
+    var className = ViewData["ClassName"]?.ToString() ?? "";
+    ViewData["Title"] = "Danh gia hanh kiem";
+}
+
+<div class="max-w-6xl mx-auto">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-3xl text-amber-500">stars</span>
+            <div>
+                <h2 class="text-xl font-bold text-slate-800">Danh gia hanh kiem</h2>
+                <p class="text-sm text-slate-500">@className</p>
+            </div>
+        </div>
+        <button onclick="saveConductScores()"
+                class="px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-sm font-semibold rounded-xl shadow-sm transition-all flex items-center gap-2">
+            <span class="material-symbols-outlined text-base">save</span>
+            Luu hanh kiem
+        </button>
+    </div>
+
+    <!-- Bo loc hoc ky -->
+    <div class="bg-white rounded-xl p-4 mb-4 flex flex-wrap gap-3 items-center border border-green-100">
+        <label class="text-sm font-semibold text-slate-600">Hoc ky:</label>
+        @foreach (var sem in semesters)
+        {
+            <button onclick="loadConductBySemester(@sem.Id)"
+                    class="px-4 py-2 rounded-lg text-sm font-medium transition-all @(sem.Id == selectedSemesterId ? "bg-green-600 text-white" : "bg-slate-100 text-slate-600 hover:bg-green-50")">
+                @sem.Name
+            </button>
+        }
+    </div>
+
+    <!-- Bang hanh kiem -->
+    <div class="bg-white rounded-2xl shadow-sm border border-green-100 overflow-hidden">
+        <div id="conductListContainer">
+            @await Html.PartialAsync("_ConductScoreList", Model)
+        </div>
+    </div>
+</div>
+
+<script>
+    var gSemesterId = @selectedSemesterId;
+    var gClassId = @classId;
+
+    function loadConductBySemester(semesterId) {
+        gSemesterId = semesterId;
+        $.ajax({
+            url: '@Url.Action("GetConductScoresBySemester", "Homeroom")',
+            type: 'GET',
+            data: { semesterId: semesterId },
+            success: function(html) {
+                $('#conductListContainer').html(html);
+            },
+            error: function() {
+                Swal.fire({ icon: 'error', title: 'Loi', text: 'Khong the tai danh sach.', confirmButtonColor: '#d97706' });
+            }
+        });
+    }
+
+    function saveConductScores() {
+        var items = [];
+
+        $('#conductTable tbody tr').each(function() {
+            var id = parseInt($(this).data('id')) || 0;
+            var studentId = parseInt($(this).data('student-id'));
+            var rank = parseInt($(this).find('.rank-select').val()) || 0;
+            var score = parseInt($(this).find('.score-input').val()) || 0;
+            var note = $(this).find('.note-input').val();
+
+            items.push({
+                id: id,
+                studentId: studentId,
+                semesterId: gSemesterId,
+                conductRank: rank > 0 ? rank : null,
+                score: score > 0 ? score : null,
+                note: note || null
+            });
+        });
+
+        $.ajax({
+            url: '@Url.Action("SaveConductScores", "Homeroom")',
+            type: 'POST',
+            contentType: 'application/json',
+            headers: { 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() },
+            data: JSON.stringify(items),
+            success: function(result) {
+                if (result.success) {
+                    Swal.fire({ icon: 'success', title: 'Thanh cong!', text: result.message, confirmButtonColor: '#006b2c' });
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Loi', text: result.message, confirmButtonColor: '#d97706' });
+                }
+            },
+            error: function() {
+                Swal.fire({ icon: 'error', title: 'Loi', text: 'Khong the luu. Vui long thu lai.', confirmButtonColor: '#d97706' });
+            }
+        });
+    }
+</script>
