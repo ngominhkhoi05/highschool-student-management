@@ -60,22 +60,54 @@
             <span class="material-symbols-outlined">menu</span>
         </button>
 
-        <!-- Thông tin người dùng -->
-        <div class="flex items-center gap-3 pl-6 border-l border-slate-100">
-            <div class="text-right hidden sm:block">
-                <p class="text-sm font-bold text-slate-800 leading-none">@userName</p>
-                <p class="text-[11px] text-green-600 font-semibold mt-1">@userRole</p>
-            </div>
-            <div class="relative">
-                @{
-                    // Lấy initial từ tên người dùng làm avatar mặc định
-                    var initial = string.IsNullOrEmpty(userName) ? "U" : userName[0].ToString().ToUpper();
-                }
-                <div class="w-10 h-10 rounded-full border-2 border-green-100 bg-green-600 flex items-center justify-center text-white font-bold text-sm">
-                    @initial
+        <!-- Thông tin người dùng + Dropdown -->
+        <div class="relative flex items-center gap-3 pl-6 border-l border-slate-100">
+
+            <input type="checkbox" id="userDropdown" class="hidden peer"/>
+
+            <label for="userDropdown" class="flex items-center gap-3 cursor-pointer select-none">
+                <div class="text-right hidden sm:block">
+                    <p class="text-sm font-bold text-slate-800 leading-none">@userName</p>
+                    <p class="text-[11px] text-green-600 font-semibold mt-1">@userRole</p>
                 </div>
-                <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+                <div class="relative">
+                    @{
+                        var initial = string.IsNullOrEmpty(userName) ? "U" : userName[0].ToString().ToUpper();
+                    }
+                    <div class="w-10 h-10 rounded-full border-2 border-green-100 bg-green-600 flex items-center justify-center text-white font-bold text-sm peer-checked:ring-2 peer-checked:ring-green-400">
+                        @initial
+                    </div>
+                    <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+                </div>
+            </label>
+
+            <!-- Dropdown menu -->
+            <div class="absolute top-full right-0 mt-2 w-52 bg-white rounded-xl shadow-lg border border-slate-100 py-2 z-50 hidden peer-checked:block animate-in fade-in slide-in-from-top-2 duration-200">
+                <div class="px-4 py-2 border-b border-slate-100 mb-1">
+                    <p class="text-xs text-slate-500">Đăng nhập với</p>
+                    <p class="text-sm font-semibold text-slate-800 truncate">@userName</p>
+                </div>
+                <a asp-area="" asp-controller="User" asp-action="Index"
+                   class="flex items-center gap-3 px-4 py-2.5 text-slate-600 hover:bg-green-50 hover:text-green-700 transition-colors">
+                    <span class="material-symbols-outlined text-lg">account_circle</span>
+                    Xem hồ sơ
+                </a>
+                <button class="btn-render-modal w-full flex items-center gap-3 px-4 py-2.5 text-slate-600 hover:bg-green-50 hover:text-green-700 transition-colors"
+                        data-url="@Url.Action("ChangePassword", "User")"
+                        data-title="Đổi mật khẩu">
+                    <span class="material-symbols-outlined text-lg">lock</span>
+                    Đổi mật khẩu
+                </button>
+                <div class="border-t border-slate-100 mt-1 pt-1">
+                    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post">
+                        <button type="submit" class="w-full flex items-center gap-3 px-4 py-2.5 text-red-500 hover:bg-red-50 transition-colors">
+                            <span class="material-symbols-outlined text-lg">logout</span>
+                            Đăng xuất
+                        </button>
+                    </form>
+                </div>
             </div>
+
         </div>
 
     </div>
