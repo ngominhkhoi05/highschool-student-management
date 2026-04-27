@@ -1,0 +1,197 @@
+@model List<highschool_student_management.ViewModels.UserAccountViewModel>
+
+@{
+    ViewData["Title"] = "Quan ly tai khoan";
+}
+
+<div class="max-w-6xl mx-auto">
+    <!-- Page Header -->
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-green-700">Quan ly tai khoan</h1>
+            <p class="text-sm text-slate-500 mt-1">Xem danh sach, khoa/mo khoa va dat lai mat khau tai khoan</p>
+        </div>
+    </div>
+
+    <!-- Bang danh sach Tai khoan -->
+    <div class="bg-white rounded-2xl shadow-sm border border-green-100 overflow-hidden">
+        <!-- Thanh tim kiem -->
+        <div class="p-4 border-b border-green-100 flex items-center gap-3">
+            <form method="get" class="flex-1 flex items-center gap-3" id="searchForm">
+                <div class="relative flex-1 max-w-md">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+                    <input type="text"
+                           name="search"
+                           value="@ViewData["Search"]"
+                           placeholder="Tim kiem theo ten dang nhap hoac email..."
+                           class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all placeholder:text-slate-300" />
+                </div>
+                <button type="submit"
+                        class="px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-xl transition-all shadow-sm">
+                    Tim kiem
+                </button>
+                @if (!string.IsNullOrEmpty(ViewData["Search"] as string))
+                {
+                    <a asp-action="Index"
+                       class="px-4 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-all">
+                        Xoa loc
+                    </a>
+                }
+            </form>
+        </div>
+
+        <!-- Bang du lieu -->
+        <table class="w-full text-sm">
+            <thead class="bg-green-600 text-white">
+                <tr>
+                    <th class="px-6 py-4 text-left font-semibold w-10">#</th>
+                    <th class="px-4 py-4 text-left font-semibold">Ten dang nhap</th>
+                    <th class="px-4 py-4 text-left font-semibold">Email</th>
+                    <th class="px-4 py-4 text-left font-semibold">Vai tro</th>
+                    <th class="px-4 py-4 text-center font-semibold">Trang thai</th>
+                    <th class="px-4 py-4 text-left font-semibold">Dang nhap cuoi</th>
+                    <th class="px-4 py-4 text-center font-semibold w-44">Thao tac</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="7" class="px-6 py-12 text-center text-slate-400">
+                            <span class="material-symbols-outlined text-4xl">search_off</span>
+                            <p class="mt-2">Khong co tai khoan nao.</p>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    var index = 1;
+                    foreach (var user in Model)
+                    {
+                        <tr class="odd:bg-white even:bg-green-50 hover:bg-green-100/40 transition-colors">
+                            <td class="px-6 py-3.5 text-slate-400 text-xs font-medium">@index</td>
+                            <td class="px-4 py-3.5">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 bg-green-100 text-green-700 rounded-full flex items-center justify-center text-sm font-bold">
+                                        @user.Username[0].ToString().ToUpper()
+                                    </div>
+                                    <span class="font-semibold text-slate-800">@user.Username</span>
+                                </div>
+                            </td>
+                            <td class="px-4 py-3.5 text-slate-600">
+                                @(string.IsNullOrEmpty(user.Email) ? "-" : user.Email)
+                            </td>
+                            <td class="px-4 py-3.5">
+                                <span class="inline-flex items-center px-2.5 py-0.5 bg-slate-100 text-slate-600 text-xs font-semibold rounded-full">
+                                    @user.RoleDisplayName
+                                </span>
+                            </td>
+                            <td class="px-4 py-3.5 text-center">
+                                @if (user.IsActive == 1)
+                                {
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
+                                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
+                                        Hoat dong
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-slate-100 text-slate-500 text-xs font-semibold rounded-full">
+                                        <span class="w-1.5 h-1.5 bg-slate-400 rounded-full"></span>
+                                        Bi khoa
+                                    </span>
+                                }
+                            </td>
+                            <td class="px-4 py-3.5 text-slate-500 text-xs">
+                                @(user.LastLogin.HasValue ? user.LastLogin.Value.ToString("dd/MM/yyyy HH:mm") : "Chua dang nhap")
+                            </td>
+                            <td class="px-4 py-3.5">
+                                <div class="flex items-center justify-center gap-1">
+                                    @if (user.IsActive == 1)
+                                    {
+                                        <button type="button"
+                                                class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                                                title="Khoa tai khoan"
+                                                onclick="toggleStatus(@user.Id, '@user.Username', 0)">
+                                            <span class="material-symbols-outlined text-base">lock</span>
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button"
+                                                class="p-1.5 text-slate-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all"
+                                                title="Mo khoa tai khoan"
+                                                onclick="toggleStatus(@user.Id, '@user.Username', 1)">
+                                            <span class="material-symbols-outlined text-base">lock_open</span>
+                                        </button>
+                                    }
+                                    <button type="button"
+                                            class="p-1.5 text-slate-400 hover:text-yellow-600 hover:bg-yellow-50 rounded-lg transition-all btn-render-modal"
+                                            title="Dat lai mat khau"
+                                            data-url="@Url.Action("_ResetPassword", "Account", new { id = user.Id })"
+                                            data-title="Dat lai mat khau">
+                                        <span class="material-symbols-outlined text-base">key</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function toggleStatus(id, username, newStatus) {
+            var action = newStatus === 1 ? "mo khoa" : "khoa";
+            Swal.fire({
+                title: 'Xac nhan ' + action,
+                text: 'Ban co muon ' + action + ' tai khoan "' + username + '" khong?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#006b2c',
+                cancelButtonColor: '#94a3b8',
+                confirmButtonText: 'Xac nhan',
+                cancelButtonText: 'Huy bo'
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '@Url.Action("ToggleStatus", "Account")',
+                        type: 'POST',
+                        data: { id: id, __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val() },
+                        success: function(result) {
+                            if (result.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Thanh cong!',
+                                    text: result.message,
+                                    confirmButtonColor: '#006b2c'
+                                }).then(function() {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Loi',
+                                    text: result.message,
+                                    confirmButtonColor: '#006b2c'
+                                });
+                            }
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Loi',
+                                text: 'Khong the thay doi trang thai. Vui long thu lai.',
+                                confirmButtonColor: '#006b2c'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}
