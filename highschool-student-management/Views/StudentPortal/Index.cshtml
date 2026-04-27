@@ -1,0 +1,64 @@
+@model highschool_student_management.ViewModels.StudentPortalViewModel
+
+@{
+    ViewData["Title"] = "Tra cuu";
+}
+
+<div class="p-6 space-y-6">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-12 h-12 bg-green-100 rounded-2xl flex items-center justify-center">
+                <span class="material-symbols-outlined text-2xl text-green-600">school</span>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold text-slate-800">Tra cuu thong tin</h1>
+                <p class="text-sm text-slate-500">@Model.FullName (@Model.StudentCode)</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu tra cuu -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <a asp-action="Scores"
+           class="bg-white rounded-2xl border border-green-100 p-6 hover:shadow-md hover:border-green-300 transition-all group">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center text-white group-hover:bg-green-600 transition-colors">
+                    <span class="material-symbols-outlined text-2xl">grade</span>
+                </div>
+                <div>
+                    <h3 class="font-bold text-slate-800">Bang diem</h3>
+                    <p class="text-sm text-slate-500">Xem diem theo hoc ky</p>
+                </div>
+            </div>
+        </a>
+
+        <a asp-action="Attendances"
+           class="bg-white rounded-2xl border border-green-100 p-6 hover:shadow-md hover:border-green-300 transition-all group">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center text-white group-hover:bg-blue-600 transition-colors">
+                    <span class="material-symbols-outlined text-2xl">how_to_reg</span>
+                </div>
+                <div>
+                    <h3 class="font-bold text-slate-800">Diem danh</h3>
+                    <p class="text-sm text-slate-500">Xem tinh trang diem danh</p>
+                </div>
+            </div>
+        </a>
+
+        <a asp-action="Conduct"
+           class="bg-white rounded-2xl border border-green-100 p-6 hover:shadow-md hover:border-green-300 transition-all group">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center text-white group-hover:bg-purple-600 transition-colors">
+                    <span class="material-symbols-outlined text-2xl">stars</span>
+                </div>
+                <div>
+                    <h3 class="font-bold text-slate-800">Hanh kiem</h3>
+                    <p class="text-sm text-slate-500">Xem diem hanh kiem va vi pham</p>
+                </div>
+            </div>
+        </a>
+    </div>
+
+</div>

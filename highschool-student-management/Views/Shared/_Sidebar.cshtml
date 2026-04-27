@@ -43,19 +43,19 @@
                     <nav class="space-y-1">
 
                         <a class="flex items-center gap-3 border-l-4 border-green-600 bg-green-50 text-green-700 font-semibold px-4 py-3 cursor-pointer active:scale-[0.98] transition-all duration-200"
-                           asp-area="" asp-controller="Home" asp-action="Index">
+                           asp-area="" asp-controller="Dashboard" asp-action="Index">
                             <span class="material-symbols-outlined text-lg">dashboard</span>
-                            <span>Bảng điều khiển</span>
+                            <span>Bang dieu khien</span>
                         </a>
 
-                        <!-- Hệ thống -->
+                        <!-- He thong -->
                         <div class="space-y-1 mt-2">
-                            <p class="px-4 py-2 text-xs font-semibold text-slate-500">Hệ thống</p>
+                            <p class="px-4 py-2 text-xs font-semibold text-slate-500">He thong</p>
 
                             <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
                                asp-area="" asp-controller="SchoolYear" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">calendar_today</span>
-                                <span>Năm học</span>
+                                <span>Nam hoc</span>
                             </a>
 
                             <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
@@ -242,37 +242,82 @@
                 </div>
             }
 
-            @* ===== NHÓM HỌC SINH / PHỤ HUYNH ===== *@
-            @if (Context.User?.IsInRole("Student") == true || Context.User?.IsInRole("Parent") == true)
+            @* ===== NHOM HOC SINH ===== *@
+            @if (Context.User?.IsInRole("Student") == true)
             {
                 <div class="mb-6">
-                    <p class="px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Cá nhân &amp; Thông báo</p>
+                    <p class="px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Tra cuu</p>
                     <nav class="space-y-1">
 
-                        <a class="flex items-center gap-3 text-slate-500 px-4 py-3 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
-                           asp-area="" asp-controller="Home" asp-action="Index">
+                        <a class="flex items-center gap-3 border-l-4 border-green-600 bg-green-50 text-green-700 font-semibold px-4 py-3 cursor-pointer transition-all duration-200"
+                           asp-area="" asp-controller="StudentPortal" asp-action="Index">
                             <span class="material-symbols-outlined text-lg">dashboard</span>
-                            <span>Bảng điều khiển</span>
+                            <span>Tong quan</span>
                         </a>
 
                         <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
-                           asp-area="" asp-controller="SemesterResults" asp-action="Index">
+                           asp-area="" asp-controller="StudentPortal" asp-action="Scores">
                             <span class="material-symbols-outlined text-lg">grade</span>
-                            <span>Kết quả học tập</span>
+                            <span>Bang diem</span>
                         </a>
 
                         <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
-                           asp-area="" asp-controller="Attendances" asp-action="MyAttendance">
+                           asp-area="" asp-controller="StudentPortal" asp-action="Attendances">
                             <span class="material-symbols-outlined text-lg">how_to_reg</span>
-                            <span>Điểm danh</span>
+                            <span>Diem danh</span>
                         </a>
 
                         <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
-                           asp-area="" asp-controller="Notifications" asp-action="Index">
-                            <span class="material-symbols-outlined text-lg">notifications</span>
-                            <span>Thông báo</span>
+                           asp-area="" asp-controller="StudentPortal" asp-action="Conduct">
+                            <span class="material-symbols-outlined text-lg">stars</span>
+                            <span>Hanh kiem</span>
                         </a>
 
+                        <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                           asp-area="" asp-controller="Notification" asp-action="Index">
+                            <span class="material-symbols-outlined text-lg">notifications</span>
+                            <span>Thong bao</span>
+                        </a>
+                    </nav>
+                </div>
+            }
+
+            @* ===== NHOM PHU HUYNH ===== *@
+            @if (Context.User?.IsInRole("Parent") == true)
+            {
+                <div class="mb-6">
+                    <p class="px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Tra cuu</p>
+                    <nav class="space-y-1">
+
+                        <a class="flex items-center gap-3 border-l-4 border-green-600 bg-green-50 text-green-700 font-semibold px-4 py-3 cursor-pointer transition-all duration-200"
+                           asp-area="" asp-controller="ParentPortal" asp-action="Index">
+                            <span class="material-symbols-outlined text-lg">dashboard</span>
+                            <span>Tong quan</span>
+                        </a>
+
+                        <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                           asp-area="" asp-controller="ParentPortal" asp-action="Scores">
+                            <span class="material-symbols-outlined text-lg">grade</span>
+                            <span>Bang diem</span>
+                        </a>
+
+                        <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                           asp-area="" asp-controller="ParentPortal" asp-action="Attendances">
+                            <span class="material-symbols-outlined text-lg">how_to_reg</span>
+                            <span>Diem danh</span>
+                        </a>
+
+                        <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                           asp-area="" asp-controller="ParentPortal" asp-action="Conduct">
+                            <span class="material-symbols-outlined text-lg">stars</span>
+                            <span>Hanh kiem</span>
+                        </a>
+
+                        <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                           asp-area="" asp-controller="Notification" asp-action="Index">
+                            <span class="material-symbols-outlined text-lg">notifications</span>
+                            <span>Thong bao</span>
+                        </a>
                     </nav>
                 </div>
             }

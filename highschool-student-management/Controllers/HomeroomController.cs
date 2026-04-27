@@ -240,8 +240,9 @@ namespace highschool_student_management.Controllers
         // POST: /Homeroom/CreateViolation
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateViolation(ViolationCreateViewModel model)
+        public async Task<IActionResult> CreateViolation([FromBody] ViolationCreateViewModel model)
         {
+            System.Diagnostics.Debug.WriteLine($"[DEBUG] CreateViolation called. SemesterId={model.SemesterId}, StudentId={model.StudentId}, ViolationTypeId={model.ViolationTypeId}, ViolationDate={model.ViolationDate}");
             var teacherId = GetCurrentTeacherId();
             if (teacherId == 0)
                 return Json(new { success = false, message = "Khong xac dinh giao vien." });

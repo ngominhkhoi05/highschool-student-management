@@ -1,0 +1,157 @@
+@model highschool_student_management.ViewModels.NotificationCreateViewModel
+
+<div class="p-6 space-y-4">
+    <div>
+        <label class="block text-sm font-semibold text-slate-600 mb-1">Tieu de <span class="text-red-500">*</span></label>
+        <input type="text" id="notifTitle" placeholder="Nhap tieu de thong bao..."
+               class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400" />
+    </div>
+
+    <div>
+        <label class="block text-sm font-semibold text-slate-600 mb-1">Noi dung</label>
+        <textarea id="notifContent" rows="4" placeholder="Noi dung thong bao..."
+                  class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 resize-none"></textarea>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+        <div>
+            <label class="block text-sm font-semibold text-slate-600 mb-1">Loai thong bao</label>
+            <select id="notifType"
+                    class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 bg-white">
+                <option value="1">Thong bao chung</option>
+                <option value="2">Hoc vu</option>
+                <option value="3">Su kien</option>
+                <option value="4">Khan</option>
+            </select>
+        </div>
+
+        <div>
+            <label class="block text-sm font-semibold text-slate-600 mb-1">Gui den</label>
+            <select id="notifTargetType"
+                    onchange="toggleTargetOptions()"
+                    class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 bg-white">
+                <option value="1">Toan truong</option>
+                <option value="2">Theo khoi</option>
+                <option value="3">Theo lop</option>
+                <option value="4">Ca nhan</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Theo khoi -->
+    <div id="targetGrades" class="hidden">
+        <label class="block text-sm font-semibold text-slate-600 mb-2">Chon khoi</label>
+        <div class="flex flex-wrap gap-2">
+            @foreach (var grade in new[] { 10, 11, 12 })
+            {
+                <label class="flex items-center gap-2 px-3 py-2 border border-slate-200 rounded-lg cursor-pointer hover:bg-green-50 transition-all">
+                    <input type="checkbox" class="grade-cb w-4 h-4 accent-green-600" value="@grade" />
+                    <span class="text-sm font-medium text-slate-600">Khoi @grade</span>
+                </label>
+            }
+        </div>
+    </div>
+
+    <!-- Theo lop -->
+    <div id="targetClasses" class="hidden">
+        <label class="block text-sm font-semibold text-slate-600 mb-2">Chon lop</label>
+        <div class="max-h-40 overflow-y-auto border border-slate-200 rounded-xl divide-y divide-slate-100">
+            @foreach (var cls in Model.Classes)
+            {
+                <label class="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-green-50 transition-all">
+                    <input type="checkbox" class="class-cb w-4 h-4 accent-green-600" value="@cls.Id" />
+                    <span class="text-sm text-slate-600">@cls.Name (Khoi @cls.GradeLevel)</span>
+                </label>
+            }
+        </div>
+    </div>
+
+    <!-- Ca nhan -->
+    <div id="targetUsers" class="hidden">
+        <label class="block text-sm font-semibold text-slate-600 mb-2">Chon nguoi nhan</label>
+        <div class="max-h-40 overflow-y-auto border border-slate-200 rounded-xl divide-y divide-slate-100">
+            @foreach (var u in Model.Users)
+            {
+                <label class="flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-green-50 transition-all">
+                    <input type="checkbox" class="user-cb w-4 h-4 accent-green-600" value="@u.Id" />
+                    <span class="text-sm text-slate-600">@u.Username (@u.RoleName)</span>
+                </label>
+            }
+        </div>
+    </div>
+
+    <!-- Nut hanh dong -->
+    <div class="flex gap-3 pt-2">
+        <button onclick="closeCreateNotificationModal()"
+                class="flex-1 px-4 py-2.5 border border-slate-200 text-slate-600 hover:bg-slate-50 text-sm font-semibold rounded-xl transition-all">
+            Dong
+        </button>
+        <button onclick="sendNotification()"
+                class="flex-1 px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-base">send</span>
+            Gui thong bao
+        </button>
+    </div>
+</div>
+
+<script>
+    function toggleTargetOptions() {
+        var targetType = parseInt($('#notifTargetType').val()) || 1;
+        $('#targetGrades').addClass('hidden');
+        $('#targetClasses').addClass('hidden');
+        $('#targetUsers').addClass('hidden');
+
+        if (targetType === 2) $('#targetGrades').removeClass('hidden');
+        if (targetType === 3) $('#targetClasses').removeClass('hidden');
+        if (targetType === 4) $('#targetUsers').removeClass('hidden');
+    }
+
+    function sendNotification() {
+        var title = $('#notifTitle').val().trim();
+        if (!title) {
+            Swal.fire({ icon: 'warning', title: 'Thieu thong tin', text: 'Vui long nhap tieu de.', confirmButtonColor: '#006b2c' });
+            return;
+        }
+
+        var targetType = parseInt($('#notifTargetType').val()) || 1;
+        var gradeLevels = [];
+        var classIds = [];
+        var userIds = [];
+
+        if (targetType === 2) {
+            gradeLevels = $('.grade-cb:checked').map(function() { return parseInt(this.value); }).get();
+        } else if (targetType === 3) {
+            classIds = $('.class-cb:checked').map(function() { return parseInt(this.value); }).get();
+        } else if (targetType === 4) {
+            userIds = $('.user-cb:checked').map(function() { return parseInt(this.value); }).get();
+        }
+
+        $.ajax({
+            url: '@Url.Action("SendNotification", "Notification")',
+            type: 'POST',
+            contentType: 'application/json',
+            headers: { 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() },
+            data: JSON.stringify({
+                title: title,
+                content: $('#notifContent').val().trim() || null,
+                type: parseInt($('#notifType').val()) || 1,
+                targetType: targetType,
+                gradeLevels: gradeLevels.length ? gradeLevels : null,
+                classIds: classIds.length ? classIds : null,
+                userIds: userIds.length ? userIds : null
+            }),
+            success: function(result) {
+                if (result.success) {
+                    Swal.fire({ icon: 'success', title: 'Thanh cong!', text: result.message, confirmButtonColor: '#006b2c' }).then(function() {
+                        closeCreateNotificationModal();
+                    });
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Loi', text: result.message, confirmButtonColor: '#dc2626' });
+                }
+            },
+            error: function() {
+                Swal.fire({ icon: 'error', title: 'Loi', text: 'Khong the gui thong bao. Vui long thu lai.', confirmButtonColor: '#dc2626' });
+            }
+        });
+    }
+</script>
