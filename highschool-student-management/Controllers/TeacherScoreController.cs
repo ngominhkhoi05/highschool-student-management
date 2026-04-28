@@ -102,7 +102,6 @@ namespace highschool_student_management.Controllers
             if (teacherId == 0)
                 return Json(new { success = false, message = "Khong xac dinh giao vien." });
 
-            // Lay danh sach mon giao vien day lop nay trong hoc ky nay
             var subjects = await _context.TeacherClasses
                 .Where(tc => tc.TeacherId == teacherId
                     && tc.ClassId == classId
@@ -224,7 +223,7 @@ namespace highschool_student_management.Controllers
                     StudentRows = studentRows
                 };
 
-                return PartialView(model);
+                return PartialView("_ScoreGrid", model);
             }
             catch (Exception ex)
             {
@@ -235,11 +234,7 @@ namespace highschool_student_management.Controllers
         // POST: /TeacherScore/SaveBulkScores
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SaveBulkScores(
-            [FromForm] int classId,
-            [FromForm] int subjectId,
-            [FromForm] int semesterId,
-            [FromForm] List<ScoreSaveItem> scores)
+        public async Task<IActionResult> SaveBulkScores([FromBody] SaveBulkScoresRequest request)
         {
             var teacherId = GetCurrentTeacherId();
             if (teacherId == 0)
@@ -250,20 +245,20 @@ namespace highschool_student_management.Controllers
                 // Kiem tra phan cong
                 var assignment = await _context.TeacherClasses
                     .AnyAsync(tc => tc.TeacherId == teacherId
-                        && tc.ClassId == classId
-                        && tc.SubjectId == subjectId
-                        && tc.SemesterId == semesterId);
+                        && tc.ClassId == request.ClassId
+                        && tc.SubjectId == request.SubjectId
+                        && tc.SemesterId == request.SemesterId);
 
                 if (!assignment)
                     return Json(new { success = false, message = "Ban khong duoc phan cong day mon nay cho lop nay." });
 
-                if (scores == null || !scores.Any())
+                if (request.Scores == null || !request.Scores.Any())
                     return Json(new { success = false, message = "Khong co du lieu de luu." });
 
                 var now = DateTime.Now;
                 var savedCount = 0;
 
-                foreach (var item in scores)
+                foreach (var item in request.Scores)
                 {
                     if (!item.ScoreValue.HasValue)
                         continue;
@@ -290,8 +285,8 @@ namespace highschool_student_management.Controllers
                         _context.Scores.Add(new QuanLyHocSinh.Models.Score
                         {
                             StudentId = item.StudentId,
-                            SubjectId = subjectId,
-                            SemesterId = semesterId,
+                            SubjectId = request.SubjectId,
+                            SemesterId = request.SemesterId,
                             ScoreTypeId = item.ScoreTypeId,
                             ScoreValue = item.ScoreValue,
                             ExamDate = item.ExamDate ?? DateOnly.FromDateTime(now),

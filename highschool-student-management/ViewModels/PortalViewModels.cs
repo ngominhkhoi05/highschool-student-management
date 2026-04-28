@@ -287,4 +287,5 @@ namespace highschool_student_management.ViewModels
         public string FullName { get; set; } = "";
         public string ClassName { get; set; } = "";
     }
+
 }

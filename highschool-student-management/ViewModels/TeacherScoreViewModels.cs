@@ -69,11 +69,19 @@ namespace highschool_student_management.ViewModels
     // Model nhan du lieu luu diem
     public class ScoreSaveItem
     {
-    public int? ScoreId { get; set; }
-    public int StudentId { get; set; }
-    public int ScoreTypeId { get; set; }
-    public decimal? ScoreValue { get; set; }
-    public DateOnly? ExamDate { get; set; }
-    public string? Note { get; set; }
+        public int? ScoreId { get; set; }
+        public int StudentId { get; set; }
+        public int ScoreTypeId { get; set; }
+        public decimal? ScoreValue { get; set; }
+        public DateOnly? ExamDate { get; set; }
+        public string? Note { get; set; }
+    }
+
+    public class SaveBulkScoresRequest
+    {
+        public int ClassId { get; set; }
+        public int SubjectId { get; set; }
+        public int SemesterId { get; set; }
+        public List<ScoreSaveItem> Scores { get; set; } = new();
     }
 }
