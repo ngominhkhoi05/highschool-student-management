@@ -2,7 +2,7 @@
 
 @{
     var isEdit = Model.Id > 0;
-    var pageTitle = isEdit ? "Sua phu huynh" : "Them phu huynh moi";
+    var pageTitle = isEdit ? "Sửa phụ huynh" : "Thêm phụ huynh mới";
 }
 
 <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg mx-auto overflow-hidden max-h-[90vh] overflow-y-auto">
@@ -24,7 +24,7 @@
         <!-- Ho va ten -->
         <div>
             <label class="block text-sm font-semibold text-slate-700 mb-1.5">
-                Ho va ten <span class="text-red-500">*</span>
+                Họ và tên <span class="text-red-500">*</span>
             </label>
             <input type="text"
                    name="FullName"
@@ -38,10 +38,10 @@
         <!-- Gioi tinh & Quan he -->
         <div class="grid grid-cols-2 gap-4">
             <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Gioi tinh</label>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Giới tính</label>
                 <select name="Gender"
                         class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all bg-white">
-                    <option value="">-- Chon --</option>
+                    <option value="">-- Chọn --</option>
                     @if (Model.Gender == 1)
                     {
                         <option value="1" selected>Nam</option>
@@ -61,10 +61,10 @@
                 </select>
             </div>
             <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Quan he voi HS</label>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Quan hệ với HS</label>
                 <select name="Relationship"
                         class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all bg-white">
-                    <option value="">-- Chon --</option>
+                    <option value="">-- Chọn --</option>
                     @if (Model.Relationship == 1)
                     {
                         <option value="1" selected>Cha</option>
@@ -83,11 +83,11 @@
                     }
                     @if (Model.Relationship == 3)
                     {
-                        <option value="3" selected>Nguoi giam ho</option>
+                        <option value="3" selected>Người giám hộ</option>
                     }
                     else
                     {
-                        <option value="3">Nguoi giam ho</option>
+                        <option value="3">Người giám hộ</option>
                     }
                 </select>
             </div>
@@ -97,7 +97,7 @@
         <div class="grid grid-cols-2 gap-4">
             <div>
                 <label class="block text-sm font-semibold text-slate-700 mb-1.5">
-                    So dien thoai <span class="text-red-500">*</span>
+                    Số điện thoại <span class="text-red-500">*</span>
                 </label>
                 <input type="text"
                        name="Phone"
@@ -119,17 +119,17 @@
 
         <!-- Nghe nghiep -->
         <div>
-            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Nghe nghiep</label>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Nghề nghiệp</label>
             <input type="text"
                    name="Occupation"
                    value="@Model.Occupation"
-                   placeholder="VD: Ky su, Giao vien, Buon ban"
+                   placeholder="VD: Kỹ sư, Giáo viên, Buôn bán"
                    class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all placeholder:text-slate-300" />
         </div>
 
         <!-- Dia chi -->
         <div>
-            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Dia chi</label>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Địa chỉ</label>
             <input type="text"
                    name="Address"
                    value="@Model.Address"
@@ -142,12 +142,12 @@
             <button type="button"
                     onclick="closeModal()"
                     class="px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors">
-                Huy bo
+                Huy bỏ
             </button>
             <button type="button"
                     onclick="submitParentForm()"
                     class="px-6 py-2.5 text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-xl shadow-sm transition-all">
-                @(isEdit ? "Luu thay doi" : "Them phu huynh")
+                @(isEdit ? "Lưu thay đổi" : "Thêm phụ huynh")
             </button>
         </div>
     </form>
@@ -165,8 +165,8 @@
         if (!fullName || !fullName.trim()) {
             Swal.fire({
                 icon: 'error',
-                title: 'Loi',
-                text: 'Ho ten khong duoc de trong.',
+                title: 'Lỗi',
+                text: 'Họ tên không được để trống.',
                 confirmButtonColor: '#006b2c'
             });
             return;
@@ -175,8 +175,8 @@
         if (!phone || !phone.trim()) {
             Swal.fire({
                 icon: 'error',
-                title: 'Loi',
-                text: 'So dien thoai khong duoc de trong.',
+                title: 'Lỗi',
+                text: 'Số điện thoại không được để trống.',
                 confirmButtonColor: '#006b2c'
             });
             return;
@@ -198,7 +198,7 @@
                 if (result.success) {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Thanh cong!',
+                        title: 'Thành công!',
                         text: result.message,
                         confirmButtonColor: '#006b2c'
                     }).then(function() {
@@ -218,7 +218,7 @@
                 Swal.fire({
                     icon: 'error',
                     title: 'Loi',
-                    text: 'Khong the luu du lieu. Vui long thu lai.',
+                    text: 'Không thể lưu dữ liệu. Vui lòng thử lại.',
                     confirmButtonColor: '#006b2c'
                 });
             }

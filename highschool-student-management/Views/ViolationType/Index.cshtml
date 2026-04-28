@@ -1,21 +1,21 @@
 @model List<QuanLyHocSinh.Models.ViolationType>
 
 @{
-    ViewData["Title"] = "Quan ly loai vi pham";
+    ViewData["Title"] = "Quản lý loại vi phạm";
 }
 
 <div class="max-w-5xl mx-auto">
     <!-- Page Header -->
     <div class="flex items-center justify-between mb-6">
         <div>
-            <h1 class="text-2xl font-bold text-green-700">Quan ly loai vi pham</h1>
-            <p class="text-sm text-slate-500 mt-1">Them, sua, xoa cac loai vi pham va muc do nghiem trong</p>
+            <h1 class="text-2xl font-bold text-green-700">Quản lý loại vi phạm</h1>
+            <p class="text-sm text-slate-500 mt-1">Thêm, sửa, xóa các loại vi phạm và mức độ nghiêm trọng</p>
         </div>
         <button class="btn-render-modal flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-sm transition-all duration-200 active:scale-95"
                 data-url="@Url.Action("_CreateOrEdit", "ViolationType", new { id = 0 })"
-                data-title="Them loai vi pham moi">
+                data-title="Thêm loại vi phạm mới">
             <span class="material-symbols-outlined text-lg">add</span>
-            Them loai vi pham
+            Thêm loại vi phạm
         </button>
     </div>
 
@@ -25,11 +25,11 @@
             <thead class="bg-green-600 text-white">
                 <tr>
                     <th class="px-6 py-4 text-left font-semibold w-10">#</th>
-                    <th class="px-4 py-4 text-left font-semibold">Ten loai vi pham</th>
-                    <th class="px-4 py-4 text-center font-semibold">Muc do</th>
-                    <th class="px-4 py-4 text-center font-semibold">Diem tru</th>
-                    <th class="px-4 py-4 text-left font-semibold">Mo ta</th>
-                    <th class="px-4 py-4 text-center font-semibold w-32">Thao tac</th>
+                    <th class="px-4 py-4 text-left font-semibold">Tên loại vi phạm</th>
+                    <th class="px-4 py-4 text-center font-semibold">Mức độ</th>
+                    <th class="px-4 py-4 text-center font-semibold">Điểm trừ</th>
+                    <th class="px-4 py-4 text-left font-semibold">Mô tả</th>
+                    <th class="px-4 py-4 text-center font-semibold w-32">Thao tác</th>
                 </tr>
             </thead>
             <tbody>
@@ -38,7 +38,7 @@
                     <tr>
                         <td colspan="6" class="px-6 py-12 text-center text-slate-400">
                             <span class="material-symbols-outlined text-4xl">search_off</span>
-                            <p class="mt-2">Chua co loai vi pham nao. Nhan "Them loai vi pham" de bat dau.</p>
+                            <p class="mt-2">Chưa có loại vi phạm nào. Nhấn "Thêm loại vi phạm" để bắt đầu.</p>
                         </td>
                     </tr>
                 }
@@ -53,15 +53,15 @@
                             <td class="px-4 py-3.5 text-center">
                                 @if (vt.Severity == 1)
                                 {
-                                    <span class="inline-flex items-center px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full">Nhe</span>
+                                    <span class="inline-flex items-center px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full">Nhẹ</span>
                                 }
                                 else if (vt.Severity == 2)
                                 {
-                                    <span class="inline-flex items-center px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded-full">Trung binh</span>
+                                    <span class="inline-flex items-center px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded-full">Trung bình</span>
                                 }
                                 else if (vt.Severity == 3)
                                 {
-                                    <span class="inline-flex items-center px-2 py-0.5 bg-red-100 text-red-700 text-xs font-semibold rounded-full">Nang</span>
+                                    <span class="inline-flex items-center px-2 py-0.5 bg-red-100 text-red-700 text-xs font-semibold rounded-full">Nặng</span>
                                 }
                                 else
                                 {
@@ -76,14 +76,14 @@
                                 <div class="flex items-center justify-center gap-1">
                                     <button type="button"
                                             class="p-1.5 text-slate-400 hover:text-yellow-600 hover:bg-yellow-50 rounded-lg transition-all btn-render-modal"
-                                            title="Sua loai vi pham"
+                                            title="Sửa loại vi phạm"
                                             data-url="@Url.Action("_CreateOrEdit", "ViolationType", new { id = vt.Id })"
-                                            data-title="Sua loai vi pham">
+                                            data-title="Sửa loại vi phạm">
                                         <span class="material-symbols-outlined text-base">edit</span>
                                     </button>
                                     <button type="button"
                                             class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
-                                            title="Xoa loai vi pham"
+                                            title="Xóa loại vi phạm"
                                             onclick="deleteViolationType(@vt.Id, '@vt.Name')">
                                         <span class="material-symbols-outlined text-base">delete</span>
                                     </button>
@@ -102,14 +102,14 @@
     <script>
         function deleteViolationType(id, name) {
             Swal.fire({
-                title: 'Xac nhan xoa loai vi pham',
-                text: 'Ban co chac chan muon xoa loai vi pham "' + name + '"? Hanh dong nay khong the hoan tac.',
+                title: 'Xác nhận xóa loại vi phạm',
+                text: 'Bạn có chắc chắn muốn xóa loại vi phạm "' + name + '"? Hành động này không thể hoàn tác.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#dc2626',
                 cancelButtonColor: '#94a3b8',
-                confirmButtonText: 'Xoa',
-                cancelButtonText: 'Huy bo'
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy bỏ'
             }).then(function(result) {
                 if (result.isConfirmed) {
                     $.ajax({
@@ -120,7 +120,7 @@
                             if (result.success) {
                                 Swal.fire({
                                     icon: 'success',
-                                    title: 'Thanh cong!',
+                                    title: 'Thành công!',
                                     text: result.message,
                                     confirmButtonColor: '#006b2c'
                                 }).then(function() {
@@ -129,7 +129,7 @@
                             } else {
                                 Swal.fire({
                                     icon: 'error',
-                                    title: 'Loi',
+                                    title: 'Lỗi',
                                     text: result.message,
                                     confirmButtonColor: '#006b2c'
                                 });
@@ -139,7 +139,7 @@
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Loi',
-                                text: 'Khong the xoa loai vi pham. Vui long thu lai.',
+                                text: 'Không thể xóa loại vi phạm. Vui lòng thử lại.',
                                 confirmButtonColor: '#006b2c'
                             });
                         }

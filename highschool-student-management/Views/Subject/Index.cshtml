@@ -1,21 +1,21 @@
 @model List<QuanLyHocSinh.Models.Subject>
 
 @{
-    ViewData["Title"] = "Quan ly mon hoc";
+    ViewData["Title"] = "Quản lý môn học";
 }
 
 <div class="max-w-5xl mx-auto">
     <!-- Page Header -->
     <div class="flex items-center justify-between mb-6">
         <div>
-            <h1 class="text-2xl font-bold text-green-700">Quan ly mon hoc</h1>
-            <p class="text-sm text-slate-500 mt-1">Them, sua, xoa mon hoc trong he thong</p>
+            <h1 class="text-2xl font-bold text-green-700">Quản lý môn học</h1>
+            <p class="text-sm text-slate-500 mt-1">Thêm, sửa, xóa môn học trong hệ thống</p>
         </div>
         <button class="btn-render-modal flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-sm transition-all duration-200 active:scale-95"
                 data-url="@Url.Action("_CreateOrEdit", "Subject", new { id = 0 })"
-                data-title="Them mon hoc moi">
+                data-title="Thêm môn học mới">
             <span class="material-symbols-outlined text-lg">add</span>
-            Them mon hoc
+            Thêm môn học
         </button>
     </div>
 
@@ -25,12 +25,12 @@
             <thead class="bg-green-600 text-white">
                 <tr>
                     <th class="px-6 py-4 text-left font-semibold w-10">#</th>
-                    <th class="px-4 py-4 text-left font-semibold">Ten mon hoc</th>
-                    <th class="px-4 py-4 text-left font-semibold">Ma mon</th>
-                    <th class="px-4 py-4 text-center font-semibold">Khoi lop</th>
-                    <th class="px-4 py-4 text-center font-semibold">So tiet/tuan</th>
-                    <th class="px-4 py-4 text-center font-semibold">Trang thai</th>
-                    <th class="px-4 py-4 text-center font-semibold w-32">Thao tac</th>
+                    <th class="px-4 py-4 text-left font-semibold">Tên môn học</th>
+                    <th class="px-4 py-4 text-left font-semibold">Mã môn</th>
+                    <th class="px-4 py-4 text-center font-semibold">Khối lớp</th>
+                    <th class="px-4 py-4 text-center font-semibold">Số tiết/tuần</th>
+                    <th class="px-4 py-4 text-center font-semibold">Trạng thái</th>
+                    <th class="px-4 py-4 text-center font-semibold w-32">Thao tác</th>
                 </tr>
             </thead>
             <tbody>
@@ -39,7 +39,7 @@
                     <tr>
                         <td colspan="7" class="px-6 py-12 text-center text-slate-400">
                             <span class="material-symbols-outlined text-4xl">search_off</span>
-                            <p class="mt-2">Chua co mon hoc nao. Nhan "Them mon hoc" de bat dau.</p>
+                            <p class="mt-2">Chưa có môn học nào. Nhấn "Thêm môn học" để bắt đầu.</p>
                         </td>
                     </tr>
                 }
@@ -55,7 +55,7 @@
                                 <span class="inline-flex items-center px-2 py-0.5 bg-slate-100 text-slate-600 text-xs font-mono font-semibold rounded">@subject.Code</span>
                             </td>
                             <td class="px-4 py-3.5 text-center text-slate-600">
-                                @(subject.GradeLevel.HasValue ? $"Khoi {subject.GradeLevel}" : "Tat ca khoi")
+                                @(subject.GradeLevel.HasValue ? $"Khối {subject.GradeLevel}" : "Tất cả khối")
                             </td>
                             <td class="px-4 py-3.5 text-center text-slate-600">
                                 @(subject.PeriodsPerWeek.HasValue ? subject.PeriodsPerWeek : "-")
@@ -64,13 +64,13 @@
                                 @if (subject.IsActive == 1)
                                 {
                                     <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
-                                        Dang day
+                                        Đang dạy
                                     </span>
                                 }
                                 else
                                 {
                                     <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-slate-100 text-slate-500 text-xs font-semibold rounded-full">
-                                        Ngung
+                                        Ngừng
                                     </span>
                                 }
                             </td>
@@ -78,14 +78,14 @@
                                 <div class="flex items-center justify-center gap-1">
                                     <button type="button"
                                             class="p-1.5 text-slate-400 hover:text-yellow-600 hover:bg-yellow-50 rounded-lg transition-all btn-render-modal"
-                                            title="Sua mon hoc"
+                                            title="Sửa môn học"
                                             data-url="@Url.Action("_CreateOrEdit", "Subject", new { id = subject.Id })"
-                                            data-title="Sua mon hoc">
+                                            data-title="Sửa môn học">
                                         <span class="material-symbols-outlined text-base">edit</span>
                                     </button>
                                     <button type="button"
                                             class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
-                                            title="Xoa mon hoc"
+                                            title="Xóa môn học"
                                             onclick="deleteSubject(@subject.Id, '@subject.Name')">
                                         <span class="material-symbols-outlined text-base">delete</span>
                                     </button>
@@ -104,14 +104,14 @@
     <script>
         function deleteSubject(id, name) {
             Swal.fire({
-                title: 'Xac nhan xoa mon hoc',
-                text: 'Ban co chac chan muon xoa mon hoc "' + name + '"? Hanh dong nay khong the hoan tac.',
+                title: 'Xác nhận xóa môn học',
+                text: 'Bạn có chắc chắn muốn xóa môn học "' + name + '"? Hành động này không thể hoàn tác.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#dc2626',
                 cancelButtonColor: '#94a3b8',
-                confirmButtonText: 'Xoa',
-                cancelButtonText: 'Huy bo'
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy bỏ'
             }).then(function(result) {
                 if (result.isConfirmed) {
                     $.ajax({
@@ -122,7 +122,7 @@
                             if (result.success) {
                                 Swal.fire({
                                     icon: 'success',
-                                    title: 'Thanh cong!',
+                                    title: 'Thành công!',
                                     text: result.message,
                                     confirmButtonColor: '#006b2c'
                                 }).then(function() {
@@ -131,7 +131,7 @@
                             } else {
                                 Swal.fire({
                                     icon: 'error',
-                                    title: 'Loi',
+                                    title: 'Lỗi',
                                     text: result.message,
                                     confirmButtonColor: '#006b2c'
                                 });
@@ -141,7 +141,7 @@
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Loi',
-                                text: 'Khong the xoa mon hoc. Vui long thu lai.',
+                                text: 'Không thể xóa môn học. Vui lòng thử lại.',
                                 confirmButtonColor: '#006b2c'
                             });
                         }

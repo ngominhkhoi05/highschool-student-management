@@ -1,15 +1,15 @@
 @model highschool_student_management.ViewModels.HomeroomClassViewModel
 
 @{
-    ViewData["Title"] = "Lop chu nhiem";
+    ViewData["Title"] = "Lớp chủ nhiệm";
 }
 
 @if (ViewData["NoClass"] != null && (bool)ViewData["NoClass"] == true)
 {
     <div class="bg-white rounded-2xl shadow-sm border border-green-100 p-12 text-center">
         <span class="material-symbols-outlined text-6xl text-slate-300">school</span>
-        <h3 class="mt-4 text-lg font-semibold text-slate-500">Ban chua co lop chu nhiem</h3>
-        <p class="mt-2 text-sm text-slate-400">Vui long lien he quan tri de duoc phan cong lop chu nhiem.</p>
+        <h3 class="mt-4 text-lg font-semibold text-slate-500">Bạn chưa có lớp chủ nhiệm</h3>
+        <p class="mt-2 text-sm text-slate-400">Vui lòng liên hệ quản trị để được phân công lớp chủ nhiệm.</p>
     </div>
 }
 else
@@ -28,7 +28,7 @@ else
                 <div class="flex items-center gap-6 text-green-100 text-sm">
                     <div class="text-center">
                         <p class="text-2xl font-bold text-white">@Model.StudentCount</p>
-                        <p class="text-xs">Hoc sinh</p>
+                        <p class="text-xs">Học sinh</p>
                     </div>
                     @if (Model.GradeLevel != null)
                     {
@@ -51,19 +51,19 @@ else
         <!-- Danh sach hoc sinh -->
         <div class="bg-white rounded-2xl shadow-sm border border-green-100 overflow-hidden">
             <div class="bg-green-600 px-6 py-3">
-                <h3 class="text-white font-bold">Danh sach hoc sinh</h3>
+                <h3 class="text-white font-bold">Danh sách học sinh</h3>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead class="bg-green-50 text-slate-600">
                         <tr>
                             <th class="px-4 py-3 text-center font-semibold w-12">STT</th>
-                            <th class="px-4 py-3 text-left font-semibold">Ma HS</th>
-                            <th class="px-4 py-3 text-left font-semibold">Ho va ten</th>
-                            <th class="px-4 py-3 text-center font-semibold">Gioi tinh</th>
-                            <th class="px-4 py-3 text-center font-semibold">Ngay sinh</th>
-                            <th class="px-4 py-3 text-center font-semibold">So dien thoai</th>
-                            <th class="px-4 py-3 text-center font-semibold">Trang thai</th>
+                            <th class="px-4 py-3 text-left font-semibold">Mã HS</th>
+                            <th class="px-4 py-3 text-left font-semibold">Họ và tên</th>
+                            <th class="px-4 py-3 text-center font-semibold">Giới tính</th>
+                            <th class="px-4 py-3 text-center font-semibold">Ngày sinh</th>
+                            <th class="px-4 py-3 text-center font-semibold">Số điện thoại</th>
+                            <th class="px-4 py-3 text-center font-semibold">Trạng thái</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -106,10 +106,10 @@ else
                                             };
                                             var statusText = s.Status switch
                                             {
-                                                1 => "Dang hoc",
-                                                2 => "Nghi hoc",
-                                                3 => "Tot nghiep",
-                                                _ => "Khac"
+                                                1 => "Đang học",
+                                                2 => "Nghỉ học",
+                                                3 => "Tốt nghiệp",
+                                                _ => "Khác"
                                             };
                                         }
                                         <span class="px-2 py-1 rounded-full text-xs font-semibold @statusClass">@statusText</span>

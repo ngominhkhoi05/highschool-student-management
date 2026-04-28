@@ -1,35 +1,35 @@
 @{
-    ViewData["Title"] = "So diem";
+    ViewData["Title"] = "Sổ điểm";
 }
 
 <div class="max-w-[98%] mx-auto">
     <!-- Thong tin loc -->
     <div class="bg-green-50 rounded-xl p-4 mb-4 flex flex-wrap gap-3 items-end">
         <div class="flex-1 min-w-[160px]">
-            <label class="block text-xs font-semibold text-slate-500 mb-1">Lop hoc</label>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Lớp học</label>
             <select id="filterClass"
                     class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 bg-white">
-                <option value="">-- Chon lop --</option>
+                <option value="">-- Chọn lớp --</option>
             </select>
         </div>
         <div class="flex-1 min-w-[160px]">
-            <label class="block text-xs font-semibold text-slate-500 mb-1">Mon hoc</label>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Môn học</label>
             <select id="filterSubject"
                     class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 bg-white">
-                <option value="">-- Chon mon --</option>
+                <option value="">-- Chọn môn --</option>
             </select>
         </div>
         <div class="flex-1 min-w-[160px]">
-            <label class="block text-xs font-semibold text-slate-500 mb-1">Hoc ky</label>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Học kỳ</label>
             <select id="filterSemester"
                     class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 bg-white">
-                <option value="">-- Chon hoc ky --</option>
+                <option value="">-- Chọn học kỳ --</option>
             </select>
         </div>
         <button type="button"
                 onclick="loadScoreGrid()"
                 class="px-5 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg shadow-sm transition-all">
-            Tai bang diem
+            Tải bảng điểm
         </button>
     </div>
 
@@ -41,19 +41,19 @@
                 disabled
                 class="px-6 py-2.5 bg-green-600 hover:bg-green-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl shadow-sm transition-all flex items-center gap-2">
             <span class="material-symbols-outlined text-base">save</span>
-            Luu toan bo
+            Lưu toàn bộ
         </button>
     </div>
 
     <!-- Bang diem -->
     <div class="bg-white rounded-2xl shadow-sm border border-green-100 overflow-hidden">
         <div class="bg-green-600 px-6 py-3">
-            <h3 class="text-white font-bold" id="gridTitle">Chon lop, mon va hoc ky de tai bang diem</h3>
+            <h3 class="text-white font-bold" id="gridTitle">Chọn lớp, môn và học kỳ để tải bảng điểm</h3>
         </div>
         <div id="scoreGridContainer">
             <div class="p-12 text-center text-slate-400">
                 <span class="material-symbols-outlined text-4xl">grid_on</span>
-                <p class="mt-2">Vui long chon day du thong tin va bam "Tai bang diem".</p>
+                <p class="mt-2">Vui lòng chọn đầy đủ thông tin và bấm "Tải bảng điểm".</p>
             </div>
         </div>
     </div>
@@ -74,23 +74,23 @@
             type: 'GET',
             success: function(result) {
                 if (result.success) {
-                    $('#filterClass').empty().append('<option value="">-- Chon lop --</option>');
+                    $('#filterClass').empty().append('<option value="">-- Chọn lớp --</option>');
                     result.classes.forEach(function(c) {
                         var label = c.className + ' (' + c.semesterName + ')';
                         $('#filterClass').append('<option value="' + c.classId + '|' + c.semesterId + '" data-semester-id="' + c.semesterId + '">' + label + '</option>');
                     });
 
                     // Lop rong -> xoa mon
-                    $('#filterSubject').empty().append('<option value="">-- Chon mon --</option>');
+                    $('#filterSubject').empty().append('<option value="">-- Chọn môn --</option>');
 
-                    $('#filterSemester').empty().append('<option value="">-- Chon hoc ky --</option>');
+                    $('#filterSemester').empty().append('<option value="">-- Chọn học kỳ --</option>');
                     result.semesters.forEach(function(s) {
                         $('#filterSemester').append('<option value="' + s.id + '">' + s.name + '</option>');
                     });
                 } else {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Loi',
+                        title: 'Lỗi',
                         text: result.message,
                         confirmButtonColor: '#006b2c'
                     });
@@ -103,7 +103,7 @@
     $('#filterClass').on('change', function() {
         var val = $(this).val();
         if (!val) {
-            $('#filterSubject').empty().append('<option value="">-- Chon mon --</option>');
+            $('#filterSubject').empty().append('<option value="">-- Chọn môn --</option>');
             gClassId = 0;
             gSemesterId = 0;
             return;
@@ -124,13 +124,13 @@
             type: 'GET',
             data: { classId: classId, semesterId: semesterId },
             success: function(result) {
-                $('#filterSubject').empty().append('<option value="">-- Chon mon --</option>');
+                $('#filterSubject').empty().append('<option value="">-- Chọn môn --</option>');
                 if (result.success && result.subjects.length > 0) {
                     result.subjects.forEach(function(s) {
                         $('#filterSubject').append('<option value="' + s.id + '">' + s.name + ' (' + s.code + ')</option>');
                     });
                 } else {
-                    $('#filterSubject').append('<option value="">-- Khong co mon --</option>');
+                    $('#filterSubject').append('<option value="">-- Không có môn --</option>');
                 }
             }
         });
@@ -152,8 +152,8 @@
         if (!classVal) {
             Swal.fire({
                 icon: 'warning',
-                title: 'Chua chon lop',
-                text: 'Vui long chon lop hoc.',
+                title: 'Chưa chọn lớp',
+                text: 'Vui lòng chọn lớp học.',
                 confirmButtonColor: '#006b2c'
             });
             return;
@@ -162,8 +162,8 @@
         if (!subjectId) {
             Swal.fire({
                 icon: 'warning',
-                title: 'Chua chon mon',
-                text: 'Vui long chon mon hoc.',
+                title: 'Chưa chọn môn',
+                text: 'Vui lòng chọn môn học.',
                 confirmButtonColor: '#006b2c'
             });
             return;
@@ -180,7 +180,7 @@
         var subjectName = $('#filterSubject option:selected').text();
         var semesterName = $('#filterSemester option:selected').text();
 
-        $('#gridTitle').text('Bang diem: ' + className + ' - ' + subjectName + ' - ' + semesterName);
+        $('#gridTitle').text('Bảng điểm: ' + className + ' - ' + subjectName + ' - ' + semesterName);
 
         $.ajax({
             url: '@Url.Action("GetScoreGrid", "TeacherScore")',
@@ -195,35 +195,7 @@
                 $('#btnSaveScores').prop('disabled', false);
             },
             error: function() {
-                $('#scoreGridContainer').html('<div class="p-12 text-center text-red-400"><span class="material-symbols-outlined text-4xl">error</span><p class="mt-2">Da xay ra loi khi tai bang diem.</p></div>');
-            }
-        });
-    }
-
-        gClassId = classId;
-        gSubjectId = subjectId;
-        gSemesterId = semesterId;
-
-        var className = $('#filterClass option:selected').text();
-        var subjectName = $('#filterSubject option:selected').text();
-        var semesterName = $('#filterSemester option:selected').text();
-
-        $('#gridTitle').text('Bang diem: ' + className + ' - ' + subjectName + ' - ' + semesterName);
-
-        $.ajax({
-            url: '@Url.Action("GetScoreGrid", "TeacherScore")',
-            type: 'GET',
-            data: {
-                classId: classId,
-                subjectId: subjectId,
-                semesterId: semesterId
-            },
-            success: function(html) {
-                $('#scoreGridContainer').html(html);
-                $('#btnSaveScores').prop('disabled', false);
-            },
-            error: function() {
-                $('#scoreGridContainer').html('<div class="p-12 text-center text-red-400"><span class="material-symbols-outlined text-4xl">error</span><p class="mt-2">Da xay ra loi khi tai bang diem.</p></div>');
+                $('#scoreGridContainer').html('<div class="p-12 text-center text-red-400"><span class="material-symbols-outlined text-4xl">error</span><p class="mt-2">Đã xảy ra lỗi khi tải bảng điểm.</p></div>');
             }
         });
     }
@@ -254,8 +226,8 @@
         if (!scores.length) {
             Swal.fire({
                 icon: 'warning',
-                title: 'Chua co diem',
-                text: 'Vui long nhap it nhat mot diem.',
+                title: 'Chưa có điểm',
+                text: 'Vui lòng nhập ít nhất một điểm.',
                 confirmButtonColor: '#006b2c'
             });
             return;
@@ -278,7 +250,7 @@
                 if (result.success) {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Thanh cong!',
+                        title: 'Thành công!',
                         text: result.message,
                         confirmButtonColor: '#006b2c'
                     });
@@ -286,7 +258,7 @@
                 } else {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Loi',
+                        title: 'Lỗi',
                         text: result.message,
                         confirmButtonColor: '#006b2c'
                     });
@@ -296,7 +268,7 @@
                 Swal.fire({
                     icon: 'error',
                     title: 'Loi',
-                    text: 'Khong the luu diem. Vui long thu lai.',
+                    text: 'Không thể lưu điểm. Vui lòng thử lại.',
                     confirmButtonColor: '#006b2c'
                 });
             }

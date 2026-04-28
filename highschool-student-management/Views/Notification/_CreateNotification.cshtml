@@ -2,51 +2,51 @@
 
 <div class="p-6 space-y-4">
     <div>
-        <label class="block text-sm font-semibold text-slate-600 mb-1">Tieu de <span class="text-red-500">*</span></label>
-        <input type="text" id="notifTitle" placeholder="Nhap tieu de thong bao..."
+        <label class="block text-sm font-semibold text-slate-600 mb-1">Tiêu đề <span class="text-red-500">*</span></label>
+        <input type="text" id="notifTitle" placeholder="Nhập tiêu đề thông báo..."
                class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400" />
     </div>
 
     <div>
-        <label class="block text-sm font-semibold text-slate-600 mb-1">Noi dung</label>
-        <textarea id="notifContent" rows="4" placeholder="Noi dung thong bao..."
+        <label class="block text-sm font-semibold text-slate-600 mb-1">Nội dung</label>
+        <textarea id="notifContent" rows="4" placeholder="Nội dung thông báo..."
                   class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 resize-none"></textarea>
     </div>
 
     <div class="grid grid-cols-2 gap-4">
         <div>
-            <label class="block text-sm font-semibold text-slate-600 mb-1">Loai thong bao</label>
+            <label class="block text-sm font-semibold text-slate-600 mb-1">Loại thông báo</label>
             <select id="notifType"
                     class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 bg-white">
-                <option value="1">Thong bao chung</option>
-                <option value="2">Hoc vu</option>
-                <option value="3">Su kien</option>
-                <option value="4">Khan</option>
+                <option value="1">Thông báo chung</option>
+                <option value="2">Học vụ</option>
+                <option value="3">Sự kiện</option>
+                <option value="4">Khẩn</option>
             </select>
         </div>
 
         <div>
-            <label class="block text-sm font-semibold text-slate-600 mb-1">Gui den</label>
+            <label class="block text-sm font-semibold text-slate-600 mb-1">Gửi đến</label>
             <select id="notifTargetType"
                     onchange="toggleTargetOptions()"
                     class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 bg-white">
-                <option value="1">Toan truong</option>
-                <option value="2">Theo khoi</option>
-                <option value="3">Theo lop</option>
-                <option value="4">Ca nhan</option>
+                <option value="1">Toàn trường</option>
+                <option value="2">Theo khối</option>
+                <option value="3">Theo lớp</option>
+                <option value="4">Cá nhân</option>
             </select>
         </div>
     </div>
 
     <!-- Theo khoi -->
     <div id="targetGrades" class="hidden">
-        <label class="block text-sm font-semibold text-slate-600 mb-2">Chon khoi</label>
+        <label class="block text-sm font-semibold text-slate-600 mb-2">Chọn khối</label>
         <div class="flex flex-wrap gap-2">
             @foreach (var grade in new[] { 10, 11, 12 })
             {
                 <label class="flex items-center gap-2 px-3 py-2 border border-slate-200 rounded-lg cursor-pointer hover:bg-green-50 transition-all">
                     <input type="checkbox" class="grade-cb w-4 h-4 accent-green-600" value="@grade" />
-                    <span class="text-sm font-medium text-slate-600">Khoi @grade</span>
+                    <span class="text-sm font-medium text-slate-600">Khối @grade</span>
                 </label>
             }
         </div>
@@ -54,7 +54,7 @@
 
     <!-- Theo lop -->
     <div id="targetClasses" class="hidden">
-        <label class="block text-sm font-semibold text-slate-600 mb-2">Chon lop</label>
+        <label class="block text-sm font-semibold text-slate-600 mb-2">Chọn lớp</label>
         <div class="max-h-40 overflow-y-auto border border-slate-200 rounded-xl divide-y divide-slate-100">
             @foreach (var cls in Model.Classes)
             {
@@ -68,7 +68,7 @@
 
     <!-- Ca nhan -->
     <div id="targetUsers" class="hidden">
-        <label class="block text-sm font-semibold text-slate-600 mb-2">Chon nguoi nhan</label>
+        <label class="block text-sm font-semibold text-slate-600 mb-2">Chọn người nhận</label>
         <div class="max-h-40 overflow-y-auto border border-slate-200 rounded-xl divide-y divide-slate-100">
             @foreach (var u in Model.Users)
             {
@@ -84,12 +84,12 @@
     <div class="flex gap-3 pt-2">
         <button onclick="closeCreateNotificationModal()"
                 class="flex-1 px-4 py-2.5 border border-slate-200 text-slate-600 hover:bg-slate-50 text-sm font-semibold rounded-xl transition-all">
-            Dong
+            Đóng
         </button>
         <button onclick="sendNotification()"
                 class="flex-1 px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2">
             <span class="material-symbols-outlined text-base">send</span>
-            Gui thong bao
+            Gửi thông báo
         </button>
     </div>
 </div>
@@ -109,7 +109,7 @@
     function sendNotification() {
         var title = $('#notifTitle').val().trim();
         if (!title) {
-            Swal.fire({ icon: 'warning', title: 'Thieu thong tin', text: 'Vui long nhap tieu de.', confirmButtonColor: '#006b2c' });
+            Swal.fire({ icon: 'warning', title: 'Thiếu thông tin', text: 'Vui lòng nhập tiêu đề.', confirmButtonColor: '#006b2c' });
             return;
         }
 
@@ -142,15 +142,15 @@
             }),
             success: function(result) {
                 if (result.success) {
-                    Swal.fire({ icon: 'success', title: 'Thanh cong!', text: result.message, confirmButtonColor: '#006b2c' }).then(function() {
+                    Swal.fire({ icon: 'success', title: 'Thành công!', text: result.message, confirmButtonColor: '#006b2c' }).then(function() {
                         closeCreateNotificationModal();
                     });
                 } else {
-                    Swal.fire({ icon: 'error', title: 'Loi', text: result.message, confirmButtonColor: '#dc2626' });
+                    Swal.fire({ icon: 'error', title: 'Lỗi', text: result.message, confirmButtonColor: '#dc2626' });
                 }
             },
             error: function() {
-                Swal.fire({ icon: 'error', title: 'Loi', text: 'Khong the gui thong bao. Vui long thu lai.', confirmButtonColor: '#dc2626' });
+                Swal.fire({ icon: 'error', title: 'Lỗi', text: 'Không thể gửi thông báo. Vui lòng thử lại.', confirmButtonColor: '#dc2626' });
             }
         });
     }

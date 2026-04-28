@@ -1,7 +1,7 @@
 @model highschool_student_management.ViewModels.StudentScoresViewModel
 
 @{
-    ViewData["Title"] = "Bang diem";
+    ViewData["Title"] = "Bảng điểm";
 }
 
 <div class="p-6 space-y-6">
@@ -11,14 +11,14 @@
         <div class="flex items-center gap-3">
             <span class="material-symbols-outlined text-3xl text-green-600">grade</span>
             <div>
-                <h1 class="text-xl font-bold text-slate-800">Bang diem</h1>
+                <h1 class="text-xl font-bold text-slate-800">Bảng điểm</h1>
                 <p class="text-sm text-slate-500">@Model.FullName (@Model.StudentCode)</p>
             </div>
         </div>
         <a asp-action="Index" class="text-sm text-green-600 hover:text-green-700 font-medium">Quay lai</a>
     </div>
 
-    <!-- Chon hoc ky -->
+    <!-- Chọn học kỳ -->
     <div class="flex flex-wrap gap-2">
         @foreach (var sem in Model.Semesters)
         {
@@ -35,7 +35,7 @@
     {
         <div class="bg-white rounded-2xl shadow-sm border border-green-100 p-12 text-center">
             <span class="material-symbols-outlined text-5xl text-slate-300">search_off</span>
-            <p class="mt-3 text-slate-500 font-medium">Chua co diem trong hoc ky nay</p>
+            <p class="mt-3 text-slate-500 font-medium">Chưa có điểm trong học kỳ này</p>
         </div>
     }
     else
@@ -47,7 +47,7 @@
                     <thead>
                         <tr class="bg-green-600 text-white">
                             <th class="px-4 py-3 text-left font-semibold w-8">STT</th>
-                            <th class="px-4 py-3 text-left font-semibold">Mon hoc</th>
+                            <th class="px-4 py-3 text-left font-semibold">Môn học</th>
                             @{
                                 var scoreTypes = Model.Scores.Select(s => s.ScoreTypeName).Distinct().OrderBy(st => st).ToList();
                                 foreach (var st in scoreTypes)

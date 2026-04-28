@@ -2,7 +2,7 @@
 
 @{
     var isEdit = Model.Id > 0;
-    var pageTitle = isEdit ? "Sua hoc sinh" : "Them hoc sinh moi";
+    var pageTitle = isEdit ? "Sửa học sinh" : "Thêm học sinh mới";
 }
 
 <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg mx-auto overflow-hidden max-h-[90vh] overflow-y-auto">
@@ -36,15 +36,15 @@
             }
             <label class="cursor-pointer px-4 py-2 text-sm font-semibold text-green-600 hover:text-green-700 hover:bg-green-50 rounded-lg transition-all">
                 <span class="material-symbols-outlined text-base align-middle mr-1">upload</span>
-                Chon anh dai dien
+                Chọn ảnh đại diện
                 <input type="file" name="AvatarFile" id="avatarInput" accept="image/*" class="hidden" onchange="previewAvatar(this)" />
             </label>
         </div>
 
-        <!-- Ma hoc sinh -->
+        <!-- Mã học sinh -->
         <div>
             <label class="block text-sm font-semibold text-slate-700 mb-1.5">
-                Ma hoc sinh
+                Mã học sinh
             </label>
             @if (isEdit)
             {
@@ -66,10 +66,10 @@
             }
         </div>
 
-        <!-- Ho va ten -->
+        <!-- Họ và tên -->
         <div>
             <label class="block text-sm font-semibold text-slate-700 mb-1.5">
-                Ho va ten <span class="text-red-500">*</span>
+                Họ và tên <span class="text-red-500">*</span>
             </label>
             <input type="text"
                    name="FullName"
@@ -80,13 +80,13 @@
                    required />
         </div>
 
-        <!-- Gioi tinh & Ngay sinh -->
+        <!-- Giới tính & Ngày sinh -->
         <div class="grid grid-cols-2 gap-4">
             <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Gioi tinh</label>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Giới tính</label>
                 <select name="Gender"
                         class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all bg-white">
-                    <option value="">-- Chon --</option>
+                    <option value="">-- Chọn --</option>
                     @if (Model.Gender == 1)
                     {
                         <option value="1" selected>Nam</option>
@@ -106,7 +106,7 @@
                 </select>
             </div>
             <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Ngay sinh</label>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Ngày sinh</label>
                 <input type="date"
                        name="DateOfBirth"
                        value="@(Model.DateOfBirth.HasValue ? Model.DateOfBirth.Value.ToString("yyyy-MM-dd") : "")"
@@ -114,10 +114,10 @@
             </div>
         </div>
 
-        <!-- Noi sinh & Dan toc -->
+        <!-- Nơi sinh & Dân tộc -->
         <div class="grid grid-cols-2 gap-4">
             <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Noi sinh</label>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Nơi sinh</label>
                 <input type="text"
                        name="PlaceOfBirth"
                        value="@Model.PlaceOfBirth"
@@ -125,7 +125,7 @@
                        class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all placeholder:text-slate-300" />
             </div>
             <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Dan toc</label>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Dân tộc</label>
                 <input type="text"
                        name="Ethnicity"
                        value="@Model.Ethnicity"
@@ -134,10 +134,10 @@
             </div>
         </div>
 
-        <!-- Ton giao & So dien thoai -->
+        <!-- Tôn giáo & Số điện thoại -->
         <div class="grid grid-cols-2 gap-4">
             <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Ton giao</label>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Tôn giáo</label>
                 <input type="text"
                        name="Religion"
                        value="@Model.Religion"
@@ -145,7 +145,7 @@
                        class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all placeholder:text-slate-300" />
             </div>
             <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-1.5">So dien thoai</label>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Số điện thoại</label>
                 <input type="text"
                        name="Phone"
                        value="@Model.Phone"
@@ -154,9 +154,9 @@
             </div>
         </div>
 
-        <!-- Dia chi -->
+        <!-- Địa chỉ -->
         <div>
-            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Dia chi</label>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Địa chỉ</label>
             <input type="text"
                    name="Address"
                    value="@Model.Address"
@@ -164,17 +164,17 @@
                    class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all placeholder:text-slate-300" />
         </div>
 
-        <!-- Ngay nhap hoc & Trang thai -->
+        <!-- Ngày nhập học & Trạng thái -->
         <div class="grid grid-cols-2 gap-4">
             <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Ngay nhap hoc</label>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Ngày nhập học</label>
                 <input type="date"
                        name="EnrollmentDate"
                        value="@(Model.EnrollmentDate.HasValue ? Model.EnrollmentDate.Value.ToString("yyyy-MM-dd") : DateTime.Now.ToString("yyyy-MM-dd"))"
                        class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all" />
             </div>
             <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Trang thai</label>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Trạng thái</label>
                 <select name="Status"
                         class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all bg-white">
                     @if (Model.Status == 1)
@@ -218,12 +218,12 @@
             <button type="button"
                     onclick="closeModal()"
                     class="px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors">
-                Huy bo
+                Huy bỏ
             </button>
             <button type="button"
                     onclick="submitStudentForm()"
                     class="px-6 py-2.5 text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-xl shadow-sm transition-all">
-                @(isEdit ? "Luu thay doi" : "Them hoc sinh")
+                @(isEdit ? "Lưu thay đổi" : "Thêm học sinh")
             </button>
         </div>
     </form>
@@ -252,8 +252,8 @@
         if (!fullName || !fullName.trim()) {
             Swal.fire({
                 icon: 'error',
-                title: 'Loi',
-                text: 'Ho ten khong duoc de trong.',
+                title: 'Lỗi',
+                text: 'Họ tên không được để trống.',
                 confirmButtonColor: '#006b2c'
             });
             return;
@@ -262,8 +262,8 @@
         if (!studentCode || !studentCode.trim()) {
             Swal.fire({
                 icon: 'error',
-                title: 'Loi',
-                text: 'Ma hoc sinh khong duoc de trong.',
+                title: 'Lỗi',
+                text: 'Mã học sinh không được để trống.',
                 confirmButtonColor: '#006b2c'
             });
             return;
@@ -285,7 +285,7 @@
                 if (result.success) {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Thanh cong!',
+                        title: 'Thành công!',
                         text: result.message,
                         confirmButtonColor: '#006b2c'
                     }).then(function() {
@@ -295,7 +295,7 @@
                 } else {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Loi',
+                        title: 'Lỗi',
                         text: result.message,
                         confirmButtonColor: '#006b2c'
                     });
@@ -304,8 +304,8 @@
             error: function() {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Loi',
-                    text: 'Khong the luu du lieu. Vui long thu lai.',
+                    title: 'Lỗi',
+                    text: 'Không thể lưu dữ liệu. Vui lòng thử lại.',
                     confirmButtonColor: '#006b2c'
                 });
             }

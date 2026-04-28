@@ -1,15 +1,15 @@
 @model List<highschool_student_management.ViewModels.UserAccountViewModel>
 
 @{
-    ViewData["Title"] = "Quan ly tai khoan";
+    ViewData["Title"] = "Quản lý tài khoản";
 }
 
 <div class="max-w-6xl mx-auto">
     <!-- Page Header -->
     <div class="flex items-center justify-between mb-6">
         <div>
-            <h1 class="text-2xl font-bold text-green-700">Quan ly tai khoan</h1>
-            <p class="text-sm text-slate-500 mt-1">Xem danh sach, khoa/mo khoa va dat lai mat khau tai khoan</p>
+            <h1 class="text-2xl font-bold text-green-700">Quản lý tài khoản</h1>
+            <p class="text-sm text-slate-500 mt-1">Xem danh sách, khóa/mở khóa và đặt lại mật khẩu tài khoản</p>
         </div>
     </div>
 
@@ -23,18 +23,18 @@
                     <input type="text"
                            name="search"
                            value="@ViewData["Search"]"
-                           placeholder="Tim kiem theo ten dang nhap hoac email..."
+                           placeholder="Tìm kiếm theo tên đăng nhập hoặc email..."
                            class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all placeholder:text-slate-300" />
                 </div>
                 <button type="submit"
                         class="px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-xl transition-all shadow-sm">
-                    Tim kiem
+                    Tìm kiếm
                 </button>
                 @if (!string.IsNullOrEmpty(ViewData["Search"] as string))
                 {
                     <a asp-action="Index"
                        class="px-4 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-all">
-                        Xoa loc
+                        Xóa lọc
                     </a>
                 }
             </form>
@@ -45,12 +45,12 @@
             <thead class="bg-green-600 text-white">
                 <tr>
                     <th class="px-6 py-4 text-left font-semibold w-10">#</th>
-                    <th class="px-4 py-4 text-left font-semibold">Ten dang nhap</th>
+                    <th class="px-4 py-4 text-left font-semibold">Tên đăng nhập</th>
                     <th class="px-4 py-4 text-left font-semibold">Email</th>
-                    <th class="px-4 py-4 text-left font-semibold">Vai tro</th>
+                    <th class="px-4 py-4 text-left font-semibold">Vai trò</th>
                     <th class="px-4 py-4 text-center font-semibold">Trang thai</th>
-                    <th class="px-4 py-4 text-left font-semibold">Dang nhap cuoi</th>
-                    <th class="px-4 py-4 text-center font-semibold w-44">Thao tac</th>
+                    <th class="px-4 py-4 text-left font-semibold">Đăng nhập cuối</th>
+                    <th class="px-4 py-4 text-center font-semibold w-44">Thao tác</th>
                 </tr>
             </thead>
             <tbody>
@@ -59,7 +59,7 @@
                     <tr>
                         <td colspan="7" class="px-6 py-12 text-center text-slate-400">
                             <span class="material-symbols-outlined text-4xl">search_off</span>
-                            <p class="mt-2">Khong co tai khoan nao.</p>
+                            <p class="mt-2">Không có tài khoản nào.</p>
                         </td>
                     </tr>
                 }
@@ -91,19 +91,19 @@
                                 {
                                     <span class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
                                         <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
-                                        Hoat dong
+                                        Hoạt động
                                     </span>
                                 }
                                 else
                                 {
                                     <span class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-slate-100 text-slate-500 text-xs font-semibold rounded-full">
                                         <span class="w-1.5 h-1.5 bg-slate-400 rounded-full"></span>
-                                        Bi khoa
+                                        Bị khóa
                                     </span>
                                 }
                             </td>
                             <td class="px-4 py-3.5 text-slate-500 text-xs">
-                                @(user.LastLogin.HasValue ? user.LastLogin.Value.ToString("dd/MM/yyyy HH:mm") : "Chua dang nhap")
+                                @(user.LastLogin.HasValue ? user.LastLogin.Value.ToString("dd/MM/yyyy HH:mm") : "Chưa đăng nhập")
                             </td>
                             <td class="px-4 py-3.5">
                                 <div class="flex items-center justify-center gap-1">
@@ -111,7 +111,7 @@
                                     {
                                         <button type="button"
                                                 class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
-                                                title="Khoa tai khoan"
+                                                title="Khóa tài khoản"
                                                 onclick="toggleStatus(@user.Id, '@user.Username', 0)">
                                             <span class="material-symbols-outlined text-base">lock</span>
                                         </button>
@@ -120,16 +120,16 @@
                                     {
                                         <button type="button"
                                                 class="p-1.5 text-slate-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all"
-                                                title="Mo khoa tai khoan"
+                                                title="Mở khóa tài khoản"
                                                 onclick="toggleStatus(@user.Id, '@user.Username', 1)">
                                             <span class="material-symbols-outlined text-base">lock_open</span>
                                         </button>
                                     }
                                     <button type="button"
                                             class="p-1.5 text-slate-400 hover:text-yellow-600 hover:bg-yellow-50 rounded-lg transition-all btn-render-modal"
-                                            title="Dat lai mat khau"
+                                            title="Đặt lại mật khẩu"
                                             data-url="@Url.Action("_ResetPassword", "Account", new { id = user.Id })"
-                                            data-title="Dat lai mat khau">
+                                            data-title="Đặt lại mật khẩu">
                                         <span class="material-symbols-outlined text-base">key</span>
                                     </button>
                                 </div>
@@ -146,16 +146,16 @@
 @section Scripts {
     <script>
         function toggleStatus(id, username, newStatus) {
-            var action = newStatus === 1 ? "mo khoa" : "khoa";
+            var action = newStatus === 1 ? "mở khóa" : "khóa";
             Swal.fire({
-                title: 'Xac nhan ' + action,
-                text: 'Ban co muon ' + action + ' tai khoan "' + username + '" khong?',
+                title: 'Xác nhận ' + action,
+                text: 'Bạn có muốn ' + action + ' tài khoản "' + username + '" không?',
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#006b2c',
                 cancelButtonColor: '#94a3b8',
-                confirmButtonText: 'Xac nhan',
-                cancelButtonText: 'Huy bo'
+                confirmButtonText: 'Xác nhận',
+                cancelButtonText: 'Hủy bỏ'
             }).then(function(result) {
                 if (result.isConfirmed) {
                     $.ajax({
@@ -166,7 +166,7 @@
                             if (result.success) {
                                 Swal.fire({
                                     icon: 'success',
-                                    title: 'Thanh cong!',
+                                    title: 'Thành công!',
                                     text: result.message,
                                     confirmButtonColor: '#006b2c'
                                 }).then(function() {
@@ -185,7 +185,7 @@
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Loi',
-                                text: 'Khong the thay doi trang thai. Vui long thu lai.',
+                                text: 'Không thể thay đổi trạng thái. Vui lòng thử lại.',
                                 confirmButtonColor: '#006b2c'
                             });
                         }

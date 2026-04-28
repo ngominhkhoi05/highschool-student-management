@@ -1,21 +1,21 @@
 @model List<highschool_student_management.ViewModels.ParentIndexViewModel>
 
 @{
-    ViewData["Title"] = "Phu huynh";
+    ViewData["Title"] = "Phụ huynh";
 }
 
 <div class="max-w-6xl mx-auto">
     <!-- Page Header -->
     <div class="flex items-center justify-between mb-6">
         <div>
-            <h1 class="text-2xl font-bold text-green-700">Phu huynh</h1>
-            <p class="text-sm text-slate-500 mt-1">Quan ly danh sach phu huynh</p>
+            <h1 class="text-2xl font-bold text-green-700">Phụ huynh</h1>
+            <p class="text-sm text-slate-500 mt-1">Quản lý danh sách phụ huynh</p>
         </div>
         <button class="btn-render-modal flex items-center gap-2 px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-xl transition-all shadow-sm"
                 data-url="@Url.Action("_CreateOrEdit", "Parent", new { id = 0 })"
-                data-title="Them phu huynh moi">
+                data-title="Thêm phụ huynh mới">
             <span class="material-symbols-outlined text-lg">add</span>
-            Them phu huynh
+            Thêm phụ huynh
         </button>
     </div>
 
@@ -29,18 +29,18 @@
                     <input type="text"
                            name="search"
                            value="@ViewData["Search"]"
-                           placeholder="Tim kiem theo ten hoac so dien thoai..."
+                           placeholder="Tìm kiếm theo tên hoặc số điện thoại..."
                            class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all placeholder:text-slate-300" />
                 </div>
                 <button type="submit"
                         class="px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-xl transition-all shadow-sm">
-                    Tim kiem
+                    Tìm kiếm
                 </button>
                 @if (!string.IsNullOrEmpty(ViewData["Search"] as string))
                 {
                     <a asp-action="Index"
                        class="px-4 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-all">
-                        Xoa loc
+                        Xóa lọc
                     </a>
                 }
             </form>
@@ -51,12 +51,12 @@
             <thead class="bg-green-600 text-white">
                 <tr>
                     <th class="px-4 py-4 text-left font-semibold w-12">#</th>
-                    <th class="px-4 py-4 text-left font-semibold">Ho va ten</th>
-                    <th class="px-4 py-4 text-left font-semibold">Quan he</th>
-                    <th class="px-4 py-4 text-left font-semibold">So dien thoai</th>
-                    <th class="px-4 py-4 text-left font-semibold">Nghe nghiep</th>
-                    <th class="px-4 py-4 text-left font-semibold">Hoc sinh duoc gan</th>
-                    <th class="px-4 py-4 text-center font-semibold w-44">Thao tac</th>
+                    <th class="px-4 py-4 text-left font-semibold">Họ và tên</th>
+                    <th class="px-4 py-4 text-left font-semibold">Quan hệ</th>
+                    <th class="px-4 py-4 text-left font-semibold">Số điện thoại</th>
+                    <th class="px-4 py-4 text-left font-semibold">Nghề nghiệp</th>
+                    <th class="px-4 py-4 text-left font-semibold">Học sinh được gán</th>
+                    <th class="px-4 py-4 text-center font-semibold w-44">Thao tác</th>
                 </tr>
             </thead>
             <tbody>
@@ -65,7 +65,7 @@
                     <tr>
                         <td colspan="7" class="px-6 py-12 text-center text-slate-400">
                             <span class="material-symbols-outlined text-4xl">family_restroom</span>
-                            <p class="mt-2">Chua co phu huynh nao.</p>
+                            <p class="mt-2">Chưa có phụ huynh nào.</p>
                         </td>
                     </tr>
                 }
@@ -103,28 +103,28 @@
                                 }
                                 else
                                 {
-                                    <span class="text-slate-400 text-xs">Chua gan</span>
+                                    <span class="text-slate-400 text-xs">Chưa gán</span>
                                 }
                             </td>
                             <td class="px-4 py-3">
                                 <div class="flex items-center justify-center gap-1">
                                     <button type="button"
                                             class="p-1.5 text-slate-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all btn-render-modal"
-                                            title="Gan hoc sinh"
+                                            title="Gán học sinh"
                                             data-url="@Url.Action("_AssignStudents", "Parent", new { parentId = parent.Id })"
-                                            data-title="Gan hoc sinh cho phu huynh">
+                                            data-title="Gán học sinh cho phụ huynh">
                                         <span class="material-symbols-outlined text-base">manage_accounts</span>
                                     </button>
                                     <button type="button"
                                             class="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all btn-render-modal"
-                                            title="Sua"
+                                            title="Sửa"
                                             data-url="@Url.Action("_CreateOrEdit", "Parent", new { id = parent.Id })"
-                                            data-title="Sua phu huynh">
+                                            data-title="Sửa phụ huynh">
                                         <span class="material-symbols-outlined text-base">edit</span>
                                     </button>
                                     <button type="button"
                                             class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
-                                            title="Xoa"
+                                            title="Xóa"
                                             onclick="deleteParent(@parent.Id, '@parent.FullName')">
                                         <span class="material-symbols-outlined text-base">delete</span>
                                     </button>
@@ -143,14 +143,14 @@
     <script>
         function deleteParent(id, name) {
             Swal.fire({
-                title: 'Xac nhan xoa',
-                text: 'Ban co muon xoa phu huynh "' + name + '" khong? Hanh dong nay se xoa ca tai khoan lien quan.',
+                title: 'Xác nhận xóa',
+                text: 'Bạn có muốn xóa phụ huynh "' + name + '" không? Hành động này sẽ xóa cả tài khoản liên quan.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#dc2626',
                 cancelButtonColor: '#94a3b8',
-                confirmButtonText: 'Xoa',
-                cancelButtonText: 'Huy bo'
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy bỏ'
             }).then(function(result) {
                 if (result.isConfirmed) {
                     $.ajax({
@@ -161,7 +161,7 @@
                             if (result.success) {
                                 Swal.fire({
                                     icon: 'success',
-                                    title: 'Thanh cong!',
+                                    title: 'Thành công!',
                                     text: result.message,
                                     confirmButtonColor: '#006b2c'
                                 }).then(function() {
@@ -170,7 +170,7 @@
                             } else {
                                 Swal.fire({
                                     icon: 'error',
-                                    title: 'Loi',
+                                    title: 'Lỗi',
                                     text: result.message,
                                     confirmButtonColor: '#006b2c'
                                 });
@@ -179,8 +179,8 @@
                         error: function() {
                             Swal.fire({
                                 icon: 'error',
-                                title: 'Loi',
-                                text: 'Khong the xoa. Vui long thu lai.',
+                                title: 'Lỗi',
+                                text: 'Không thể xóa. Vui lòng thử lại.',
                                 confirmButtonColor: '#006b2c'
                             });
                         }

@@ -4,7 +4,7 @@
 {
     <div class="p-12 text-center text-slate-400">
         <span class="material-symbols-outlined text-4xl">person_off</span>
-        <p class="mt-2">Lop nay chua co hoc sinh nao.</p>
+        <p class="mt-2">Lớp này chưa có học sinh nào.</p>
     </div>
 }
 else
@@ -14,8 +14,8 @@ else
             <thead class="bg-green-600 text-white">
                 <tr>
                     <th class="px-3 py-3 text-center font-semibold sticky left-0 bg-green-600 z-10 w-10">STT</th>
-                    <th class="px-3 py-3 text-left font-semibold sticky left-0 bg-green-600 z-10 w-28">Ma HS</th>
-                    <th class="px-3 py-3 text-left font-semibold sticky left-0 bg-green-600 z-10 w-48">Ho va ten</th>
+                    <th class="px-3 py-3 text-left font-semibold sticky left-0 bg-green-600 z-10 w-28">Mã HS</th>
+                    <th class="px-3 py-3 text-left font-semibold sticky left-0 bg-green-600 z-10 w-48">Họ và tên</th>
                     @foreach (var st in Model.ScoreTypes)
                     {
                         <th class="px-2 py-3 text-center font-semibold min-w-[60px]">
@@ -62,11 +62,11 @@ else
     </div>
     <div class="px-4 py-3 bg-slate-50 text-xs text-slate-400 flex items-center gap-4">
         <span class="flex items-center gap-1">
-            <span class="w-3 h-3 inline-block border border-green-400 bg-green-50 rounded"></span> Da co diem
+            <span class="w-3 h-3 inline-block border border-green-400 bg-green-50 rounded"></span> Đã có điểm
         </span>
         <span class="flex items-center gap-1">
-            <span class="w-3 h-3 inline-block border border-slate-200 rounded"></span> Chua co diem
+            <span class="w-3 h-3 inline-block border border-slate-200 rounded"></span> Chưa có điểm
         </span>
-        <span>Diem tu 0 den 10, thang 1 chu so thap phan.</span>
+        <span>Điểm từ 0 đến 10, thang 1 chữ số thập phân.</span>
     </div>
 }

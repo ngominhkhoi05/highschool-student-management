@@ -4,8 +4,8 @@
 {
     <div class="p-12 text-center text-slate-400">
         <span class="material-symbols-outlined text-5xl">check_circle</span>
-        <p class="mt-3 text-slate-500 font-medium">Chua co vi pham nao</p>
-        <p class="text-sm mt-1">Danh sach vi pham trong hoc ky nay se hien thi o day.</p>
+        <p class="mt-3 text-slate-500 font-medium">Chưa có vi phạm nào</p>
+        <p class="text-sm mt-1">Danh sách vi phạm trong học kỳ này sẽ hiển thị ở đây.</p>
     </div>
 }
 else
@@ -14,13 +14,13 @@ else
         <table class="w-full text-sm">
             <thead class="bg-red-50 text-red-700">
                 <tr>
-                    <th class="px-4 py-3 text-left font-semibold">Ngay</th>
-                    <th class="px-4 py-3 text-left font-semibold">Ma HS</th>
-                    <th class="px-4 py-3 text-left font-semibold">Ho va ten</th>
-                    <th class="px-4 py-3 text-left font-semibold">Loai vi pham</th>
-                    <th class="px-4 py-3 text-center font-semibold">Muc do</th>
-                    <th class="px-4 py-3 text-left font-semibold">Mo ta</th>
-                    <th class="px-4 py-3 text-center font-semibold">Hanh dong</th>
+                    <th class="px-4 py-3 text-left font-semibold">Ngày</th>
+                    <th class="px-4 py-3 text-left font-semibold">Mã HS</th>
+                    <th class="px-4 py-3 text-left font-semibold">Họ và tên</th>
+                    <th class="px-4 py-3 text-left font-semibold">Loại vi phạm</th>
+                    <th class="px-4 py-3 text-center font-semibold">Mức độ</th>
+                    <th class="px-4 py-3 text-left font-semibold">Mô tả</th>
+                    <th class="px-4 py-3 text-center font-semibold">Hành động</th>
                     <th class="px-4 py-3 text-center font-semibold w-16"></th>
                 </tr>
             </thead>
@@ -36,17 +36,17 @@ else
                     };
                     var severityText = v.Severity switch
                     {
-                        1 => "Nhe",
-                        2 => "Trung binh",
-                        3 => "Nang",
+                        1 => "Nhẹ",
+                        2 => "Trung bình",
+                        3 => "Nặng",
                         _ => "-"
                     };
                     var actionText = v.ActionTaken switch
                     {
-                        1 => "Nhac nho",
-                        2 => "Phat lao dong",
-                        3 => "Moi phu huynh",
-                        4 => "Ky luat",
+                        1 => "Nhắc nhở",
+                        2 => "Phạt lao động",
+                        3 => "Mời phụ huynh",
+                        4 => "Kỷ luật",
                         _ => "-"
                     };
                     <tr class="odd:bg-white even:bg-red-50/20 hover:bg-red-50/40 transition-colors" data-id="@v.Id">
@@ -62,7 +62,7 @@ else
                         <td class="px-4 py-3 text-center">
                             <button onclick="deleteViolation(@v.Id)"
                                     class="text-red-400 hover:text-red-600 transition-colors p-1 rounded hover:bg-red-50"
-                                    title="Xoa">
+                                    title="Xóa">
                                 <span class="material-symbols-outlined text-lg">delete</span>
                             </button>
                         </td>

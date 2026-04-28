@@ -4,8 +4,8 @@
     <!-- Header -->
     <div class="bg-green-600 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
         <div>
-            <h3 class="text-white font-bold text-lg">Xep lop hoc sinh</h3>
-            <p class="text-green-100 text-xs mt-0.5">@Model.ClassName - @Model.SchoolYearName (si so: @Model.StudentsInClass.Count / @(Model.MaxStudents > 0 ? Model.MaxStudents.ToString() : "khong gioi han"))</p>
+            <h3 class="text-white font-bold text-lg">Xếp lớp học sinh</h3>
+            <p class="text-green-100 text-xs mt-0.5">@Model.ClassName - @Model.SchoolYearName (sỉ số: @Model.StudentsInClass.Count / @(Model.MaxStudents > 0 ? Model.MaxStudents.ToString() : "không giới hạn"))</p>
         </div>
         <button type="button" onclick="closeManageModal()"
                 class="text-white/70 hover:text-white transition-colors">
@@ -19,7 +19,7 @@
             <span class="material-symbols-outlined text-green-600 text-2xl">school</span>
             <div>
                 <p class="font-semibold text-slate-800">@Model.ClassName</p>
-                <p class="text-xs text-slate-500">@Model.SchoolYearName - @Model.StudentsInClass.Count hoc sinh hien tai</p>
+                <p class="text-xs text-slate-500">@Model.SchoolYearName - @Model.StudentsInClass.Count học sinh hiện tại</p>
             </div>
         </div>
 
@@ -30,7 +30,7 @@
                 <div class="flex items-center justify-between">
                     <h4 class="font-bold text-slate-700 text-sm flex items-center gap-2">
                         <span class="material-symbols-outlined text-green-600 text-base">group</span>
-                        Hoc sinh trong lop
+                        Học sinh trong lớp
                     </h4>
                     <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">@Model.StudentsInClass.Count</span>
                 </div>
@@ -39,7 +39,7 @@
                     {
                         <div class="text-center py-8 text-slate-400">
                             <span class="material-symbols-outlined text-3xl">person_off</span>
-                            <p class="text-xs mt-1">Chua co hoc sinh nao</p>
+                            <p class="text-xs mt-1">Chưa có học sinh nào</p>
                         </div>
                     }
                     else
@@ -59,7 +59,7 @@
                                 <button type="button"
                                         onclick="removeStudentFromClass(@s.StudentId, '@s.FullName')"
                                         class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
-                                        title="Xoa khoi lop">
+                                        title="Xóa khỏi lớp">
                                     <span class="material-symbols-outlined text-base">person_remove</span>
                                 </button>
                             </div>
@@ -73,7 +73,7 @@
                 <div class="flex items-center justify-between">
                     <h4 class="font-bold text-slate-700 text-sm flex items-center gap-2">
                         <span class="material-symbols-outlined text-blue-600 text-base">person_add</span>
-                        Hoc sinh chua co lop
+                        Học sinh chưa có lớp
                     </h4>
                     <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">@Model.AvailableStudents.Count</span>
                 </div>
@@ -82,7 +82,7 @@
                     {
                         <div class="text-center py-8 text-slate-400">
                             <span class="material-symbols-outlined text-3xl">check_circle</span>
-                            <p class="text-xs mt-1">Tat ca hoc sinh da co lop</p>
+                            <p class="text-xs mt-1">Tất cả học sinh đã có lớp</p>
                         </div>
                     }
                     else
@@ -113,7 +113,7 @@
                         onclick="addStudentsToClass()"
                         class="w-full px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2">
                     <span class="material-symbols-outlined text-base">add</span>
-                    Them vao lop
+                    Thêm vào lớp
                 </button>
             </div>
         </div>
@@ -136,8 +136,8 @@
             error: function() {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Loi',
-                    text: 'Khong the tai lai du lieu.',
+                    title: 'Lỗi',
+                    text: 'Không thể tải lại dữ liệu.',
                     confirmButtonColor: '#006b2c'
                 });
             }
@@ -146,14 +146,14 @@
 
     function removeStudentFromClass(studentId, fullName) {
         Swal.fire({
-            title: 'Xac nhan xoa',
-            text: 'Ban co muon xoa hoc sinh "' + fullName + '" khoi lop nay?',
+            title: 'Xác nhận xóa',
+            text: 'Bạn có muốn xóa học sinh "' + fullName + '" khỏi lớp này?',
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#dc2626',
             cancelButtonColor: '#94a3b8',
-            confirmButtonText: 'Xoa',
-            cancelButtonText: 'Huy bo'
+            confirmButtonText: 'Xóa',
+            cancelButtonText: 'Hủy bỏ'
         }).then(function(result) {
             if (result.isConfirmed) {
                 $.ajax({
@@ -164,7 +164,7 @@
                         if (result.success) {
                             Swal.fire({
                                 icon: 'success',
-                                title: 'Thanh cong!',
+                                    title: 'Thành công!',
                                 text: result.message,
                                 confirmButtonColor: '#006b2c'
                             });
@@ -173,7 +173,7 @@
                         } else {
                             Swal.fire({
                                 icon: 'error',
-                                title: 'Loi',
+                                title: 'Lỗi',
                                 text: result.message,
                                 confirmButtonColor: '#006b2c'
                             });
@@ -182,8 +182,8 @@
                     error: function() {
                         Swal.fire({
                             icon: 'error',
-                            title: 'Loi',
-                            text: 'Khong the xoa. Vui long thu lai.',
+                            title: 'Lỗi',
+                            text: 'Không thể xóa. Vui lòng thử lại.',
                             confirmButtonColor: '#006b2c'
                         });
                     }
@@ -201,8 +201,8 @@
         if (selected.length === 0) {
             Swal.fire({
                 icon: 'warning',
-                title: 'Chua chon hoc sinh',
-                text: 'Vui long chon it nhat mot hoc sinh de them vao lop.',
+                title: 'Chưa chọn học sinh',
+                text: 'Vui lòng chọn ít nhất một học sinh để thêm vào lớp.',
                 confirmButtonColor: '#006b2c'
             });
             return;
@@ -220,7 +220,7 @@
                 if (result.success) {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Thanh cong!',
+                                    title: 'Thành công!',
                         text: result.message,
                         confirmButtonColor: '#006b2c'
                     });
@@ -237,8 +237,8 @@
             error: function() {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Loi',
-                    text: 'Khong the them hoc sinh. Vui long thu lai.',
+                    title: 'Lỗi',
+                    text: 'Không thể thêm học sinh. Vui lòng thử lại.',
                     confirmButtonColor: '#006b2c'
                 });
             }

@@ -1,7 +1,7 @@
 @model highschool_student_management.ViewModels.DashboardViewModel
 
 @{
-    ViewData["Title"] = "Bang dieu khien";
+    ViewData["Title"] = "Bảng điều khiển";
 }
 
 <div class="p-6 space-y-6">
@@ -9,8 +9,8 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-2xl font-bold text-slate-800">Bang dieu khien</h1>
-            <p class="text-sm text-slate-500">Nam hoc: @Model.SchoolYearName @(Model.SemesterName != "" ? " - " + Model.SemesterName : "")</p>
+            <h1 class="text-2xl font-bold text-slate-800">Bảng điều khiển</h1>
+            <p class="text-sm text-slate-500">Năm học: @Model.SchoolYearName @(Model.SemesterName != "" ? " - " + Model.SemesterName : "")</p>
         </div>
     </div>
 
@@ -22,7 +22,7 @@
             </div>
             <div>
                 <p class="text-3xl font-bold text-green-800">@Model.TotalStudents</p>
-                <p class="text-sm text-green-600 font-medium">Hoc sinh dang hoc</p>
+                <p class="text-sm text-green-600 font-medium">Học sinh đang học</p>
             </div>
         </div>
 
@@ -32,7 +32,7 @@
             </div>
             <div>
                 <p class="text-3xl font-bold text-blue-800">@Model.TotalTeachers</p>
-                <p class="text-sm text-blue-600 font-medium">Giao vien dang day</p>
+                <p class="text-sm text-blue-600 font-medium">Giáo viên đang dạy</p>
             </div>
         </div>
 
@@ -42,22 +42,22 @@
             </div>
             <div>
                 <p class="text-3xl font-bold text-purple-800">@Model.TotalClasses</p>
-                <p class="text-sm text-purple-600 font-medium">Lop hoc hien tai</p>
+                <p class="text-sm text-purple-600 font-medium">Lớp học hiện tại</p>
             </div>
         </div>
     </div>
 
     <!-- Bieu do xep loai hoc luc -->
     <div class="bg-white rounded-2xl shadow-sm border border-green-100 p-6">
-        <h2 class="text-lg font-bold text-slate-800 mb-1">Thong ke xep loai hoc luc</h2>
+        <h2 class="text-lg font-bold text-slate-800 mb-1">Thống kê xếp loại học lực</h2>
         <p class="text-sm text-slate-500 mb-6">@Model.SemesterName</p>
 
         @if (!Model.AcademicRankStats.Any())
         {
             <div class="text-center py-12 text-slate-400">
                 <span class="material-symbols-outlined text-5xl">analytics</span>
-                <p class="mt-3 font-medium">Chua co du lieu xep loai hoc luc</p>
-                <p class="text-sm mt-1">Vui long dam bao da co ket qua hoc ky duoc tao.</p>
+                <p class="mt-3 font-medium">Chưa có dữ liệu xếp loại học lực</p>
+                <p class="text-sm mt-1">Vui lòng đảm bảo đã có kết quả học kỳ được tạo.</p>
             </div>
         }
         else

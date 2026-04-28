@@ -3,7 +3,7 @@
 <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg mx-auto overflow-hidden max-h-[90vh] overflow-y-auto">
     <!-- Header -->
     <div class="bg-green-600 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
-        <h3 class="text-white font-bold text-lg">Gan hoc sinh</h3>
+        <h3 class="text-white font-bold text-lg">Gán học sinh</h3>
         <button type="button" onclick="closeModal()"
                 class="text-white/70 hover:text-white transition-colors">
             <span class="material-symbols-outlined text-2xl">close</span>
@@ -22,14 +22,14 @@
             </div>
             <div>
                 <p class="text-sm font-semibold text-slate-800">@Model.ParentName</p>
-                <p class="text-xs text-slate-500">Chon hoc sinh de gan cho phu huynh nay</p>
+                <p class="text-xs text-slate-500">Chọn học sinh để gán cho phụ huynh này</p>
             </div>
         </div>
 
         <!-- Danh sach hoc sinh -->
         <div>
             <label class="block text-sm font-semibold text-slate-700 mb-2">
-                Danh sach hoc sinh <span class="text-red-500">*</span>
+                Danh sách học sinh <span class="text-red-500">*</span>
             </label>
             <select name="studentIds"
                     id="studentSelect"
@@ -51,7 +51,7 @@
                     }
                 }
             </select>
-            <p class="text-xs text-slate-400 mt-1">Giu phim Ctrl de chon nhieu hoc sinh</p>
+            <p class="text-xs text-slate-400 mt-1">Giữ phím Ctrl để chọn nhiều học sinh</p>
         </div>
 
         <!-- Footer -->
@@ -59,12 +59,12 @@
             <button type="button"
                     onclick="closeModal()"
                     class="px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors">
-                Huy bo
+                Huy bỏ
             </button>
             <button type="button"
                     onclick="submitAssignStudents()"
                     class="px-6 py-2.5 text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-xl shadow-sm transition-all">
-                Luu phan gan
+                Lưu phân gán
             </button>
         </div>
     </form>
@@ -93,7 +93,7 @@
                 if (result.success) {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Thanh cong!',
+                        title: 'Thành công!',
                         text: result.message,
                         confirmButtonColor: '#006b2c'
                     }).then(function() {
@@ -103,7 +103,7 @@
                 } else {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Loi',
+                        title: 'Lỗi',
                         text: result.message,
                         confirmButtonColor: '#006b2c'
                     });
@@ -113,7 +113,7 @@
                 Swal.fire({
                     icon: 'error',
                     title: 'Loi',
-                    text: 'Khong the luu. Vui long thu lai.',
+                    text: 'Không thể lưu. Vui lòng thử lại.',
                     confirmButtonColor: '#006b2c'
                 });
             }

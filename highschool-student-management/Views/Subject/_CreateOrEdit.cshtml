@@ -2,7 +2,7 @@
 
 @{
     var isEdit = Model.Id > 0;
-    var pageTitle = isEdit ? "Sua mon hoc" : "Them mon hoc moi";
+    var pageTitle = isEdit ? "Sửa môn học" : "Thêm môn học mới";
 }
 
 <div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-auto overflow-hidden">
@@ -20,24 +20,24 @@
         @Html.AntiForgeryToken()
         <input type="hidden" name="Id" value="@Model.Id" />
 
-        <!-- Ten mon hoc -->
+        <!-- Tên môn học -->
         <div>
             <label class="block text-sm font-semibold text-slate-700 mb-1.5">
-                Ten mon hoc <span class="text-red-500">*</span>
+                Tên môn học <span class="text-red-500">*</span>
             </label>
             <input type="text"
                    name="Name"
                    id="subjectName"
                    value="@Model.Name"
-                   placeholder="VD: Toan hoc"
+                   placeholder="VD: Toán học"
                    class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all placeholder:text-slate-300"
                    required />
         </div>
 
-        <!-- Ma mon hoc -->
+        <!-- Mã môn học -->
         <div>
             <label class="block text-sm font-semibold text-slate-700 mb-1.5">
-                Ma mon hoc <span class="text-red-500">*</span>
+                Mã môn học <span class="text-red-500">*</span>
             </label>
             <input type="text"
                    name="Code"
@@ -49,46 +49,46 @@
             <p class="text-xs text-slate-400 mt-1">VD: MATH, LIT, ENG, PHY, CHEM</p>
         </div>
 
-        <!-- Khoi lop -->
+        <!-- Khối lớp -->
         <div>
             <label class="block text-sm font-semibold text-slate-700 mb-1.5">
-                Khoi lop
+                Khối lớp
             </label>
             <select name="GradeLevel"
                     class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all bg-white">
-                <option value="">-- Tat ca khoi --</option>
+                <option value="">-- Tất cả khối --</option>
                 @if (Model.GradeLevel == 10)
                 {
-                    <option value="10" selected>Khoi 10</option>
+                    <option value="10" selected>Khối 10</option>
                 }
                 else
                 {
-                    <option value="10">Khoi 10</option>
+                    <option value="10">Khối 10</option>
                 }
                 @if (Model.GradeLevel == 11)
                 {
-                    <option value="11" selected>Khoi 11</option>
+                    <option value="11" selected>Khối 11</option>
                 }
                 else
                 {
-                    <option value="11">Khoi 11</option>
+                    <option value="11">Khối 11</option>
                 }
                 @if (Model.GradeLevel == 12)
                 {
-                    <option value="12" selected>Khoi 12</option>
+                    <option value="12" selected>Khối 12</option>
                 }
                 else
                 {
-                    <option value="12">Khoi 12</option>
+                    <option value="12">Khối 12</option>
                 }
             </select>
-            <p class="text-xs text-slate-400 mt-1">Bo trong = ap dung tat ca khoi</p>
+            <p class="text-xs text-slate-400 mt-1">Bỏ trống = áp dụng tất cả khối</p>
         </div>
 
-        <!-- So tiet/tuan -->
+        <!-- Số tiết/tuần -->
         <div>
             <label class="block text-sm font-semibold text-slate-700 mb-1.5">
-                So tiet/tuan
+                Số tiết/tuần
             </label>
             <input type="number"
                    name="PeriodsPerWeek"
@@ -99,28 +99,28 @@
                    class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all placeholder:text-slate-300" />
         </div>
 
-        <!-- Trang thai -->
+        <!-- Trạng thái -->
         <div>
             <label class="block text-sm font-semibold text-slate-700 mb-1.5">
-                Trang thai
+                Trạng thái
             </label>
             <select name="IsActive"
                     class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all bg-white">
                 @if (Model.IsActive == 1)
                 {
-                    <option value="1" selected>Dang day</option>
+                    <option value="1" selected>Đang dạy</option>
                 }
                 else
                 {
-                    <option value="1">Dang day</option>
+                    <option value="1">Đang dạy</option>
                 }
                 @if (Model.IsActive == 0)
                 {
-                    <option value="0" selected>Ngung</option>
+                    <option value="0" selected>Ngừng</option>
                 }
                 else
                 {
-                    <option value="0">Ngung</option>
+                    <option value="0">Ngừng</option>
                 }
             </select>
         </div>
@@ -130,12 +130,12 @@
             <button type="button"
                     onclick="closeModal()"
                     class="px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors">
-                Huy bo
+                Hủy bỏ
             </button>
             <button type="button"
                     onclick="submitSubjectForm()"
                     class="px-6 py-2.5 text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-xl shadow-sm transition-all">
-                @(isEdit ? "Luu thay doi" : "Them mon hoc")
+                @(isEdit ? "Lưu thay đổi" : "Thêm môn học")
             </button>
         </div>
     </form>
@@ -153,8 +153,8 @@
         if (!name || !name.trim()) {
             Swal.fire({
                 icon: 'error',
-                title: 'Loi',
-                text: 'Ten mon hoc khong duoc de trong.',
+                title: 'Lỗi',
+                text: 'Tên môn học không được để trống.',
                 confirmButtonColor: '#006b2c'
             });
             return;
@@ -163,8 +163,8 @@
         if (!code || !code.trim()) {
             Swal.fire({
                 icon: 'error',
-                title: 'Loi',
-                text: 'Ma mon hoc khong duoc de trong.',
+                title: 'Lỗi',
+                text: 'Mã môn học không được để trống.',
                 confirmButtonColor: '#006b2c'
             });
             return;
@@ -181,7 +181,7 @@
                 if (result.success) {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Thanh cong!',
+                        title: 'Thành công!',
                         text: result.message,
                         confirmButtonColor: '#006b2c'
                     }).then(function() {
@@ -191,7 +191,7 @@
                 } else {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Loi',
+                        title: 'Lỗi',
                         text: result.message,
                         confirmButtonColor: '#006b2c'
                     });
@@ -200,8 +200,8 @@
             error: function() {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Loi',
-                    text: 'Khong the luu du lieu. Vui long thu lai.',
+                    title: 'Lỗi',
+                    text: 'Không thể lưu dữ liệu. Vui lòng thử lại.',
                     confirmButtonColor: '#006b2c'
                 });
             }

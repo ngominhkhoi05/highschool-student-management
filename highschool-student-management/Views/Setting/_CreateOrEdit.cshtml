@@ -2,7 +2,7 @@
 
 @{
     var isEdit = Model.Id > 0;
-    var pageTitle = isEdit ? "Sua cau hinh" : "Them cau hinh moi";
+    var pageTitle = isEdit ? "Sửa cấu hình" : "Thêm cấu hình mới";
 }
 
 <div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-auto overflow-hidden">
@@ -23,7 +23,7 @@
         <!-- Khoa -->
         <div>
             <label class="block text-sm font-semibold text-slate-700 mb-1.5">
-                Khoa cai dat <span class="text-red-500">*</span>
+                Khóa cài đặt <span class="text-red-500">*</span>
             </label>
             @if (isEdit)
             {
@@ -32,7 +32,7 @@
                        class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm bg-slate-100 text-slate-500 cursor-not-allowed"
                        readonly />
                 <input type="hidden" name="Key" value="@Model.Key" />
-                <p class="text-xs text-slate-400 mt-1">Khoa khong the thay doi khi sua</p>
+                <p class="text-xs text-slate-400 mt-1">Khóa không thể thay đổi khi sửa</p>
             }
             else
             {
@@ -49,26 +49,26 @@
         <!-- Gia tri -->
         <div>
             <label class="block text-sm font-semibold text-slate-700 mb-1.5">
-                Gia tri
+                Giá trị
             </label>
             <input type="text"
                    name="Value"
                    id="settingValue"
                    value="@Model.Value"
-                   placeholder="Gia tri cau hinh"
+                   placeholder="Giá trị cấu hình"
                    class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all placeholder:text-slate-300" />
         </div>
 
         <!-- Mo ta -->
         <div>
             <label class="block text-sm font-semibold text-slate-700 mb-1.5">
-                Mo ta
+                Mô tả
             </label>
             <input type="text"
                    name="Description"
                    id="settingDescription"
                    value="@Model.Description"
-                   placeholder="Mo ta cho cau hinh nay"
+                   placeholder="Mô tả cho cấu hình này"
                    class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all placeholder:text-slate-300" />
         </div>
 
@@ -77,12 +77,12 @@
             <button type="button"
                     onclick="closeModal()"
                     class="px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors">
-                Huy bo
+                Hủy bỏ
             </button>
             <button type="button"
                     onclick="submitSettingForm()"
                     class="px-6 py-2.5 text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-xl shadow-sm transition-all">
-                @(isEdit ? "Luu thay doi" : "Them cau hinh")
+                @(isEdit ? "Lưu thay đổi" : "Thêm cấu hình")
             </button>
         </div>
     </form>
@@ -99,8 +99,8 @@
         if (!key || !key.trim()) {
             Swal.fire({
                 icon: 'error',
-                title: 'Loi',
-                text: 'Khoa cai dat khong duoc de trong.',
+                title: 'Lỗi',
+                text: 'Khóa cài đặt không được để trống.',
                 confirmButtonColor: '#006b2c'
             });
             return;
@@ -116,7 +116,7 @@
                 if (result.success) {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Thanh cong!',
+                        title: 'Thành công!',
                         text: result.message,
                         confirmButtonColor: '#006b2c'
                     }).then(function() {
@@ -126,7 +126,7 @@
                 } else {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Loi',
+                        title: 'Lỗi',
                         text: result.message,
                         confirmButtonColor: '#006b2c'
                     });
@@ -135,8 +135,8 @@
             error: function() {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Loi',
-                    text: 'Khong the luu du lieu. Vui long thu lai.',
+                    title: 'Lỗi',
+                    text: 'Không thể lưu dữ liệu. Vui lòng thử lại.',
                     confirmButtonColor: '#006b2c'
                 });
             }

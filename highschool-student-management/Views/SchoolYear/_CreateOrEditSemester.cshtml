@@ -2,7 +2,7 @@
 
 @{
     var isEdit = Model.Id > 0;
-    var pageTitle = isEdit ? "Sua hoc ky" : "Them hoc ky moi";
+    var pageTitle = isEdit ? "Sửa học kỳ" : "Thêm học kỳ mới";
     var syStart = ViewBag.SchoolYearStart ?? "";
     var syEnd = ViewBag.SchoolYearEnd ?? "";
 }
@@ -25,10 +25,10 @@
         <input type="hidden" id="syStart" value="@syStart" />
         <input type="hidden" id="syEnd" value="@syEnd" />
 
-        <!-- Thong tin nam hoc -->
+        <!-- Thông tin năm học -->
         <div class="flex items-center gap-2 px-3 py-2 bg-slate-50 rounded-lg text-sm text-slate-600">
             <span class="material-symbols-outlined text-base text-green-600">calendar_today</span>
-            <span>Nam hoc: <strong class="text-slate-800">@ViewBag.SchoolYearName</strong></span>
+            <span>Năm học: <strong class="text-slate-800">@ViewBag.SchoolYearName</strong></span>
             @if (!string.IsNullOrEmpty(syStart) || !string.IsNullOrEmpty(syEnd))
             {
                 <span class="ml-1 text-slate-400">
@@ -37,52 +37,52 @@
             }
         </div>
 
-        <!-- So thu tu hoc ky -->
+        <!-- Số thứ tự học kỳ -->
         <div>
             <label class="block text-sm font-semibold text-slate-700 mb-1.5">
-                So thu tu <span class="text-red-500">*</span>
+                Số thứ tự <span class="text-red-500">*</span>
             </label>
             <select name="SemesterNumber" id="semesterNumber"
                     class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all bg-white">
-                <option value="">-- Chon hoc ky --</option>
+                <option value="">-- Chọn học kỳ --</option>
                 @if (Model.SemesterNumber == 1)
                 {
-                    <option value="1" selected>1 - Hoc ky 1</option>
+                    <option value="1" selected>1 - Học kỳ 1</option>
                 }
                 else
                 {
-                    <option value="1">1 - Hoc ky 1</option>
+                    <option value="1">1 - Học kỳ 1</option>
                 }
                 @if (Model.SemesterNumber == 2)
                 {
-                    <option value="2" selected>2 - Hoc ky 2</option>
+                    <option value="2" selected>2 - Học kỳ 2</option>
                 }
                 else
                 {
-                    <option value="2">2 - Hoc ky 2</option>
+                    <option value="2">2 - Học kỳ 2</option>
                 }
             </select>
         </div>
 
-        <!-- Ten hoc ky -->
+        <!-- Tên học kỳ -->
         <div>
             <label class="block text-sm font-semibold text-slate-700 mb-1.5">
-                Ten hoc ky <span class="text-red-500">*</span>
+                Tên học kỳ <span class="text-red-500">*</span>
             </label>
             <input type="text"
                    name="Name"
                    id="semesterName"
                    value="@Model.Name"
-                   placeholder="VD: Hoc ky 1"
+                   placeholder="VD: Học kỳ 1"
                    class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all placeholder:text-slate-300"
                    required />
-            <p class="text-xs text-slate-400 mt-1">VD: Hoc ky 1, Hoc ky 2</p>
+            <p class="text-xs text-slate-400 mt-1">VD: Học kỳ 1, Học kỳ 2</p>
         </div>
 
-        <!-- Tu ngay -->
+        <!-- Từ ngày -->
         <div>
             <label class="block text-sm font-semibold text-slate-700 mb-1.5">
-                Tu ngay
+                Từ ngày
             </label>
             <input type="date"
                    name="StartDate"
@@ -91,10 +91,10 @@
                    class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-green-500/20 focus:border-green-400 transition-all" />
         </div>
 
-        <!-- Den ngay -->
+        <!-- Đến ngày -->
         <div>
             <label class="block text-sm font-semibold text-slate-700 mb-1.5">
-                Den ngay
+                Đến ngày
             </label>
             <input type="date"
                    name="EndDate"
@@ -108,11 +108,11 @@
             <button type="button"
                     onclick="$('#modalContainer').fadeOut().addClass('hidden').removeClass('flex')"
                     class="px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition-colors">
-                Huy bo
+                Hủy bỏ
             </button>
             <button type="submit"
                     class="px-6 py-2.5 text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-xl shadow-sm transition-all">
-                @(isEdit ? "Luu thay doi" : "Tao hoc ky")
+                @(isEdit ? "Lưu thay đổi" : "Tạo học kỳ")
             </button>
         </div>
     </form>
@@ -132,18 +132,18 @@
             var halfYear = new Date(start.getTime() + msInYear / 2);
 
             if (semNum == 1) {
-                // HK1: tu dau nam hoc den giua nam hoc
+                // HK1: từ đầu năm học đến giữa năm học
                 var endHk1 = new Date(halfYear);
                 endHk1.setDate(endHk1.getDate() - 1);
 
-                $('#semesterName').val('Hoc ky 1');
+                $('#semesterName').val('Học kỳ 1');
                 $('#startDate').val(syStart);
                 $('#endDate').val(endHk1.toISOString().split('T')[0]);
             } else if (semNum == 2) {
-                // HK2: tu giua nam hoc den cuoi nam hoc
+                // HK2: từ giữa năm học đến cuối năm học
                 var startHk2 = new Date(halfYear);
 
-                $('#semesterName').val('Hoc ky 2');
+                $('#semesterName').val('Học kỳ 2');
                 $('#startDate').val(startHk2.toISOString().split('T')[0]);
                 $('#endDate').val(syEnd);
             }
@@ -160,8 +160,8 @@
             if (!$('select[name="SemesterNumber"]').val()) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Loi',
-                    text: 'Vui long chon so thu tu hoc ky.',
+                    title: 'Lỗi',
+                    text: 'Vui lòng chọn số thứ tự học kỳ.',
                     confirmButtonColor: '#006b2c'
                 });
                 return;
@@ -178,7 +178,7 @@
                     if (result.success) {
                         Swal.fire({
                             icon: 'success',
-                            title: 'Thanh cong!',
+                            title: 'Thành công!',
                             text: result.message,
                             confirmButtonColor: '#006b2c'
                         }).then(function() {
@@ -188,7 +188,7 @@
                     } else {
                         Swal.fire({
                             icon: 'error',
-                            title: 'Loi',
+                            title: 'Lỗi',
                             text: result.message,
                             confirmButtonColor: '#006b2c'
                         });
@@ -197,8 +197,8 @@
                 error: function() {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Loi',
-                        text: 'Khong the luu du lieu. Vui long thu lai.',
+                        title: 'Lỗi',
+                        text: 'Không thể lưu dữ liệu. Vui lòng thử lại.',
                         confirmButtonColor: '#006b2c'
                     });
                 }

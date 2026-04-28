@@ -2,7 +2,7 @@
 
 @{
     var unreadCount = (int)(ViewData["UnreadCount"] ?? 0);
-    ViewData["Title"] = "Thong bao";
+    ViewData["Title"] = "Thông báo";
 }
 
 <div class="p-6 space-y-6">
@@ -12,9 +12,9 @@
         <div class="flex items-center gap-3">
             <span class="material-symbols-outlined text-3xl text-green-600">notifications</span>
             <div>
-                <h1 class="text-2xl font-bold text-slate-800">Thong bao</h1>
+                <h1 class="text-2xl font-bold text-slate-800">Thông báo</h1>
                 <p class="text-sm text-slate-500">
-                    @(unreadCount > 0 ? unreadCount + " thong bao chua doc" : "Tat ca da doc")
+                    @(unreadCount > 0 ? unreadCount + " thông báo chưa đọc" : "Tất cả đã đọc")
                 </p>
             </div>
         </div>
@@ -24,7 +24,7 @@
             <button onclick="openCreateNotificationModal()"
                     class="px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-xl shadow-sm transition-all flex items-center gap-2">
                 <span class="material-symbols-outlined text-base">add</span>
-                Tao thong bao
+                Tạo thông báo
             </button>
         }
     </div>
@@ -34,7 +34,7 @@
     {
         <div class="bg-white rounded-2xl shadow-sm border border-green-100 p-12 text-center">
             <span class="material-symbols-outlined text-5xl text-slate-300">notifications_off</span>
-            <p class="mt-3 text-slate-500 font-medium">Chua co thong bao nao</p>
+            <p class="mt-3 text-slate-500 font-medium">Chưa có thông báo nào</p>
         </div>
     }
     else
@@ -62,7 +62,7 @@
                                 </h3>
                                 @if (notif.IsRead == 0)
                                 {
-                                    <span class="w-2 h-2 bg-green-500 rounded-full flex-shrink-0" title="Chua doc"></span>
+                                    <span class="w-2 h-2 bg-green-500 rounded-full flex-shrink-0" title="Chưa đọc"></span>
                                 }
                                 @if (notif.Type == 4)
                                 {
@@ -81,7 +81,7 @@
                                 <span>@notif.CreatedAt.ToString("dd/MM/yyyy HH:mm")</span>
                                 @if (notif.IsRead == 1 && notif.ReadAt.HasValue)
                                 {
-                                    <span class="text-green-500">Da doc luc @notif.ReadAt.Value.ToString("dd/MM HH:mm")</span>
+                                    <span class="text-green-500">Đã đọc lúc @notif.ReadAt.Value.ToString("dd/MM HH:mm")</span>
                                 }
                             </div>
                         </div>
@@ -91,8 +91,8 @@
                         {
                             <button onclick="event.stopPropagation(); markAsRead(@notif.Id)"
                                     class="px-3 py-1.5 text-xs font-medium text-green-700 bg-green-50 hover:bg-green-100 rounded-lg transition-all flex-shrink-0"
-                                    title="Danh dau da doc">
-                                Da doc
+                                    title="Đánh dấu đã đọc">
+                                Đã đọc
                             </button>
                         }
                     </div>
@@ -108,7 +108,7 @@
         <div class="bg-green-600 px-6 py-4 flex items-center justify-between flex-shrink-0">
             <h3 class="text-white font-bold text-lg flex items-center gap-2">
                 <span class="material-symbols-outlined">campaign</span>
-                Tao thong bao moi
+                Tạo thông báo mới
             </h3>
             <button onclick="closeCreateNotificationModal()" class="text-white/80 hover:text-white transition-colors">
                 <span class="material-symbols-outlined text-2xl">close</span>
@@ -119,7 +119,7 @@
             <!-- Partial view se load o day -->
             <div class="p-6 text-center text-slate-400">
                 <span class="material-symbols-outlined text-3xl animate-spin">sync</span>
-                <p class="mt-2 text-sm">Dang tai...</p>
+                <p class="mt-2 text-sm">Đang tải...</p>
             </div>
         </div>
     </div>
@@ -129,7 +129,7 @@
     <script>
         function openCreateNotificationModal() {
             $('#createNotificationFormContainer').html(
-                '<div class="p-6 text-center text-slate-400"><span class="material-symbols-outlined text-3xl animate-spin">sync</span><p class="mt-2 text-sm">Dang tai...</p></div>'
+                '<div class="p-6 text-center text-slate-400"><span class="material-symbols-outlined text-3xl animate-spin">sync</span><p class="mt-2 text-sm">Đang tải...</p></div>'
             );
             $('#createNotificationModal').removeClass('hidden').addClass('flex');
 
@@ -137,7 +137,7 @@
                 $('#createNotificationFormContainer').html(html);
             }).fail(function() {
                 $('#createNotificationFormContainer').html(
-                    '<div class="p-6 text-center text-red-400"><p>Khong the tai form. Vui long thu lai.</p></div>'
+                    '<div class="p-6 text-center text-red-400"><p>Không thể tải form. Vui lòng thử lại.</p></div>'
                 );
             });
         }
@@ -168,7 +168,7 @@
                         item.removeClass('border-l-4 border-l-green-500').addClass('opacity-70');
                         item.off('click');
 
-                        // Cap nhat so thong bao chua doc
+                        // Cập nhật số thông báo chưa đọc
                         var badge = $('.sidebar-unread-badge');
                         if (badge.length) {
                             var count = parseInt(badge.text()) - 1;
