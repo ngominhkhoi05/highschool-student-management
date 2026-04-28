@@ -17,12 +17,12 @@ namespace highschool_student_management.ViewModels
         public int Count { get; set; }
         public string RankName => Rank switch
         {
-            1 => "Gioi",
-            2 => "Kha",
-            3 => "Trung binh",
-            4 => "Yeu",
-            5 => "Kem",
-            _ => "Khong xep loai"
+            1 => "Giỏi",
+            2 => "Khá",
+            3 => "Trung bình",
+            4 => "Yếu",
+            5 => "Kém",
+            _ => "Không xếp loại"
         };
     }
 
@@ -41,11 +41,11 @@ namespace highschool_student_management.ViewModels
 
         public string TypeName => Type switch
         {
-            1 => "Thong bao chung",
-            2 => "Hoc vu",
-            3 => "Su kien",
-            4 => "Khan",
-            _ => "Khong ro"
+            1 => "Thông báo chung",
+            2 => "Học vụ",
+            3 => "Sự kiện",
+            4 => "Khẩn",
+            _ => "Không rõ"
         };
 
         public string TypeIcon => Type switch
@@ -135,11 +135,11 @@ namespace highschool_student_management.ViewModels
 
         public string StatusName => Status switch
         {
-            1 => "Co mat",
-            2 => "Vang co phep",
-            3 => "Vang khong phep",
-            4 => "Di tre",
-            _ => "Khong ro"
+            1 => "Có mặt",
+            2 => "Vắng có phép",
+            3 => "Vắng không phép",
+            4 => "Đi trễ",
+            _ => "Không rõ"
         };
 
         public string StatusClass => Status switch
@@ -167,11 +167,11 @@ namespace highschool_student_management.ViewModels
 
         public string RankName => ConductRank switch
         {
-            1 => "Tot",
-            2 => "Kha",
-            3 => "Trung binh",
-            4 => "Yeu",
-            _ => "Chua danh gia"
+            1 => "Tốt",
+            2 => "Khá",
+            3 => "Trung bình",
+            4 => "Yếu",
+            _ => "Chưa đánh giá"
         };
 
         public string RankClass => ConductRank switch
@@ -202,10 +202,10 @@ namespace highschool_student_management.ViewModels
 
         public string ActionName => ActionTaken switch
         {
-            1 => "Nhac nho",
-            2 => "Phat lao dong",
-            3 => "Moi phu huynh",
-            4 => "Ky luat",
+            1 => "Nhắc nhở",
+            2 => "Phạt lao động",
+            3 => "Mời phụ huynh",
+            4 => "Kỷ luật",
             _ => ""
         };
     }
@@ -241,5 +241,50 @@ namespace highschool_student_management.ViewModels
         public string FullName { get; set; } = "";
         public ConductDetailViewModel? ConductScore { get; set; }
         public List<StudentViolationViewModel> Violations { get; set; } = new();
+    }
+
+    // ========== DASHBOARD TEACHER ==========
+    public class TeacherClassItemViewModel
+    {
+        public int ClassId { get; set; }
+        public string ClassName { get; set; } = "";
+        public int GradeLevel { get; set; }
+        public int SubjectId { get; set; }
+        public string SubjectName { get; set; } = "";
+        public int? PeriodsPerWeek { get; set; }
+    }
+
+    public class HomeroomClassInfoViewModel
+    {
+        public int ClassId { get; set; }
+        public string ClassName { get; set; } = "";
+        public int GradeLevel { get; set; }
+        public string? Room { get; set; }
+        public int StudentCount { get; set; }
+    }
+
+    // ========== DASHBOARD ADMIN ==========
+    public class GradeStatViewModel
+    {
+        public int GradeLevel { get; set; }
+        public int StudentCount { get; set; }
+    }
+
+    // ========== DASHBOARD STUDENT / PARENT ==========
+    public class StudentAttendanceSummary
+    {
+        public int TotalPresent { get; set; }
+        public int TotalAbsentPermit { get; set; }
+        public int TotalAbsentNoPermit { get; set; }
+        public int TotalLate { get; set; }
+        public int TotalRecords { get; set; }
+    }
+
+    public class ParentChildSummary
+    {
+        public int StudentId { get; set; }
+        public string StudentCode { get; set; } = "";
+        public string FullName { get; set; } = "";
+        public string ClassName { get; set; } = "";
     }
 }
