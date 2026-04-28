@@ -34,7 +34,7 @@
     <div class="flex items-center gap-6">
 
         <!-- Nút thông báo -->
-        <a asp-area="" asp-controller="Notifications" asp-action="Index"
+        <a asp-area="" asp-controller="Notification" asp-action="Index"
            class="relative text-slate-500 hover:text-green-600 transition-colors active:opacity-80 cursor-pointer">
             <span class="material-symbols-outlined">notifications</span>
             @{
@@ -87,13 +87,13 @@
                     <p class="text-xs text-slate-500">Đăng nhập với</p>
                     <p class="text-sm font-semibold text-slate-800 truncate">@userName</p>
                 </div>
-                <a asp-area="" asp-controller="User" asp-action="Index"
+                <a asp-area="" asp-controller="User" asp-action="EditProfile"
                    class="flex items-center gap-3 px-4 py-2.5 text-slate-600 hover:bg-green-50 hover:text-green-700 transition-colors">
                     <span class="material-symbols-outlined text-lg">account_circle</span>
                     Xem hồ sơ
                 </a>
                 <button class="btn-render-modal w-full flex items-center gap-3 px-4 py-2.5 text-slate-600 hover:bg-green-50 hover:text-green-700 transition-colors"
-                        data-url="@Url.Action("ChangePassword", "User")"
+                        data-url="@Url.Action("ChangePassword", "Account")"
                         data-title="Đổi mật khẩu">
                     <span class="material-symbols-outlined text-lg">lock</span>
                     Đổi mật khẩu
