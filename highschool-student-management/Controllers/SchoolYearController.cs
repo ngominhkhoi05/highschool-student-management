@@ -18,13 +18,23 @@ namespace highschool_student_management.Controllers
 
         // GET: /SchoolYear
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? search)
         {
-            var schoolYears = await _context.SchoolYears
+            var query = _context.SchoolYears
                 .Include(sy => sy.Semesters.OrderBy(s => s.SemesterNumber))
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.Trim().ToLower();
+                query = query.Where(sy => sy.Name.ToLower().Contains(search));
+            }
+
+            var schoolYears = await query
                 .OrderByDescending(sy => sy.StartDate)
                 .ToListAsync();
 
+            ViewData["Search"] = search;
             ViewData["Title"] = "Quan ly nam hoc";
             return View(schoolYears);
         }

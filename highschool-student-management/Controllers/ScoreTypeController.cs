@@ -18,12 +18,21 @@ namespace highschool_student_management.Controllers
 
         // GET: /ScoreType
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? search)
         {
-            var scoreTypes = await _context.ScoreTypes
+            var query = _context.ScoreTypes.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.Trim().ToLower();
+                query = query.Where(st => st.Name.ToLower().Contains(search));
+            }
+
+            var scoreTypes = await query
                 .OrderBy(st => st.Name)
                 .ToListAsync();
 
+            ViewData["Search"] = search;
             ViewData["Title"] = "Quan ly loai diem";
             return View(scoreTypes);
         }

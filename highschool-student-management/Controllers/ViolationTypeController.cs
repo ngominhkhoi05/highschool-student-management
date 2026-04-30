@@ -18,12 +18,21 @@ namespace highschool_student_management.Controllers
 
         // GET: /ViolationType
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? search)
         {
-            var violationTypes = await _context.ViolationTypes
+            var query = _context.ViolationTypes.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.Trim().ToLower();
+                query = query.Where(vt => vt.Name.ToLower().Contains(search));
+            }
+
+            var violationTypes = await query
                 .OrderBy(vt => vt.Name)
                 .ToListAsync();
 
+            ViewData["Search"] = search;
             ViewData["Title"] = "Quan ly loai vi pham";
             return View(violationTypes);
         }

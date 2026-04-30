@@ -49,7 +49,10 @@ else
                         4 => "Kỷ luật",
                         _ => "-"
                     };
-                    <tr class="odd:bg-white even:bg-red-50/20 hover:bg-red-50/40 transition-colors" data-id="@v.Id">
+                    <tr class="violation-row odd:bg-white even:bg-red-50/20 hover:bg-red-50/40 transition-colors"
+                            data-id="@v.Id"
+                            data-code="@v.StudentCode.ToLower()"
+                            data-name="@v.StudentName.ToLower()">
                         <td class="px-4 py-3 text-slate-600">@v.ViolationDate.ToString("dd/MM/yyyy")</td>
                         <td class="px-4 py-3 font-medium text-green-700">@v.StudentCode</td>
                         <td class="px-4 py-3 font-semibold text-slate-800">@v.StudentName</td>

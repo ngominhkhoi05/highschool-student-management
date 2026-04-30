@@ -17,14 +17,25 @@ namespace highschool_student_management.Controllers
         }
 
         // GET: /Notification
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? search)
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0");
 
-            var notifications = await _context.NotificationRecipients
+            var query = _context.NotificationRecipients
                 .Where(nr => nr.UserId == userId)
                 .Include(nr => nr.Notification)
                     .ThenInclude(n => n.Sender)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.Trim().ToLower();
+                query = query.Where(nr =>
+                    nr.Notification.Title.ToLower().Contains(search) ||
+                    (nr.Notification.Content != null && nr.Notification.Content.ToLower().Contains(search)));
+            }
+
+            var notifications = await query
                 .OrderByDescending(nr => nr.Notification.CreatedAt)
                 .Select(nr => new NotificationViewModel
                 {
@@ -42,6 +53,7 @@ namespace highschool_student_management.Controllers
 
             var unreadCount = notifications.Count(n => n.IsRead == 0);
             ViewData["UnreadCount"] = unreadCount;
+            ViewData["Search"] = search;
 
             return View(notifications);
         }

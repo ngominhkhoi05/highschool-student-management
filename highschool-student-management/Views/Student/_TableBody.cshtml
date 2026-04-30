@@ -1,0 +1,62 @@
+@model List<highschool_student_management.ViewModels.StudentIndexViewModel>
+
+@if (!Model.Any())
+{
+    <tr>
+        <td colspan="7" class="px-6 py-12 text-center text-slate-400">
+            <span class="material-symbols-outlined text-4xl">school</span>
+            <p class="mt-2">Không có học sinh nào phù hợp.</p>
+        </td>
+    </tr>
+}
+else
+{
+    foreach (var student in Model)
+    {
+        <tr class="odd:bg-white even:bg-green-50/30 hover:bg-green-100/30 transition-colors">
+            <td class="px-4 py-3">
+                @if (!string.IsNullOrEmpty(student.Avatar))
+                {
+                    <img src="@student.Avatar" alt="Avatar" class="w-10 h-10 rounded-full object-cover" />
+                }
+                else
+                {
+                    <div class="w-10 h-10 rounded-full bg-blue-200 text-blue-700 flex items-center justify-center text-sm font-bold">
+                        @student.FullName[0].ToString().ToUpper()
+                    </div>
+                }
+            </td>
+            <td class="px-4 py-3">
+                <span class="font-semibold text-green-700">@student.StudentCode</span>
+            </td>
+            <td class="px-4 py-3">
+                <p class="font-semibold text-slate-800">@student.FullName</p>
+                <p class="text-xs text-slate-400">@student.Phone</p>
+            </td>
+            <td class="px-4 py-3 text-slate-600">@student.GenderName</td>
+            <td class="px-4 py-3 text-slate-600">@(student.DateOfBirth?.ToString("dd/MM/yyyy") ?? "-")</td>
+            <td class="px-4 py-3 text-center">
+                <span class="inline-flex items-center px-2.5 py-0.5 text-xs font-semibold rounded-full @(student.Status == 1 ? "bg-green-100 text-green-700" : student.Status == 2 ? "bg-yellow-100 text-yellow-700" : student.Status == 3 ? "bg-blue-100 text-blue-700" : "bg-slate-100 text-slate-700")">
+                    @student.StatusName
+                </span>
+            </td>
+            <td class="px-4 py-3">
+                <div class="flex items-center justify-center gap-1">
+                    <button type="button"
+                            class="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all btn-render-modal"
+                            title="Sửa"
+                            data-url="@Url.Action("_CreateOrEdit", "Student", new { id = student.Id })"
+                            data-title="Sửa học sinh">
+                        <span class="material-symbols-outlined text-base">edit</span>
+                    </button>
+                    <button type="button"
+                            class="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                            title="Xóa"
+                            onclick="deleteStudent(@student.Id, '@Html.Raw(System.Web.HttpUtility.JavaScriptStringEncode(student.FullName))')">
+                        <span class="material-symbols-outlined text-base">delete</span>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    }
+}

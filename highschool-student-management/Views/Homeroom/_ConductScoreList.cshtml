@@ -29,7 +29,9 @@ else
                     {
                         var hasViolation = cs.HasViolationRecord;
                         <tr data-id="@cs.Id" data-student-id="@cs.StudentId"
-                            class="odd:bg-white even:bg-amber-50/20 hover:bg-amber-50/40 transition-colors @(hasViolation ? "bg-red-50/20" : "")">
+                            class="conduct-row odd:bg-white even:bg-amber-50/20 hover:bg-amber-50/40 transition-colors @(hasViolation ? "bg-red-50/20" : "")"
+                            data-code="@cs.StudentCode.ToLower()"
+                            data-name="@cs.StudentName.ToLower()">
                             <td class="px-4 py-3 text-center text-slate-400 text-xs font-medium">@stt</td>
                             <td class="px-4 py-3 font-medium text-green-700">@cs.StudentCode</td>
                             <td class="px-4 py-3 font-semibold text-slate-800">@cs.StudentName</td>
