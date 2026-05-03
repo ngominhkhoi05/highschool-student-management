@@ -24,7 +24,7 @@ namespace highschool_student_management.Controllers
         {
             if (User.Identity?.IsAuthenticated == true)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoleDashboard();
             }
 
             ViewData["ReturnUrl"] = returnUrl;
@@ -96,12 +96,25 @@ namespace highschool_student_management.Controllers
                 new ClaimsPrincipal(claimsIdentity),
                 authProperties);
 
-            // Chuyen huong ve trang yeu cau hoac trang chu
+            // Chuyen huong ve trang yeu cau hoac dashboard tuong ung voi quyen
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
             {
                 return Redirect(returnUrl);
             }
 
+            return RedirectToRoleDashboard();
+        }
+
+        private IActionResult RedirectToRoleDashboard()
+        {
+            if (User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Dashboard");
+            if (User.IsInRole("Teacher"))
+                return RedirectToAction("Index", "Home");
+            if (User.IsInRole("Student"))
+                return RedirectToAction("Index", "StudentPortal");
+            if (User.IsInRole("Parent"))
+                return RedirectToAction("Index", "ParentPortal");
             return RedirectToAction("Index", "Home");
         }
 

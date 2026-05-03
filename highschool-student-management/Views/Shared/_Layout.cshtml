@@ -141,6 +141,27 @@
                 }
             });
 
+            // === SweetAlert2 logout ===
+            $(document).on('click', '.btn-logout', function(e) {
+                e.preventDefault();
+                var form = $(this).closest('form');
+                Swal.fire({
+                    title: 'Xác nhận đăng xuất',
+                    text: 'Bạn có chắc chắn muốn đăng xuất không?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#006b2c',
+                    cancelButtonColor: '#94a3b8',
+                    confirmButtonText: 'Có, đăng xuất',
+                    cancelButtonText: 'Hủy',
+                    reverseButtons: true
+                }).then(function(result) {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+
             // === Bắt sự kiện mở modal cho các nút có class .btn-render-modal ===
             $(document).on('click', '.btn-render-modal', function(e) {
                 e.preventDefault();

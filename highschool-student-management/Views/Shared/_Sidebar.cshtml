@@ -11,6 +11,21 @@
                  : Context.User?.IsInRole("Student") == true ? "Học sinh"
                  : Context.User?.IsInRole("Parent") == true ? "Phụ huynh"
                  : "Unknown";
+
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+}
+
+@functions {
+    private string ActiveClass(string controller, string action = "Index") {
+        var ctrl = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+        var act = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+        if (ctrl.Equals(controller, StringComparison.OrdinalIgnoreCase)
+            && act.Equals(action, StringComparison.OrdinalIgnoreCase)) {
+            return "border-l-4 border-green-600 bg-green-50 text-green-700 font-semibold";
+        }
+        return "text-slate-500 hover:bg-green-50 hover:text-green-600";
+    }
 }
 
 <!-- Sidebar: Cấu trúc cố định 280px -->
@@ -42,7 +57,7 @@
                     <p class="px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Quản trị hệ thống</p>
                     <nav class="space-y-1">
 
-                        <a class="flex items-center gap-3 border-l-4 border-green-600 bg-green-50 text-green-700 font-semibold px-4 py-3 cursor-pointer active:scale-[0.98] transition-all duration-200"
+                        <a class="flex items-center gap-3 px-4 py-3 cursor-pointer transition-all duration-200 @ActiveClass("Dashboard", "Index")"
                            asp-area="" asp-controller="Dashboard" asp-action="Index">
                             <span class="material-symbols-outlined text-lg">dashboard</span>
                             <span>Bảng điều khiển</span>
@@ -52,37 +67,37 @@
                         <div class="space-y-1 mt-2">
                             <p class="px-4 py-2 text-xs font-semibold text-slate-500">Hệ thống</p>
 
-                            <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                            <a class="flex items-center gap-3 px-4 py-2 cursor-pointer transition-all duration-200 @ActiveClass("SchoolYear", "Index")"
                                asp-area="" asp-controller="SchoolYear" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">calendar_today</span>
                                 <span>Năm học</span>
                             </a>
 
-                            <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                            <a class="flex items-center gap-3 px-4 py-2 cursor-pointer transition-all duration-200 @ActiveClass("Subject", "Index")"
                                asp-area="" asp-controller="Subject" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">book</span>
                                 <span>Môn học</span>
                             </a>
 
-                            <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                            <a class="flex items-center gap-3 px-4 py-2 cursor-pointer transition-all duration-200 @ActiveClass("Class", "Index")"
                                asp-area="" asp-controller="Class" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">class</span>
                                 <span>Lớp học</span>
                             </a>
 
-                            <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                            <a class="flex items-center gap-3 px-4 py-2 cursor-pointer transition-all duration-200 @ActiveClass("ScoreType", "Index")"
                                asp-area="" asp-controller="ScoreType" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">score</span>
                                 <span>Loại điểm</span>
                             </a>
 
-                            <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                            <a class="flex items-center gap-3 px-4 py-2 cursor-pointer transition-all duration-200 @ActiveClass("ViolationType", "Index")"
                                asp-area="" asp-controller="ViolationType" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">gavel</span>
                                 <span>Loại vi phạm</span>
                             </a>
 
-                            <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                            <a class="flex items-center gap-3 px-4 py-2 cursor-pointer transition-all duration-200 @ActiveClass("Setting", "Index")"
                                asp-area="" asp-controller="Setting" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">settings</span>
                                 <span>Cấu hình</span>
@@ -93,25 +108,25 @@
                         <div class="space-y-1 mt-2">
                             <p class="px-4 py-2 text-xs font-semibold text-slate-500">Quản lý người dùng</p>
 
-                            <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                            <a class="flex items-center gap-3 px-4 py-2 cursor-pointer transition-all duration-200 @ActiveClass("Teacher", "Index")"
                                asp-area="" asp-controller="Teacher" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">school</span>
                                 <span>Giáo viên</span>
                             </a>
 
-                            <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                            <a class="flex items-center gap-3 px-4 py-2 cursor-pointer transition-all duration-200 @ActiveClass("Student", "Index")"
                                asp-area="" asp-controller="Student" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">groups</span>
                                 <span>Học sinh</span>
                             </a>
 
-                            <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                            <a class="flex items-center gap-3 px-4 py-2 cursor-pointer transition-all duration-200 @ActiveClass("Parent", "Index")"
                                asp-area="" asp-controller="Parent" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">family_restroom</span>
                                 <span>Phụ huynh</span>
                             </a>
 
-                            <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                            <a class="flex items-center gap-3 px-4 py-2 cursor-pointer transition-all duration-200 @ActiveClass("Account", "Index")"
                                asp-area="" asp-controller="Account" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">manage_accounts</span>
                                 <span>Tài khoản</span>
@@ -122,13 +137,13 @@
                         <div class="space-y-1 mt-2">
                             <p class="px-4 py-2 text-xs font-semibold text-slate-500">Giáo viên bộ môn</p>
 
-                            <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                            <a class="flex items-center gap-3 px-4 py-2 cursor-pointer transition-all duration-200 @ActiveClass("TeacherAttendance", "Index")"
                                asp-area="" asp-controller="TeacherAttendance" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">how_to_reg</span>
                                 <span>Sổ điểm danh</span>
                             </a>
 
-                            <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                            <a class="flex items-center gap-3 px-4 py-2 cursor-pointer transition-all duration-200 @ActiveClass("TeacherScore", "Index")"
                                asp-area="" asp-controller="TeacherScore" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">grade</span>
                                 <span>Sổ điểm</span>
@@ -146,7 +161,7 @@
                     <p class="px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Giảng dạy &amp; Chủ nhiệm</p>
                     <nav class="space-y-1">
 
-                        <a class="flex items-center gap-3 text-slate-500 px-4 py-3 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                        <a class="flex items-center gap-3 px-4 py-3 cursor-pointer transition-all duration-200 @ActiveClass("Home", "Index")"
                            asp-area="" asp-controller="Home" asp-action="Index">
                             <span class="material-symbols-outlined text-lg">dashboard</span>
                             <span>Bảng điều khiển</span>
@@ -156,13 +171,13 @@
                         <div class="space-y-1">
                             <p class="px-4 py-2 text-xs font-semibold text-slate-500">Công tác giảng dạy</p>
 
-                            <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                            <a class="flex items-center gap-3 px-4 py-2 cursor-pointer transition-all duration-200 @ActiveClass("TeacherScore", "Index")"
                                asp-area="" asp-controller="TeacherScore" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">assignment</span>
                                 <span>Sổ điểm</span>
                             </a>
 
-                            <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                            <a class="flex items-center gap-3 px-4 py-2 cursor-pointer transition-all duration-200 @ActiveClass("TeacherAttendance", "Index")"
                                asp-area="" asp-controller="TeacherAttendance" asp-action="Index">
                                 <span class="material-symbols-outlined text-lg">how_to_reg</span>
                                 <span>Điểm danh</span>
@@ -173,19 +188,19 @@
                         <div class="space-y-1 mt-2">
                             <p class="px-4 py-2 text-xs font-semibold text-slate-500">Công tác chủ nhiệm</p>
 
-                            <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                            <a class="flex items-center gap-3 px-4 py-2 cursor-pointer transition-all duration-200 @ActiveClass("Homeroom", "MyClass")"
                                asp-area="" asp-controller="Homeroom" asp-action="MyClass">
                                 <span class="material-symbols-outlined text-lg">meeting_room</span>
                                 <span>Lớp chủ nhiệm</span>
                             </a>
 
-                            <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                            <a class="flex items-center gap-3 px-4 py-2 cursor-pointer transition-all duration-200 @ActiveClass("Homeroom", "Violations")"
                                asp-area="" asp-controller="Homeroom" asp-action="Violations">
                                 <span class="material-symbols-outlined text-lg">report</span>
                                 <span>Vi phạm</span>
                             </a>
 
-                            <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                            <a class="flex items-center gap-3 px-4 py-2 cursor-pointer transition-all duration-200 @ActiveClass("Homeroom", "ConductScores")"
                                asp-area="" asp-controller="Homeroom" asp-action="ConductScores">
                                 <span class="material-symbols-outlined text-lg">stars</span>
                                 <span>Hạnh kiểm</span>
@@ -203,31 +218,31 @@
                     <p class="px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Tra cứu</p>
                     <nav class="space-y-1">
 
-                        <a class="flex items-center gap-3 border-l-4 border-green-600 bg-green-50 text-green-700 font-semibold px-4 py-3 cursor-pointer transition-all duration-200"
+                        <a class="flex items-center gap-3 px-4 py-3 cursor-pointer transition-all duration-200 @ActiveClass("StudentPortal", "Index")"
                            asp-area="" asp-controller="StudentPortal" asp-action="Index">
                             <span class="material-symbols-outlined text-lg">dashboard</span>
                             <span>Tổng quan</span>
                         </a>
 
-                        <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                        <a class="flex items-center gap-3 px-4 py-2 cursor-pointer transition-all duration-200 @ActiveClass("StudentPortal", "Scores")"
                            asp-area="" asp-controller="StudentPortal" asp-action="Scores">
                             <span class="material-symbols-outlined text-lg">grade</span>
                             <span>Bảng điểm</span>
                         </a>
 
-                        <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                        <a class="flex items-center gap-3 px-4 py-2 cursor-pointer transition-all duration-200 @ActiveClass("StudentPortal", "Attendances")"
                            asp-area="" asp-controller="StudentPortal" asp-action="Attendances">
                             <span class="material-symbols-outlined text-lg">how_to_reg</span>
                             <span>Điểm danh</span>
                         </a>
 
-                        <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                        <a class="flex items-center gap-3 px-4 py-2 cursor-pointer transition-all duration-200 @ActiveClass("StudentPortal", "Conduct")"
                            asp-area="" asp-controller="StudentPortal" asp-action="Conduct">
                             <span class="material-symbols-outlined text-lg">stars</span>
                             <span>Hạnh kiểm</span>
                         </a>
 
-                        <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                        <a class="flex items-center gap-3 px-4 py-2 cursor-pointer transition-all duration-200 @ActiveClass("Notification", "Index")"
                            asp-area="" asp-controller="Notification" asp-action="Index">
                             <span class="material-symbols-outlined text-lg">notifications</span>
                             <span>Thông báo</span>
@@ -243,31 +258,31 @@
                     <p class="px-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Tra cứu</p>
                     <nav class="space-y-1">
 
-                        <a class="flex items-center gap-3 border-l-4 border-green-600 bg-green-50 text-green-700 font-semibold px-4 py-3 cursor-pointer transition-all duration-200"
+                        <a class="flex items-center gap-3 px-4 py-3 cursor-pointer transition-all duration-200 @ActiveClass("ParentPortal", "Index")"
                            asp-area="" asp-controller="ParentPortal" asp-action="Index">
                             <span class="material-symbols-outlined text-lg">dashboard</span>
                             <span>Tổng quan</span>
                         </a>
 
-                        <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                        <a class="flex items-center gap-3 px-4 py-2 cursor-pointer transition-all duration-200 @ActiveClass("ParentPortal", "Scores")"
                            asp-area="" asp-controller="ParentPortal" asp-action="Scores">
                             <span class="material-symbols-outlined text-lg">grade</span>
                             <span>Bảng điểm</span>
                         </a>
 
-                        <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                        <a class="flex items-center gap-3 px-4 py-2 cursor-pointer transition-all duration-200 @ActiveClass("ParentPortal", "Attendances")"
                            asp-area="" asp-controller="ParentPortal" asp-action="Attendances">
                             <span class="material-symbols-outlined text-lg">how_to_reg</span>
                             <span>Điểm danh</span>
                         </a>
 
-                        <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                        <a class="flex items-center gap-3 px-4 py-2 cursor-pointer transition-all duration-200 @ActiveClass("ParentPortal", "Conduct")"
                            asp-area="" asp-controller="ParentPortal" asp-action="Conduct">
                             <span class="material-symbols-outlined text-lg">stars</span>
                             <span>Hạnh kiểm</span>
                         </a>
 
-                        <a class="flex items-center gap-3 text-slate-500 px-4 py-2 hover:bg-green-50 hover:text-green-600 transition-all duration-200"
+                        <a class="flex items-center gap-3 px-4 py-2 cursor-pointer transition-all duration-200 @ActiveClass("Notification", "Index")"
                            asp-area="" asp-controller="Notification" asp-action="Index">
                             <span class="material-symbols-outlined text-lg">notifications</span>
                             <span>Thông báo</span>
@@ -282,7 +297,7 @@
         <div class="px-3 pt-4 border-t border-slate-100">
             <form asp-area="" asp-controller="Auth" asp-action="Logout" method="post">
                 @Html.AntiForgeryToken()
-                <button type="submit" class="w-full flex items-center gap-3 text-slate-500 px-4 py-3 hover:bg-red-50 hover:text-red-600 transition-all duration-200 rounded-lg">
+                <button type="button" class="btn-logout w-full flex items-center gap-3 text-slate-500 px-4 py-3 hover:bg-red-50 hover:text-red-600 transition-all duration-200 rounded-lg">
                     <span class="material-symbols-outlined text-lg">logout</span>
                     <span class="font-medium">Đăng xuất</span>
                 </button>
